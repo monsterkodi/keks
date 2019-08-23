@@ -1,0 +1,181 @@
+
+//  0000000  000000000  000   000  000    
+// 000          000      000 000   000    
+// 0000000      000       00000    000    
+//      000     000        000     000    
+// 0000000      000        000     0000000
+
+frameWidth          = 6px
+titlebarHeight      = 30px
+titlebarFontSize    = 15px
+titlebarFont        = Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial
+fontMono            = "Meslo LG S", "Liberation Mono", "Menlo", "Cousine", "Andale Mono", Arial
+
+// 0000000     0000000   0000000    000   000
+// 000   000  000   000  000   000   000 000 
+// 0000000    000   000  000   000    00000  
+// 000   000  000   000  000   000     000   
+// 0000000     0000000   0000000       000   
+
+body
+    font-family         fontMono
+    font-size           14px
+    
+#main
+    display             flex
+    flex-direction      column
+    
+//  0000000  000   000  00000000  000      00000000
+// 000       000   000  000       000      000
+// 0000000   000000000  0000000   000      000000
+//      000  000   000  000       000      000
+// 0000000   000   000  00000000  0000000  000
+
+#shelf
+    overflow            hidden
+    position            absolute
+    left                0
+    top                 0
+    bottom              0
+
+#shelfResize
+    background          transparent
+    
+// 0000000    00000000    0000000   000   000   0000000  00000000  00000000
+// 000   000  000   000  000   000  000 0 000  000       000       000   000
+// 0000000    0000000    000   000  000000000  0000000   0000000   0000000
+// 000   000  000   000  000   000  000   000       000  000       000   000
+// 0000000    000   000   0000000   00     00  0000000   00000000  000   000
+
+.browser
+    position            absolute
+    bottom              0
+    right               0
+    left                0
+    top                 0
+
+.browserColumn
+    overflow            hidden
+    position            relative
+
+.browserColumnTable
+    display             table
+    width               100%
+    height              100%
+
+.browserRow
+    display             block
+    padding-left        6px
+    padding-right       6px
+    white-space         nowrap
+    cursor              pointer
+
+    & .git
+        float           right
+        padding-top     1px
+
+.rowNameInput
+    font-family         font
+    font-size           15px
+    border              none
+    white-space         nowrap
+    position            absolute
+    left                30px
+    right               30px
+        
+.browserSearch
+    padding-right       12px
+    float               right
+
+.browserImageContainer
+    position            relative
+    padding-left        frameWidth
+
+.browserImage
+    max-width           600px
+    max-height          600px
+    border              1px solid
+    
+.browserFileIcon
+    
+    text-align          left
+    display             inline-block
+    width               24px
+    opacity             0.5
+
+.openFileIcon
+    display             inline-block
+    width               24px
+    margin-top          -3px
+    
+.browserStatusIcon
+    
+    text-align          right
+    display             inline-block
+    width               24px
+    opacity             0.5
+    position            absolute
+    right               6px
+    
+octicon(char)
+    font-family         octicons
+    content             char
+
+awesome(char)
+    font-family         FontAwesome
+    content             char
+    
+unicode(char)
+    font-family         Sans-Serif
+    content             char
+    
+.git-changed-icon:before
+    awesome('\f040')
+    
+.git-added-icon:before
+    awesome('\f067')
+    
+.git-dirs-icon:before
+    awesome('\f044')
+
+.history-icon:before
+    awesome('\f141')
+    
+.file-icon:before
+    octicon('\f011')
+    
+.folder-icon:before 
+    octicon('\f016')
+    
+.noon-icon:before
+    unicode('ⓞ')
+    
+
+//  0000000   0000000  00000000    0000000   000      000      0000000     0000000   00000000
+// 000       000       000   000  000   000  000      000      000   000  000   000  000   000
+// 0000000   000       0000000    000   000  000      000      0000000    000000000  0000000
+//      000  000       000   000  000   000  000      000      000   000  000   000  000   000
+// 0000000    0000000  000   000   0000000   0000000  0000000  0000000    000   000  000   000
+
+.scrollbar
+    position            absolute
+    top                 0
+    cursor              ns-resize
+
+    &.left
+        bottom          0
+        left            0
+        width           scrollbarWidth
+    &.right
+        right           0
+        width           10%
+        height          100%
+
+.scrollhandle
+    position            absolute
+    width               scrollhandleWidth
+    top                 0
+    &.left
+        left            0
+    &.right
+        right           0

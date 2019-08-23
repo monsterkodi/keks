@@ -1,0 +1,48 @@
+body {
+  background: #181818;
+}
+.split-handle {
+  background: #222;
+}
+.browser {
+  background: backColor;
+  color: #fff;
+}
+.browserRow.hover {
+  background: #111;
+}
+.browserRow.active {
+  background: #222;
+}
+.browserRow.active.dir {
+  color: #ff8;
+}
+.rowNameInput {
+  color: #ff0;
+  background-color: #222;
+}
+.browserColumn.focus .browserRow.active {
+  background: #22a;
+}
+.browserImage {
+  border: 1px solid #222;
+}
+.browserRow.historySeparator * {
+  color: #555;
+}
+.browserRow.historySeparator.active * {
+  color: #888;
+}
+#shelf .browserRow.active {
+  background: backColor;
+}
+#shelf {
+  background: darkColor;
+}
+#shelf.focus {
+  background: #222;
+}
+#browser {
+  background: #181818;
+  border-color: #222;
+}
