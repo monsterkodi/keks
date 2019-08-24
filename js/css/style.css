@@ -84,6 +84,12 @@ body {
   position: absolute;
   right: 6px;
 }
+.crumb {
+  position: absolute;
+  top: -30px;
+  left: 10px;
+  color: #f00;
+}
 .file-icon:before {
   font-family: octicons;
   content: '\f011';

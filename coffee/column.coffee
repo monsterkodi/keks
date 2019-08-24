@@ -27,6 +27,8 @@ class Column
         @table = elem class: 'browserColumnTable'
         @div.appendChild @table
         
+        @div.appendChild elem class:'crumb' text:'crumb'
+        
         @browser.cols?.appendChild @div
         
         @div.addEventListener 'focus'     @onFocus

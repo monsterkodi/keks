@@ -1,7 +1,6 @@
 <br>
 <br>
-![bright](img/kex-bright.png)
+![bright](./img/kex-bright.png)
 <br>
 <br>
-<br>
-![dark](img/kex-dark.png)
+![dark](./img/kex-dark.png)
