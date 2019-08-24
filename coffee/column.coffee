@@ -451,8 +451,6 @@ class Column
         
         { mod, key, combo, char } = keyinfo.forEvent event
 
-        klog 'column.onKey' combo
-        
         switch combo
             when 'shift+`'             then return stopEvent event, @browser.loadDir slash.resolve '~'
             when '/'                   then return stopEvent event, @browser.loadDir '/'
@@ -460,7 +458,6 @@ class Column
             when 'alt+o'               then return @open()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'enter'               then return stopEvent event, @navigateCols key
-            # when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
             when 'command+left' 'command+up' 'command+right' 'command+down' 'ctrl+left' 'ctrl+up' 'ctrl+right' 'ctrl+down'
                 return stopEvent event, @navigateRoot key
             when 'command+backspace' 'ctrl+backspace' 'command+delete' 'ctrl+delete' 

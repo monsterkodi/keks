@@ -10,8 +10,11 @@
 
 Browser  = require './browser'
 Shelf    = require './shelf'
+File     = require './file'
 dirlist  = require './dirlist'
 dirCache = require './dircache'
+pbytes   = require 'pretty-bytes'
+moment   = require 'moment'
 
 class FileBrowser extends Browser
 
@@ -32,7 +35,7 @@ class FileBrowser extends Browser
         post.on 'dircache'    @onDirCache
         post.on 'openFile'    @onOpenFile
 
-        @shelfResize = elem 'div', class: 'shelfResize'
+        @shelfResize = elem 'div' class: 'shelfResize'
         @shelfResize.style.position = 'absolute'
         @shelfResize.style.top      = '0px'
         @shelfResize.style.bottom   = '0px'
@@ -106,19 +109,47 @@ class FileBrowser extends Browser
         file = item.file
 
         switch slash.ext file
-            when 'gif', 'png', 'jpg', 'jpeg', 'svg', 'bmp', 'ico'
-                cnt = elem class: 'browserImageContainer', child:
-                    elem 'img', class: 'browserImage', src: slash.fileUrl file
+            when 'gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico'
+                cnt = elem class: 'browserImageContainer' child:
+                    elem 'img' class: 'browserImage' src: slash.fileUrl file
                 @columns[col].table.appendChild cnt
-            when 'tiff', 'tif'
+            when 'tiff' 'tif'
                 if not slash.win()
                     @convertImage row
             when 'pxm'
                 if not slash.win()
                     @convertPXM row
+            else
+                @columns[col].table.appendChild @fileInfo file
                     
         @updateColumnScrolls()
 
+    # 00000000  000  000      00000000        000  000   000  00000000   0000000   
+    # 000       000  000      000             000  0000  000  000       000   000  
+    # 000000    000  000      0000000         000  000 0 000  000000    000   000  
+    # 000       000  000      000             000  000  0000  000       000   000  
+    # 000       000  0000000  00000000        000  000   000  000        0000000   
+    
+    fileInfo: (file) ->
+        
+        stat = slash.fileExists file
+        size = pbytes(stat.size).split ' '
+        
+        t = moment stat.mtime
+
+        age = moment().to(t, true)
+        [num, range] = age.split ' '
+        num = '1' if num[0] == 'a'
+        if range == 'few'
+            num = moment().diff t, 'seconds'
+            range = 'seconds'
+        
+        elem class:'browserFileInfo' children: [
+            elem 'div' class:"fileInfoIcon #{slash.ext file} #{File.iconClassName file}"
+            elem 'div' class:"fileInfoFile #{slash.ext file}" html:File.span file
+            elem 'table' class:"fileInfoData" html:"<tr><th>#{size[0]}</th><td>#{size[1]}</td></tr><tr><th>#{num}</th><td>#{range}</td></tr>"
+        ]
+        
     # 0000000    000  00000000   000  000000000  00000000  00     00
     # 000   000  000  000   000  000     000     000       000   000
     # 000   000  000  0000000    000     000     0000000   000000000
@@ -140,7 +171,7 @@ class FileBrowser extends Browser
 
         if dirCache.has(dir) and not opt.ignoreCache
             @loadDirItems dir, item, dirCache.get(dir), col, opt
-            post.emit 'dir', dir
+            post.emit 'dir' dir
         else
             opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
 
@@ -148,11 +179,11 @@ class FileBrowser extends Browser
 
                 if err? then return
 
-                post.toMain 'dirLoaded', dir
+                post.toMain 'dirLoaded' dir
 
                 dirCache.set dir, items
                 @loadDirItems dir, item, items, col, opt
-                post.emit 'dir', dir
+                post.emit 'dir' dir
 
                 @updateColumnScrolls()
                 
@@ -161,7 +192,7 @@ class FileBrowser extends Browser
         updir = slash.resolve slash.join dir, '..'
 
         if col == 0 or col-1 < @numCols() and @columns[col-1].activeRow()?.item.name == '..'
-            if items[0].name not in ['..', '/']
+            if items[0].name not in ['..' '/']
                 if not (updir == dir == slash.resolve '/')
                     items.unshift
                         name: '..'

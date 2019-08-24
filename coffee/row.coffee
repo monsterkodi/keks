@@ -22,7 +22,7 @@ class Row
         if empty(text) or empty text.trim()
             html = '<span> </span>'
         else
-            html = @fileSpan text
+            html = File.span text
         @div = elem class: 'browserRow' html: html
         @div.classList.add @item.type
         @column.table.appendChild @div
@@ -35,22 +35,7 @@ class Row
             onStart: @onDragStart
             onMove:  @onDragMove
             onStop:  @onDragStop
-   
-    #  0000000  00000000    0000000   000   000  
-    # 000       000   000  000   000  0000  000  
-    # 0000000   00000000   000000000  000 0 000  
-    #      000  000        000   000  000  0000  
-    # 0000000   000        000   000  000   000  
-    
-    fileSpan: (text) ->
-        base = slash.base text
-        ext  = slash.ext text
-        clss = valid(ext) and ' '+ext or ''
-        span = "<span class='text#{clss}'>"+base+"</span>"
-        if valid ext
-            span += "<span class='ext punct#{clss}'>.</span>" + "<span class='ext text#{clss}'>"+ext+"</span>"
-        span
-            
+               
     next:        -> @index() < @column.numRows()-1 and @column.rows[@index()+1] or null
     prev:        -> @index() > 0 and @column.rows[@index()-1] or null
     index:       -> @column.rows.indexOf @    

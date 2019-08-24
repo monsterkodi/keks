@@ -61,6 +61,30 @@ body {
   position: relative;
   padding: 6px;
 }
+.browserFileInfo {
+  position: relative;
+  padding: 6px;
+}
+.fileInfoIcon {
+  text-align: center;
+}
+.fileInfoIcon:before {
+  font-size: 200px;
+}
+.fileInfoFile {
+  text-align: center;
+  display: block;
+  font-size: 28px;
+}
+.fileInfoData {
+  margin: auto;
+}
+.fileInfoData th {
+  text-align: right;
+}
+.fileInfoData td {
+  text-align: left;
+}
 .browserImage {
   max-width: 600px;
   max-height: 600px;
