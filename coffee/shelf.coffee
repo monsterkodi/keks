@@ -23,7 +23,7 @@ class Shelf extends Column
         @index  = -1
         @div.id = 'shelf'
         
-        post.on 'addToShelf'             @addPath
+        post.on 'addToShelf' @addPath
         
         post.on 'file' @onFile
         

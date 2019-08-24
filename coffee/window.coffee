@@ -59,7 +59,6 @@ onMenuAction = (name, args) ->
         when 'Copy'                  then return window.focusEditor.copy()
         when 'Paste'                 then return window.focusEditor.paste()
         when 'New Window'            then return post.toMain 'newWindowWithFile', editor.currentFile
-        # when 'Toggle Scheme'         then return scheme.toggle()
         when 'Increase'              then return changeFontSize +1
         when 'Decrease'              then return changeFontSize -1
         when 'Reset'                 then return resetFontSize()
@@ -82,9 +81,8 @@ onCombo = (combo, info) ->
 
     { mod, key, combo, char, event } = info
 
-
-    switch combo
-        when 'f3'                 then return stopEvent event, screenShot()
+    # switch combo
+        # when 'f3'                 then return stopEvent event, screenshot()
         # when 'command+shift+='    then return stopEvent event, @changeZoom +1
         # when 'command+shift+-'    then return stopEvent event, @changeZoom -1
         # when 'command+shift+0'    then return stopEvent event, @resetZoom()
