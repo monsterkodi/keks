@@ -85,12 +85,8 @@ class FileBrowser extends Browser
         @clearColumnsFrom col+2, pop:true
 
         switch item.type
-            when 'dir'
-                @loadDirItem  item, col+1
-            when 'file'
-                @loadFileItem item, col+1
-                if item.textFile
-                    post.emit 'jumpToFile', item
+            when 'dir'  then @loadDirItem  item, col+1
+            when 'file' then @loadFileItem item, col+1
 
     # 00000000  000  000      00000000  000  000000000  00000000  00     00
     # 000       000  000      000       000     000     000       000   000
@@ -118,48 +114,19 @@ class FileBrowser extends Browser
             when 'pxm'
                 if not slash.win()
                     @convertPXM row
-            else
-                @loadSourceItem item, col
+            else 
+                if item.textFile
+                    @loadTextItem item, col
 
-    #  0000000   0000000   000   000  00000000    0000000  00000000  000  000000000  00000000  00     00
-    # 000       000   000  000   000  000   000  000       000       000     000     000       000   000
-    # 0000000   000   000  000   000  0000000    000       0000000   000     000     0000000   000000000
-    #      000  000   000  000   000  000   000  000       000       000     000     000       000 0 000
-    # 0000000    0000000    0000000   000   000   0000000  00000000  000     000     00000000  000   000
+    # 000000000  00000000  000   000  000000000  000  000000000  00000000  00     00
+    #    000     000        000 000      000     000     000     000       000   000
+    #    000     0000000     00000       000     000     000     0000000   000000000
+    #    000     000        000 000      000     000     000     000       000 0 000
+    #    000     00000000  000   000     000     000     000     00000000  000   000
 
-    loadSourceItem: (item, col) ->
+    loadTextItem: (item, col) ->
 
-        if not @srcCache[item.file]?
-
-            @srcCache[item.file] = post.get 'indexer' 'file' item.file
-
-        info = @srcCache[item.file]
-
-        if empty info
-            @columns[col].loadItems [], item
-            return
-
-        items = []
-        clsss = info.classes ? []
-        for clss in clsss
-            text = '● '+clss.name
-            items.push name:clss.name, text:text, type:'class', file:item.file, line:clss.line
-
-        funcs = info.funcs ? []
-        for func in funcs
-            if func.test == 'describe'
-                text = '● '+func.name
-            else if func.static
-                text = '  ◆ '+func.name
-            else if func.post
-                text = '  ⬢ '+func.name
-            else
-                text = '  ▸ '+func.name
-            items.push name:func.name, text:text, type:'func', file:item.file, line:func.line
-
-        if valid items
-            items.sort (a,b) -> a.line - b.line
-            @columns[col].loadItems items, item
+        klog 'loadTextItem' item
 
     # 0000000    000  00000000   000  000000000  00000000  00     00
     # 000   000  000  000   000  000     000     000       000   000

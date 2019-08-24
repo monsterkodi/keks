@@ -1,6 +1,6 @@
 body {
-  font-family: "Meslo LG S", "Liberation Mono", "Menlo", "Cousine", "Andale Mono", Arial;
-  font-size: 14px;
+  font-family: Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial;
+  font-size: 20px;
 }
 #main {
   display: flex;

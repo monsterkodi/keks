@@ -47,9 +47,10 @@ class Shelf extends Column
         row.setActive emit:true
         
         if item.type == 'file'
-            post.emit 'jumpToFile', item
+            # post.emit 'jumpToFile' item
+            true
         else
-            post.emit 'filebrowser', 'loadItem', item
+            post.emit 'filebrowser' 'loadItem' item
                 
     #  0000000   000   000      00000000  000  000      00000000  
     # 000   000  0000  000      000       000  000      000       
@@ -116,7 +117,7 @@ class Shelf extends Column
     itemPaths: -> @rows.map (r) -> r.path()
     
     savePrefs: -> 
-        window.state.set "shelf|items", @items
+        # window.state.set "shelf|items", @items
     
     setItems: (@items, opt) ->
         
@@ -235,7 +236,7 @@ class Shelf extends Column
 
         navigate = (action) =>
             @navigatingRows = true
-            post.emit 'menuAction', action
+            post.emit 'menuAction' action
         
         if      key == 'up'   and index > @items.length     then navigate 'Navigate Forward'
         else if key == 'down' and index > @items.length + 1 then navigate 'Navigate Backward'
@@ -309,27 +310,26 @@ class Shelf extends Column
         { mod, key, combo, char } = keyinfo.forEvent event
         
         switch combo
-            when 'command+enter', 'ctrl+enter' then return @openFileInNewWindow()
-            when 'backspace', 'delete' then return stopEvent event, @clearSearch().removeObject()
-            when 'command+k', 'ctrl+k' then return stopEvent event if @browser.cleanUp()
+            when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
+            when 'backspace' 'delete' then return stopEvent event, @clearSearch().removeObject()
+            when 'command+k' 'ctrl+k' then return stopEvent event if @browser.cleanUp()
             when 'tab'    
                 if @search.length then @doSearch ''
                 return stopEvent event
             when 'esc'
                 if @search.length then @clearSearch()
-                else window.split.focus 'commandline-editor'
                 return stopEvent event
 
         switch key
-            when 'up', 'down', 'page up', 'page down', 'home', 'end' 
+            when 'up' 'down' 'page up' 'page down' 'home' 'end' 
                 return stopEvent event, @navigateRows key
-            when 'right', 'enter'
+            when 'right' 'enter'
                 return stopEvent event, @focusBrowser()
                 
         switch char
-            when '~', '/' then return stopEvent event, @navigateRoot char
+            when '~' '/' then return stopEvent event, @navigateRoot char
             
-        if mod in ['shift', ''] and char then @doSearch char
+        if mod in ['shift' ''] and char then @doSearch char
         
         if key in ['left'] then return stopEvent event
         

@@ -23,21 +23,21 @@ class Column
         @items  = []
         @rows   = []
         
-        @div   = elem class: 'browserColumn', tabIndex: 6, id: @name()
+        @div   = elem class: 'browserColumn' tabIndex: 6, id: @name()
         @table = elem class: 'browserColumnTable'
         @div.appendChild @table
         
         @browser.cols?.appendChild @div
         
-        @div.addEventListener 'focus',     @onFocus
-        @div.addEventListener 'blur',      @onBlur
-        @div.addEventListener 'keydown',   @onKey
+        @div.addEventListener 'focus'     @onFocus
+        @div.addEventListener 'blur'      @onBlur
+        @div.addEventListener 'keydown'   @onKey
         
-        @div.addEventListener 'mouseover', @onMouseOver
-        @div.addEventListener 'mouseout',  @onMouseOut
+        @div.addEventListener 'mouseover' @onMouseOver
+        @div.addEventListener 'mouseout'  @onMouseOut
 
-        @div.addEventListener 'mouseup',   @onClick
-        @div.addEventListener 'dblclick',  @onDblClick
+        @div.addEventListener 'mouseup'   @onClick
+        @div.addEventListener 'dblclick'  @onDblClick
         
         @div.addEventListener "contextmenu", @onContextMenu
         
@@ -57,7 +57,7 @@ class Column
         @parent = parent
         
         if @parent.type == undefined
-            log 'column.loadItems', String @parent
+            log 'column.loadItems' String @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
         
         kerror "no parent item?" if not @parent?
@@ -160,7 +160,7 @@ class Column
         @navigateCols 'enter'
         if item = @activeRow()?.item
             if item.file and item.type == 'file' # jump to top of file on double click
-                post.emit 'singleCursorAtPos', [0, 0]
+                post.emit 'singleCursorAtPos' [0, 0]
 
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -198,10 +198,10 @@ class Column
                 if item = @activeRow()?.item
                     type = item.type
                     if type == 'dir'
-                        post.emit 'filebrowser', 'loadItem', item, focus:true
+                        post.emit 'filebrowser' 'loadItem' item, focus:true
                     else if item.file
-                        post.emit 'jumpTo', item
-                        post.emit 'focus', 'editor'
+                        post.emit 'jumpTo' item
+                        post.emit 'focus' 'editor'
         @
 
     navigateRoot: (key) -> # move to file browser?
@@ -220,7 +220,7 @@ class Column
         
         if item = @activeRow()?.item
             if item.type == 'file' and item.textFile and item.file
-                post.emit 'openFiles', [item.file], newWindow: true
+                post.emit 'openFiles' [item.file], newWindow: true
         @
 
     #  0000000  00000000   0000000   00000000    0000000  000   000    
@@ -266,7 +266,7 @@ class Column
     removeObject: =>
         
         if row = @activeRow()
-            @browser.emit 'willRemoveRow', row, @
+            @browser.emit 'willRemoveRow' row, @
             nextOrPrev = row.next() ? row.prev()
             @removeRow row
             nextOrPrev?.activate()
@@ -315,7 +315,7 @@ class Column
     toggleDotFiles: =>
 
         if @parent.type == undefined
-            log 'column.toggleDotFiles', @parent
+            log 'column.toggleDotFiles' @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
             
         # if @parent.type == 'dir'            
@@ -331,7 +331,7 @@ class Column
 
         stateKey = "browser|hideExtensions"
         # window.state.set stateKey, not window.state.get stateKey, false
-        # setStyle '.browserRow .ext', 'display', window.state.get(stateKey) and 'none' or 'initial'
+        # setStyle '.browserRow .ext' 'display' window.state.get(stateKey) and 'none' or 'initial'
         @
         
     # 000000000  00000000    0000000    0000000  000   000  
@@ -343,8 +343,6 @@ class Column
     moveToTrash: =>
         
         pathToTrash = @activePath()
-        if pathToTrash == window.tabs.activeTab()?.file
-            window.tabs.closeTab window.tabs.activeTab()
         @removeObject()
         
         trash([pathToTrash]).catch (err) -> error "failed to trash #{pathToTrash} #{err}"
@@ -352,8 +350,7 @@ class Column
     addToShelf: =>
         
         if pathToShelf = @activePath()
-            post.emit 'addToShelf', pathToShelf
-            window.split.focus 'shelf'
+            post.emit 'addToShelf' pathToShelf
         
     duplicateFile: =>
         
@@ -362,8 +359,8 @@ class Column
             fileName = slash.path fileName
             if fs.copy? # fs.copyFile in node > 8.4
                 fs.copy @activePath(), fileName, (err) =>
-                    return error 'copy file failed', err if err?
-                    post.emit 'loadFile', fileName
+                    return error 'copy file failed' err if err?
+                    post.emit 'loadFile' fileName
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  
@@ -443,21 +440,21 @@ class Column
         switch combo
             when 'alt+e'               then return @explorer()
             when 'alt+o'               then return @open()
-            when 'page up', 'page down', 'home', 'end' then return stopEvent event, @navigateRows key
+            when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'enter'               then return stopEvent event, @navigateCols key
-            when 'command+enter', 'ctrl+enter' then return @openFileInNewWindow()
-            when 'command+left', 'command+up', 'command+right', 'command+down', 'ctrl+left', 'ctrl+up', 'ctrl+right', 'ctrl+down'
+            when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
+            when 'command+left' 'command+up' 'command+right' 'command+down' 'ctrl+left' 'ctrl+up' 'ctrl+right' 'ctrl+down'
                 return stopEvent event, @navigateRoot key
-            when 'command+backspace', 'ctrl+backspace', 'command+delete', 'ctrl+delete' 
+            when 'command+backspace' 'ctrl+backspace' 'command+delete' 'ctrl+delete' 
                 return stopEvent event, @moveToTrash()
             when 'alt+left'            then return stopEvent event, window.split.focus 'shelf'
-            when 'backspace', 'delete' then return stopEvent event, @browser.onBackspaceInColumn @
+            when 'backspace' 'delete'  then return stopEvent event, @browser.onBackspaceInColumn @
             when 'ctrl+t'              then return stopEvent event, @sortByType()
             when 'ctrl+n'              then return stopEvent event, @sortByName()
-            when 'command+i', 'ctrl+i' then return stopEvent event, @toggleDotFiles()
-            when 'command+d', 'ctrl+d' then return stopEvent event, @duplicateFile()
-            when 'command+e', 'ctrl+e' then return stopEvent event, @toggleExtensions()
-            when 'command+k', 'ctrl+k' then return stopEvent event if @browser.cleanUp()
+            when 'command+i' 'ctrl+i'  then return stopEvent event, @toggleDotFiles()
+            when 'command+d' 'ctrl+d'  then return stopEvent event, @duplicateFile()
+            when 'command+e' 'ctrl+e'  then return stopEvent event, @toggleExtensions()
+            when 'command+k' 'ctrl+k'  then return stopEvent event if @browser.cleanUp()
             when 'f2'                  then return stopEvent event, @activeRow()?.editName()
             when 'tab'    
                 if @search.length then @doSearch ''
@@ -467,13 +464,13 @@ class Column
                 else window.split.focus 'commandline-editor'
                 return stopEvent event
 
-        if key in ['up',   'down']  then return stopEvent event, @navigateRows key              
-        if key in ['left', 'right'] then return stopEvent event, @navigateCols key        
+        if key in ['up'   'down']  then return stopEvent event, @navigateRows key              
+        if key in ['left' 'right'] then return stopEvent event, @navigateCols key        
             
         switch char
-            when '~', '/' then return stopEvent event, @navigateRoot char
+            when '~' '/' then return stopEvent event, @navigateRoot char
             
-        if mod in ['shift', ''] and char then @doSearch char
+        if mod in ['shift' ''] and char then @doSearch char
                 
 module.exports = Column
 
