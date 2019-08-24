@@ -119,6 +119,8 @@ class FileBrowser extends Browser
             else 
                 if item.textFile
                     @loadTextItem item, col
+                    
+        @updateColumnScrolls()
 
     # 000000000  00000000  000   000  000000000  000  000000000  00000000  00     00
     #    000     000        000 000      000     000     000     000       000   000
@@ -165,6 +167,8 @@ class FileBrowser extends Browser
                 @loadDirItems dir, item, items, col, opt
                 post.emit 'dir', dir
 
+                @updateColumnScrolls()
+                
     loadDirItems: (dir, item, items, col, opt) =>
 
         updir = slash.resolve slash.join dir, '..'
@@ -375,6 +379,8 @@ class FileBrowser extends Browser
         else
             @lastUsedColumn()?.focus()
             @setShelfSize 0
+            
+        @updateColumnScrolls()
         
     refresh: =>
 

@@ -93,6 +93,8 @@ class Browser extends event
         index = clamp 0, @numCols()-1, index
         if @columns[index].numRows()
             @columns[index].focus().activeRow().activate()
+            
+        @updateColumnScrolls()
         @
         
     # 00000000   0000000    0000000  000   000   0000000  
@@ -245,6 +247,7 @@ class Browser extends event
     updateColumnScrolls: =>
         
         for c in @columns
+            c.updateCrumb()
             c.scroll.update()
 
     reset: -> delete @cols; @initColumns()

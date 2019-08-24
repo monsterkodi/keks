@@ -27,7 +27,8 @@ class Column
         @table = elem class: 'browserColumnTable'
         @div.appendChild @table
         
-        @div.appendChild elem class:'crumb' text:'crumb'
+        @crumb = elem class:'crumb'
+        document.body.appendChild @crumb
         
         @browser.cols?.appendChild @div
         
@@ -57,6 +58,8 @@ class Column
         
         @items  = items
         @parent = parent
+        
+        @crumb.innerHTML = slash.base @parent.file
         
         if @parent.type == undefined
             log 'column.loadItems' String @parent
@@ -96,6 +99,7 @@ class Column
         @div.scrollTop = 0
         @editor?.del()
         @table.innerHTML = ''
+        @crumb.innerHTML = ''
         @rows = []
         @scroll.update()
                     
@@ -160,6 +164,17 @@ class Column
     onClick:     (event) => @row(event.target)?.activate event
     onDblClick:  (event) => @navigateCols 'enter'
 
+    #  0000000  00000000   000   000  00     00  0000000    
+    # 000       000   000  000   000  000   000  000   000  
+    # 000       0000000    000   000  000000000  0000000    
+    # 000       000   000  000   000  000 0 000  000   000  
+    #  0000000  000   000   0000000   000   000  0000000    
+    
+    updateCrumb: =>
+        br = @div.getBoundingClientRect()
+        @crumb.style.left = "#{br.left}px"
+        @crumb.style.width = "#{br.right - br.left}px"
+    
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
     # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
@@ -377,7 +392,7 @@ class Column
     showContextMenu: (absPos) =>
         
         if not absPos?
-            absPos = kpos @view.getBoundingClientRect().left, @view.getBoundingClientRect().top
+            absPos = kpos @div.getBoundingClientRect().left, @div.getBoundingClientRect().top
         
         opt = items: [ 
             text:   'Toggle Invisible'

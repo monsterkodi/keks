@@ -95,7 +95,7 @@ class Scroller
 
     update: =>
         
-        klog 'scroller update' @numRows(), @rowHeight(), @height()
+        # klog 'scroller update' @numRows(), @rowHeight(), @height()
         if @numRows() * @rowHeight() < @height()
             
             @elem.style.display   = 'none'

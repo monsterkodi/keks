@@ -165,7 +165,7 @@ class Flex
         
         if @snapFirst? and prevSize < @snapFirst and not @prevVisPane prev
             
-            if prevSize <= 0 or offset < @snapFirst # collapse panea
+            if prevSize <= 0 or offset < @snapFirst
                 prevSize = -1
                 nextSize = next.size + prev.size + @handleSize
                 
@@ -184,7 +184,7 @@ class Flex
                     
         if @snapLast? and nextSize < @snapLast and not @nextVisPane next
             
-            if nextSize <= 0 or -offset < @snapLast # collapse paneb
+            if nextSize <= 0 or -offset < @snapLast
                 nextSize = -1
                 prevSize = prev.size + next.size + @handleSize
                 
@@ -241,9 +241,9 @@ class Flex
         
     resized:       -> @update().calculate()
 
-    update:        -> @updatePanes().updateHandles()
-    updatePanes:   -> p.update() for p in @panes   ; @
-    updateHandles: -> h.update() for h in @handles ; @
+    update:        -> @updatePanes(); @updateHandles()
+    updatePanes:   -> p.update() for p in @panes  
+    updateHandles: -> h.update() for h in @handles
 
     # handle drag callbacks
     

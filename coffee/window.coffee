@@ -34,12 +34,10 @@ winID    = window.winID = win.id
 
 winMain = -> 
 
-    klog 'win main'
-    
     fileBrowser = new FileBrowser $ "#main"
     fileBrowser.loadItem type:'dir' file:slash.resolve '~'
     
-    # scheme.set prefs.get 'scheme' 'dark'
+    win.on 'resize' -> fileBrowser.resized()
 
 window.onload = -> klog 'win onload'
 
@@ -82,7 +80,6 @@ onCombo = (combo, info) ->
     { mod, key, combo, char, event } = info
 
     # switch combo
-        # when 'f3'                 then return stopEvent event, screenshot()
         # when 'command+shift+='    then return stopEvent event, @changeZoom +1
         # when 'command+shift+-'    then return stopEvent event, @changeZoom -1
         # when 'command+shift+0'    then return stopEvent event, @resetZoom()

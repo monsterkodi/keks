@@ -1,18 +1,18 @@
 {
-  "name": "kex",
-  "productName": "kex",
-  "version": "0.3.0",
+  "name": "keks",
+  "productName": "keks",
+  "version": "0.4.0",
   "description": "file browser",
   "main": "js/main.js",
   "bin": {
-    "kex": "./bin/kex"
+    "keks": "./bin/keks"
   },
   "scripts": [
     "konrad build"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/monsterkodi/kex.git"
+    "url": "https://github.com/monsterkodi/keks.git"
   },
   "keywords": [
     "filebrowser",
@@ -28,7 +28,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/monsterkodi/kex/issues"
+    "url": "https://github.com/monsterkodi/keks/issues"
   },
   "dependencies": {
     "file-icons-js": "^1.0.3",
