@@ -144,6 +144,15 @@ body {
 #titlebar .winbutton:hover svg {
   stroke: #000;
 }
+.winbutton {
+  background: #eee;
+}
+#crumbs {
+  background: #eee;
+}
+#titlebar {
+  background: none;
+}
 .menuItem {
   color: #888;
   background-color: #eee;
@@ -180,6 +189,12 @@ body {
 }
 .popupCombo {
   color: #ddd;
+}
+.scroller.long {
+  color: #c8c8c8;
+}
+.scroller.short {
+  color: #00009b;
 }
 ::-webkit-scrollbar-corner {
   background-color: #eee;

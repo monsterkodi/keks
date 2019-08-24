@@ -59,7 +59,7 @@ body {
 }
 .browserImageContainer {
   position: relative;
-  padding-left: 6px;
+  padding: 6px;
 }
 .browserImage {
   max-width: 600px;
@@ -84,9 +84,6 @@ body {
   opacity: 0.5;
   position: absolute;
   right: 6px;
-}
-.crumb {
-  text-align: center;
 }
 .file-iconbefore {
   font-family: octicons;
@@ -119,8 +116,10 @@ body {
   opacity: 0;
 }
 .crumb {
+  font-size: 14px;
+  line-height: 30px;
   position: absolute;
-  top: 6px;
+  text-align: center;
 }
 #crumbs {
   position: absolute;

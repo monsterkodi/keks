@@ -6,10 +6,12 @@
 0000000    0000000  000   000   0000000   0000000  0000000  00000000  000   000
 ###
 
-{ stopEvent, clamp, drag, elem, klog } = require 'kxk'
+{ stopEvent, clamp, drag, elem, klog, _ } = require 'kxk'
 
 class Scroller
 
+    @colors = {}
+    
     constructor: (@column) ->
 
         @elem = elem class: 'scrollbar right'
@@ -93,9 +95,38 @@ class Scroller
         @target.scrollTop = parseInt newTop
         @update()
 
+    @colorForClass: (clss) ->
+        
+        if not @colors[clss]?
+            
+            div = elem class: clss
+            document.body.appendChild div
+            color = window.getComputedStyle(div).color
+            @colors[clss] = color
+            div.remove()
+            
+        return @colors[clss]
+        
+    @fadeColor: (a,b,f) ->
+        
+        av = @parseColor a
+        bv = @parseColor b
+        fv = [0,0,0]
+        for i in [0...3]
+            fv[i] = Math.round (1-f) * av[i] + f * bv[i]
+        "rgb(#{fv[0]}, #{fv[1]}, #{fv[2]})"
+       
+    @parseColor: (c) ->
+        
+        if _.isString(c) and c.startsWith 'rgb'
+            s = c.indexOf '('
+            e = c.indexOf ')'
+            c = c.slice s+1, e
+            v = c.split ','
+            return [parseInt(v[0]), parseInt(v[1]), parseInt(v[2])]
+        
     update: =>
         
-        # klog 'scroller update' @numRows(), @rowHeight(), @height()
         if @numRows() * @rowHeight() < @height()
             
             @elem.style.display   = 'none'
@@ -120,11 +151,11 @@ class Scroller
             @handle.style.height  = "#{scrollHeight}px"
             @handle.style.width   = "2px"
             
-            # longColor  = scheme.colorForClass 'scroller long'
-            # shortColor = scheme.colorForClass 'scroller short'
-            # cf = 1 - clamp 0, 1, (scrollHeight-10)/200
-            # cs = scheme.fadeColor longColor, shortColor, cf
-            # @handle.style.backgroundColor = cs
+            longColor  = Scroller.colorForClass 'scroller long'
+            shortColor = Scroller.colorForClass 'scroller short'
+            cf = 1 - clamp 0, 1, (scrollHeight-10)/200
+            cs = Scroller.fadeColor longColor, shortColor, cf
+            @handle.style.backgroundColor = cs
 
         if @column.parent?.type == 'preview'
             if @column.prevColumn?().div.scrollTop != @target.scrollTop

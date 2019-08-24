@@ -20,8 +20,8 @@ kapp = new app
     aboutDebug: false
     width:      474
     height:     900
-    minWidth:   333
-    minHeight:  333
+    minWidth:   353
+    minHeight:  111
     
 post.on 'winDidShow' ->
     

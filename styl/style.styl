@@ -90,7 +90,8 @@ body
 
 .browserImageContainer
     position            relative
-    padding-left        frameWidth
+    // padding-left        frameWidth
+    padding             frameWidth
 
 .browserImage
     max-width           600px
@@ -117,13 +118,6 @@ body
     opacity             0.5
     position            absolute
     right               6px
-    
-.crumb
-    text-align          center
-    // position            absolute
-    // position            sticky
-    // top                 6px
-    // left                10px
     
 octicon(char)
     font-family         octicons
@@ -165,8 +159,10 @@ unicode(char)
     opacity     0
     
 .crumb
+    font-size   14px
+    line-height titlebarHeight
     position    absolute
-    top         6px
+    text-align  center
 
 #crumbs
     position    absolute

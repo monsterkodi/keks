@@ -133,3 +133,9 @@ body {
 .dir .dotfile {
   color: #88e;
 }
+.scroller.long {
+  color: #3c3c3c;
+}
+.scroller.short {
+  color: #9696ff;
+}

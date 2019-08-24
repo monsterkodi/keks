@@ -174,7 +174,15 @@ class Column
     updateCrumb: =>
         br = @div.getBoundingClientRect()
         @crumb.style.left = "#{br.left}px"
-        @crumb.style.width = "#{br.right - br.left}px"
+        if @index == @browser.numCols()-1
+            width = br.right - br.left - 135
+            @crumb.style.width = "#{width}px"
+            if width < 50
+                @crumb.style.display = 'none'
+            else
+                @crumb.style.display = null
+        else
+            @crumb.style.width = "#{br.right - br.left}px"
     
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
