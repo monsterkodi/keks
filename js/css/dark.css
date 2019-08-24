@@ -27,12 +27,6 @@ body {
 .browserImage {
   border: 1px solid #222;
 }
-.browserRow.historySeparator * {
-  color: #555;
-}
-.browserRow.historySeparator.active * {
-  color: #888;
-}
 #shelf .browserRow.active {
   background: backColor;
 }
@@ -45,4 +39,86 @@ body {
 #browser {
   background: #181818;
   border-color: #222;
+}
+.dir {
+  color: #aaf;
+  font-weight: bold;
+}
+.dir.text,
+.dir.punct {
+  color: #a84;
+  font-weight: normal;
+}
+.file {
+  color: #aaa;
+}
+.cc,
+.cpp,
+.git,
+.coffee {
+  color: #ff0;
+}
+.h,
+.hpp,
+.py,
+.noon {
+  color: #f80;
+}
+.md,
+.txt {
+  color: #0a0;
+}
+.url {
+  color: #808;
+}
+.url.domain {
+  color: #f0f;
+}
+.url.tld {
+  color: #a0a;
+}
+.png,
+.gif,
+.jpg,
+.bmp,
+.tiff,
+.image {
+  color: #080;
+}
+.ico,
+.icns,
+.pic {
+  color: #0f0;
+}
+.pug,
+.styl {
+  color: #0af;
+}
+.js,
+.css,
+.json,
+.html {
+  color: #b4a;
+}
+.sh {
+  color: #f00;
+}
+.dirname {
+  opacity: 0.6;
+}
+.ext {
+  opacity: 0.5;
+}
+.separator {
+  opacity: 0.3;
+}
+.linepos {
+  color: #66a;
+}
+.lock,
+.dotfile {
+  color: #666;
+}
+.dir .dotfile {
+  color: #88e;
 }

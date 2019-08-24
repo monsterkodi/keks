@@ -6,7 +6,7 @@
 0000000   000   000  00000000  0000000  000     
 ###
 
-{ stopEvent, keyinfo, slash, post, popup, elem, clamp, empty, first, last, kerror, $, _ } = require 'kxk'
+{ stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './scroller'
@@ -23,8 +23,6 @@ class Shelf extends Column
         @index  = -1
         @div.id = 'shelf'
         
-        # @showHistory = window.stash.get 'shelf|history' true
-
         post.on 'addToShelf'             @addPath
         
         post.on 'file' @onFile
@@ -38,17 +36,13 @@ class Shelf extends Column
     activateRow: (row) -> 
         
         item = row.item
-        
-        if item.type == 'historySeparator'
-            row.setActive emit:false
-            return
-        
+                
         $('.hover')?.classList.remove 'hover'
         row.setActive emit:true
         
         if item.type == 'file'
             # post.emit 'jumpToFile' item
-            true
+            klog 'shelf.activeRow file' item
         else
             post.emit 'filebrowser' 'loadItem' item
                 
@@ -94,12 +88,10 @@ class Shelf extends Column
         
         @loadShelfItems()
         
-        @loadHistory() if @showHistory
-        
     loadShelfItems: ->
         
-        # items = window.state.get "shelf|items"
-        # @setItems items, save:false
+        items = prefs.get "shelf▸items"
+        @setItems items, save:false
                 
     addPath: (path, opt) =>
         
@@ -116,8 +108,7 @@ class Shelf extends Column
 
     itemPaths: -> @rows.map (r) -> r.path()
     
-    savePrefs: -> 
-        # window.state.set "shelf|items", @items
+    savePrefs: -> prefs.set "shelf▸items" @items
     
     setItems: (@items, opt) ->
         
@@ -169,7 +160,6 @@ class Shelf extends Column
             @items.push item
             
         @setItems @items
-        @loadHistory() if @showHistory
                         
     dropRow: (row, pos) -> @addItem row.item, pos:pos
             
@@ -252,13 +242,6 @@ class Shelf extends Column
     removeObject: =>
                 
         if row = @activeRow()
-            if @showHistory
-                if row.item.type == 'historySeparator'
-                    @toggleHistory()
-                    return
-                if row.index() > @historySeparatorIndex()
-                    window.navigate.delFilePos row.item
-                
             nextOrPrev = row.next() ? row.prev()
             row.div.remove()
             @items.splice row.index(), 1
@@ -279,10 +262,6 @@ class Shelf extends Column
             absPos = pos @view.getBoundingClientRect().left, @view.getBoundingClientRect().top
         
         opt = items: [ 
-            text:   'Toggle History'
-            combo:  'alt+h' 
-            cb:     @toggleHistory
-        ,
             text:   'Toggle Extensions'
             combo:  'ctrl+e' 
             cb:     @toggleExtensions
@@ -290,9 +269,6 @@ class Shelf extends Column
             text:   'Remove'
             combo:  'backspace' 
             cb:     @removeObject
-        ,
-            text:   'Clear History'
-            cb:     @clearHistory
         ]
         
         opt.x = absPos.x

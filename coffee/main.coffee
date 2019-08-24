@@ -16,6 +16,7 @@ kapp = new app
     icon:       '../img/app.ico'
     tray:       '../img/menu.png'
     about:      '../img/about.png'
+    prefsSeperator: '▸'
     aboutDebug: false
     width:      474
     height:     900

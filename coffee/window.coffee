@@ -15,6 +15,7 @@ w = new win
     pkg:    require '../package.json'
     menu:   '../coffee/menu.noon'
     icon:   '../img/menu@2x.png'
+    prefsSeperator: '▸'
     scheme: false
 
 electron = require 'electron'

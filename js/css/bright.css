@@ -1,3 +1,192 @@
 body {
+  background: #fff;
+}
+.split-handle {
   background: #eee;
+}
+#main {
+  border-left: 6px solid #eee;
+  border-right: 6px solid #eee;
+  border-bottom: 6px solid #eee;
+  background: #fff;
+}
+#shelf {
+  background: #f8f8f8;
+}
+#shelf.focus {
+  background: #eee;
+}
+#shelf .browserRow.active {
+  background: #ddf;
+}
+.browser {
+  background: #fff;
+  color: #000;
+  border-color: #eee;
+}
+.browserRow.hover {
+  background: #fafafa;
+}
+.browserRow.active {
+  background: #eee;
+}
+.browserColumn.focus .browserRow.active {
+  background: #ddf;
+}
+.browserImage {
+  border: 1px solid #eee;
+}
+.browserRow.array {
+  color: #666;
+}
+.browserRow .arrayIndex {
+  color: #ddd;
+  font-size: 12px;
+}
+.browserRow .arrayDot {
+  color: #eee;
+}
+.rowNameInput {
+  color: #ff0;
+  background-color: #eee;
+}
+.dir {
+  color: #08f;
+  font-weight: bold;
+}
+.file {
+  color: #888;
+}
+.cc,
+.cpp,
+.coffee {
+  color: #c00;
+}
+.h,
+.hpp,
+.py,
+.noon {
+  color: #0b0;
+}
+.md,
+.txt {
+  color: #008;
+}
+.image {
+  color: #080;
+}
+.pic {
+  color: #0a0;
+}
+.pug,
+.styl {
+  color: #a0a;
+}
+.js,
+.css,
+.json,
+.html {
+  color: #666;
+}
+.sh {
+  color: #f60;
+}
+.dirname {
+  opacity: 0.4;
+}
+.ext {
+  opacity: 0.3;
+}
+.separator {
+  opacity: 0.2;
+}
+.marker {
+  opacity: 0.4;
+}
+.lock,
+.dotfile {
+  color: #666;
+}
+#titlebar {
+  background: #eee;
+}
+.titlebar-name {
+  color: textActiveColor;
+}
+.titlebar-version {
+  color: scrollColor;
+}
+.titlebar-dot {
+  color: #ddd;
+}
+#titlebar .winbutton:active {
+  background-color: #f00;
+}
+#titlebar .winbutton:active.gray {
+  background-color: #ddd;
+}
+#titlebar .winbutton.gray {
+  color: #888;
+}
+#titlebar .winbutton svg {
+  stroke-width: 1px;
+  stroke: #888;
+}
+#titlebar .winbutton.gray:active {
+  color: #000;
+}
+#titlebar .winbutton:active svg {
+  stroke: #000;
+}
+#titlebar .winbutton.gray:hover {
+  color: #000;
+}
+#titlebar .winbutton:hover svg {
+  stroke: #000;
+}
+.menuItem {
+  color: #888;
+  background-color: #eee;
+}
+.menuItem.selected {
+  color: textActiveColor;
+}
+.menu:focus .menuItem.selected {
+  color: #000;
+}
+.popup {
+  background-color: #eee;
+}
+.popupWindow {
+  background-color: #eee;
+}
+.popupItem {
+  color: #888;
+}
+.popupItem:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+.popupItem.selected {
+  color: #000;
+}
+.popupItem.selected .popupCombo {
+  color: #888;
+}
+.popupItem.separator {
+  border-top: 1px solid #ddd;
+}
+.popupItem:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+.popupCombo {
+  color: #ddd;
+}
+::-webkit-scrollbar-corner {
+  background-color: #eee;
+}
+::-webkit-scrollbar-thumb {
+  background-color: scrollColor;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: scrollHoverColor;
 }

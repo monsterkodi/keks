@@ -84,22 +84,6 @@ body {
   position: absolute;
   right: 6px;
 }
-.git-changed-icon:before {
-  font-family: FontAwesome;
-  content: '\f040';
-}
-.git-added-icon:before {
-  font-family: FontAwesome;
-  content: '\f067';
-}
-.git-dirs-icon:before {
-  font-family: FontAwesome;
-  content: '\f044';
-}
-.history-icon:before {
-  font-family: FontAwesome;
-  content: '\f141';
-}
 .file-icon:before {
   font-family: octicons;
   content: '\f011';

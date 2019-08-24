@@ -6,7 +6,7 @@
 000       000  0000000  00000000        0000000    000   000   0000000   00     00  0000000   00000000  000   000
 ###
 
-{ post, valid, empty, clamp, last, elem, drag, state, klog, slash, fs, os, $, _ } = require 'kxk'
+{ post, valid, empty, clamp, prefs, last, elem, drag, state, klog, slash, fs, os, $, _ } = require 'kxk'
 
 Browser  = require './browser'
 Shelf    = require './shelf'
@@ -44,7 +44,7 @@ class FileBrowser extends Browser
             target:  @shelfResize
             onMove:  @onShelfDrag
 
-        # @shelfSize = window.state.get 'shelf|size', 200
+        @shelfSize = prefs.get 'shelf▸size' 200
 
         @initColumns()
 
@@ -151,7 +151,7 @@ class FileBrowser extends Browser
             @loadDirItems dir, item, dirCache.get(dir), col, opt
             post.emit 'dir', dir
         else
-            # opt.ignoreHidden = not window.state.get "browser|showHidden|#{dir}"
+            opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
 
             dirlist dir, opt, (err, items) =>
 
@@ -357,7 +357,7 @@ class FileBrowser extends Browser
 
     setShelfSize: (@shelfSize) ->
 
-        # window.state.set 'shelf|size', @shelfSize
+        prefs.set 'shelf▸size' @shelfSize
         @shelfResize.style.left = "#{@shelfSize}px"
         @shelf.div.style.width = "#{@shelfSize}px"
         @cols.style.left = "#{@shelfSize}px"

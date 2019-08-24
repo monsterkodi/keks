@@ -318,20 +318,20 @@ class Column
             log 'column.toggleDotFiles' @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
             
-        # if @parent.type == 'dir'            
-            # stateKey = "browser|showHidden|#{@parent.file}"
-            # if window.state.get stateKey
-                # window.state.del stateKey
-            # else
-                # window.state.set stateKey, true
-            # @browser.loadDirItem @parent, @index, ignoreCache:true
+        if @parent.type == 'dir'            
+            stateKey = "browser▸showHidden▸#{@parent.file}"
+            if prefs.get stateKey
+                prefs.del stateKey
+            else
+                prefs.set stateKey, true
+            @browser.loadDirItem @parent, @index, ignoreCache:true
         @
         
     toggleExtensions: =>
 
         stateKey = "browser|hideExtensions"
-        # window.state.set stateKey, not window.state.get stateKey, false
-        # setStyle '.browserRow .ext' 'display' window.state.get(stateKey) and 'none' or 'initial'
+        prefs.set stateKey, not prefs.get stateKey, false
+        setStyle '.browserRow .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
         @
         
     # 000000000  00000000    0000000    0000000  000   000  
