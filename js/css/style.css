@@ -1,6 +1,6 @@
 body {
   font-family: Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial;
-  font-size: 20px;
+  font-size: 18px;
 }
 #main {
   display: flex;
@@ -26,6 +26,7 @@ body {
 .browserColumn {
   overflow: hidden;
   position: relative;
+  line-height: 1.25;
 }
 .browserColumnTable {
   display: table;
@@ -86,11 +87,8 @@ body {
 }
 .crumb {
   text-align: center;
-  position: absolute;
-  top: 4px;
-  left: 10px;
 }
-.file-icon:before {
+.file-iconbefore {
   font-family: octicons;
   content: '\f011';
 }
@@ -101,6 +99,37 @@ body {
 .noon-icon:before {
   font-family: Sans-Serif;
   content: 'ⓞ';
+}
+.dir,
+.crumb {
+  font-weight: bold;
+}
+.dir.text,
+.dir.punct {
+  font-weight: normal;
+}
+#titlebar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30px;
+}
+.titlebar-title {
+  opacity: 0;
+}
+.crumb {
+  position: absolute;
+  top: 6px;
+}
+#crumbs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 30px;
+  display: block;
+  background: frameColor;
 }
 .scrollbar {
   position: absolute;

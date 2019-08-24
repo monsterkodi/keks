@@ -371,6 +371,7 @@ class FileBrowser extends Browser
         @shelfResize.style.left = "#{@shelfSize}px"
         @shelf.div.style.width = "#{@shelfSize}px"
         @cols.style.left = "#{@shelfSize}px"
+        @updateColumnScrolls()
 
     toggleShelf: ->
         

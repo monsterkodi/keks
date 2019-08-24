@@ -50,9 +50,9 @@ body {
   color: #ff0;
   background-color: #eee;
 }
+.crumb,
 .dir {
   color: #08f;
-  font-weight: bold;
 }
 .file {
   color: #888;

@@ -28,7 +28,8 @@ class Column
         @div.appendChild @table
         
         @crumb = elem class:'crumb'
-        document.body.appendChild @crumb
+        
+        $('crumbs').appendChild @crumb
         
         @browser.cols?.appendChild @div
         

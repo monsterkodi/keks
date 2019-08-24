@@ -27,11 +27,20 @@ body {
 .browserImage {
   border: 1px solid #222;
 }
+.winbutton {
+  background: #222;
+}
+#crumbs {
+  background: #222;
+}
+#titlebar {
+  background: none;
+}
 #shelf .browserRow.active {
   background: backColor;
 }
 #shelf {
-  background: darkColor;
+  background: #1b1b1b;
 }
 #shelf.focus {
   background: #222;
@@ -40,14 +49,16 @@ body {
   background: #181818;
   border-color: #222;
 }
+.crumb {
+  background: #222;
+}
+.crumb,
 .dir {
   color: #aaf;
-  font-weight: bold;
 }
 .dir.text,
 .dir.punct {
   color: #a84;
-  font-weight: normal;
 }
 .file {
   color: #aaa;
