@@ -1,7 +1,7 @@
 <p align="center"><img src="img/keks.png" width=256 height=256></p>
 <br>
 <br>
-![bright](img/kex-bright.png)
+<p align="center"><img src="img/keksbright.png"></p>
 <br>
 <br>
-![dark](img/kex-dark.png)
+<p align="center"><img src="img/keksdark.png"></p>
