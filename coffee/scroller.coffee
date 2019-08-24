@@ -32,9 +32,9 @@ class Scroller
         @target = @column.div
         
     numRows:   -> @column.numRows()
-    visRows:   -> 1 + parseInt @column.browser.height() / @column.rowHeight()
-    rowHeight: -> @column.rowHeight()
+    visRows:   -> 1 + parseInt @column.browser.height() / @rowHeight()
     height:    -> @column.browser.height()
+    rowHeight: -> @column.rowHeight()
     
     #  0000000  000000000   0000000   00000000   000000000
     # 000          000     000   000  000   000     000

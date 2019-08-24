@@ -15,6 +15,7 @@ class File
         switch slash.ext file
             when 'noon'   then className = 'noon-icon'
             when 'koffee' then className = 'coffee-icon'
+            when 'xcf'    then className = 'image-icon'
             else
                 try
                     fileIcons = require 'file-icons-js'

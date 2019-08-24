@@ -85,7 +85,7 @@ body {
   position: absolute;
   right: 6px;
 }
-.file-iconbefore {
+.file-icon:before {
   font-family: octicons;
   content: '\f011';
 }

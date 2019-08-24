@@ -79,14 +79,15 @@ body {
 .txt {
   color: #0a0;
 }
-.url {
+.bin,
+.com,
+.dat,
+.dll,
+.lib,
+.msg,
+.pak,
+.pdb {
   color: #808;
-}
-.url.domain {
-  color: #f0f;
-}
-.url.tld {
-  color: #a0a;
 }
 .png,
 .gif,
@@ -98,7 +99,8 @@ body {
 }
 .ico,
 .icns,
-.pic {
+.pic,
+.xcf {
   color: #0f0;
 }
 .pug,
@@ -108,10 +110,15 @@ body {
 .js,
 .css,
 .json,
-.html {
+.html,
+.htm,
+.xml,
+.rtf {
   color: #b4a;
 }
-.sh {
+.sh,
+.bat,
+.exe {
   color: #f00;
 }
 .dirname {

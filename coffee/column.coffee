@@ -301,7 +301,7 @@ class Column
     sortByName: ->
          
         @rows.sort (a,b) -> 
-            a.item.name.localeCompare b.item.name
+            (a.item.type + a.item.name).localeCompare(b.item.type + b.item.name)
             
         @table.innerHTML = ''
         for row in @rows
@@ -311,9 +311,9 @@ class Column
     sortByType: ->
         
         @rows.sort (a,b) -> 
-            atype = a.item.type == 'file' and slash.ext(a.item.name) or a.item.type
-            btype = b.item.type == 'file' and slash.ext(b.item.name) or b.item.type
-            (atype + a.item.name).localeCompare btype + b.item.name
+            atype = a.item.type == 'file' and slash.ext(a.item.name) or '___' #a.item.type
+            btype = b.item.type == 'file' and slash.ext(b.item.name) or '___' #b.item.type
+            (a.item.type + atype + a.item.name).localeCompare(b.item.type + btype + b.item.name, undefined, numeric:true)
             
         @table.innerHTML = ''
         for row in @rows

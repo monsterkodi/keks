@@ -116,21 +116,8 @@ class FileBrowser extends Browser
             when 'pxm'
                 if not slash.win()
                     @convertPXM row
-            else 
-                if item.textFile
-                    @loadTextItem item, col
                     
         @updateColumnScrolls()
-
-    # 000000000  00000000  000   000  000000000  000  000000000  00000000  00     00
-    #    000     000        000 000      000     000     000     000       000   000
-    #    000     0000000     00000       000     000     000     0000000   000000000
-    #    000     000        000 000      000     000     000     000       000 0 000
-    #    000     00000000  000   000     000     000     000     00000000  000   000
-
-    loadTextItem: (item, col) ->
-
-        klog 'loadTextItem' item
 
     # 0000000    000  00000000   000  000000000  00000000  00     00
     # 000   000  000  000   000  000     000     000       000   000

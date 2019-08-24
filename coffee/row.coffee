@@ -88,15 +88,7 @@ class Row
         if @column.index < 0 # shelf handles row activation
             @column.activateRow @
             return
-        
-        if event?
-            { mod } = keyinfo.forEvent event
-            switch mod
-                when 'alt' 'command+alt' 'ctrl+alt'
-                    if @item.type == 'file' and @item.textFile
-                        klog 'activate textFile' @item.file
-                        return
-            
+                    
         $('.hover')?.classList.remove 'hover'
         
         @setActive emit:true

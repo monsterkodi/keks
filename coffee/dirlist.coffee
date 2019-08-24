@@ -72,7 +72,6 @@ dirList = (dirPath, opt, cb) ->
                 type: 'file'
                 file: slash.path f
                 name: slash.basename f
-            file.textFile = true if slash.isText f
             files.push file
 
     try

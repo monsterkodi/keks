@@ -145,7 +145,6 @@ class Shelf extends Column
             name: slash.file file
             type: 'file'
             file: slash.path file
-        item.textFile = true if slash.isText file
         @addItem item, opt
         
     addItem:  (item, opt) ->
