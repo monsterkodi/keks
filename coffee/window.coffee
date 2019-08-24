@@ -16,7 +16,6 @@ w = new win
     menu:   '../coffee/menu.noon'
     icon:   '../img/menu@2x.png'
     prefsSeperator: '▸'
-    scheme: false
 
 electron = require 'electron'
 pkg      = require '../package.json'
@@ -39,6 +38,8 @@ winMain = ->
     
     fileBrowser = new FileBrowser $ "#main"
     fileBrowser.loadItem type:'dir' file:slash.resolve '~'
+    
+    # scheme.set prefs.get 'scheme' 'dark'
 
 window.onload = -> klog 'win onload'
 
@@ -58,7 +59,7 @@ onMenuAction = (name, args) ->
         when 'Copy'                  then return window.focusEditor.copy()
         when 'Paste'                 then return window.focusEditor.paste()
         when 'New Window'            then return post.toMain 'newWindowWithFile', editor.currentFile
-        when 'Toggle Scheme'         then return scheme.toggle()
+        # when 'Toggle Scheme'         then return scheme.toggle()
         when 'Increase'              then return changeFontSize +1
         when 'Decrease'              then return changeFontSize -1
         when 'Reset'                 then return resetFontSize()

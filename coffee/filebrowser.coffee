@@ -6,7 +6,7 @@
 000       000  0000000  00000000        0000000    000   000   0000000   00     00  0000000   00000000  000   000
 ###
 
-{ post, valid, empty, clamp, prefs, last, elem, drag, state, klog, slash, fs, os, $, _ } = require 'kxk'
+{ post, open, valid, empty, clamp, prefs, last, elem, drag, state, klog, slash, fs, os, $, _ } = require 'kxk'
 
 Browser  = require './browser'
 Shelf    = require './shelf'
@@ -27,10 +27,10 @@ class FileBrowser extends Browser
 
         @srcCache = {}
 
-        post.on 'fileIndexed' @onFileIndexed
         post.on 'file'        @onFile
         post.on 'filebrowser' @onFileBrowser
         post.on 'dircache'    @onDirCache
+        post.on 'openFile'    @onOpenFile
 
         @shelfResize = elem 'div', class: 'shelfResize'
         @shelfResize.style.position = 'absolute'
@@ -53,13 +53,15 @@ class FileBrowser extends Browser
         switch action
             when 'loadItem'     then @loadItem     item, arg
             when 'activateItem' then @activateItem item, arg
-
+    
     # 000       0000000    0000000   0000000    000  000000000  00000000  00     00
     # 000      000   000  000   000  000   000  000     000     000       000   000
     # 000      000   000  000000000  000   000  000     000     0000000   000000000
     # 000      000   000  000   000  000   000  000     000     000       000 0 000
     # 0000000   0000000   000   000  0000000    000     000     00000000  000   000
 
+    loadDir: (path) -> @loadItem type:'dir' file:path
+    
     loadItem: (item, opt) ->
 
         opt ?= {}
@@ -140,7 +142,7 @@ class FileBrowser extends Browser
             if column.path() == dir
                 @loadDirItem {file:dir, type:'dir'}, column.index, active:column.activePath()
                 return
-
+                
     loadDirItem: (item, col=0, opt={}) ->
 
         return if col > 0 and item.name == '/'
@@ -296,6 +298,10 @@ class FileBrowser extends Browser
 
         @navigateToFile file
 
+    onOpenFile: (file) =>
+        
+        open file
+        
     #  0000000   0000000   000      000   000  00     00  000   000   0000000
     # 000       000   000  000      000   000  000   000  0000  000  000
     # 000       000   000  000      000   000  000000000  000 0 000  0000000
@@ -362,6 +368,14 @@ class FileBrowser extends Browser
         @shelf.div.style.width = "#{@shelfSize}px"
         @cols.style.left = "#{@shelfSize}px"
 
+    toggleShelf: ->
+        
+        if @shelfSize < 1
+            @setShelfSize 200
+        else
+            @lastUsedColumn()?.focus()
+            @setShelfSize 0
+        
     refresh: =>
 
         dirCache.reset()
@@ -369,18 +383,5 @@ class FileBrowser extends Browser
 
         if @lastUsedColumn()
             @navigateToFile @lastUsedColumn()?.path()
-
-    # 000  000   000  0000000    00000000  000   000  00000000  0000000
-    # 000  0000  000  000   000  000        000 000   000       000   000
-    # 000  000 0 000  000   000  0000000     00000    0000000   000   000
-    # 000  000  0000  000   000  000        000 000   000       000   000
-    # 000  000   000  0000000    00000000  000   000  00000000  0000000
-
-    onFileIndexed: (file, info) =>
-
-        @srcCache[file] = info
-
-        if file == @lastUsedColumn()?.parent?.file
-            @loadSourceItem { file:file, type:'file' }, @lastUsedColumn()?.index
 
 module.exports = FileBrowser

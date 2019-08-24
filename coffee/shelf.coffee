@@ -41,7 +41,6 @@ class Shelf extends Column
         row.setActive emit:true
         
         if item.type == 'file'
-            # post.emit 'jumpToFile' item
             klog 'shelf.activeRow file' item
         else
             post.emit 'filebrowser' 'loadItem' item
@@ -186,7 +185,7 @@ class Shelf extends Column
         @div.classList.add 'focus'
         if @browser.shelfSize < 200
             @browser.setShelfSize 200
-        
+            
     # 00     00   0000000   000   000   0000000  00000000  
     # 000   000  000   000  000   000  000       000       
     # 000000000  000   000  000   000  0000000   0000000   
@@ -231,13 +230,6 @@ class Shelf extends Column
         if      key == 'up'   and index > @items.length     then navigate 'Navigate Forward'
         else if key == 'down' and index > @items.length + 1 then navigate 'Navigate Backward'
         else @rows[index].activate()
-    
-    openFileInNewWindow: ->  
-        
-        if item = @activeRow()?.item
-            if item.type == 'file' and item.textFile
-                window.openFiles [item.file], newWindow: true
-        @
     
     removeObject: =>
                 
@@ -286,7 +278,8 @@ class Shelf extends Column
         { mod, key, combo, char } = keyinfo.forEvent event
         
         switch combo
-            when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
+            when 'shift+alt+left''alt+left'   then return @browser.toggleShelf()
+            # when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
             when 'backspace' 'delete' then return stopEvent event, @clearSearch().removeObject()
             when 'command+k' 'ctrl+k' then return stopEvent event if @browser.cleanUp()
             when 'tab'    

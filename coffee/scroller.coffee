@@ -6,7 +6,7 @@
 0000000    0000000  000   000   0000000   0000000  0000000  00000000  000   000
 ###
 
-{ stopEvent, clamp, drag, elem } = require 'kxk'
+{ stopEvent, clamp, drag, elem, klog } = require 'kxk'
 
 class Scroller
 
@@ -95,6 +95,7 @@ class Scroller
 
     update: =>
         
+        klog 'scroller update' @numRows(), @rowHeight(), @height()
         if @numRows() * @rowHeight() < @height()
             
             @elem.style.display   = 'none'

@@ -6,7 +6,7 @@
 000   000   0000000   00     00
 ###
 
-{ elem, keyinfo, drag, clamp, stopEvent, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
+{ elem, keyinfo, drag, clamp, stopEvent, valid, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
 
 electron  = require 'electron'
 File      = require './file'
@@ -22,7 +22,7 @@ class Row
         if empty(text) or empty text.trim()
             html = '<span> </span>'
         else
-            html = "<span>"+text+"</span>"
+            html = @fileSpan text
         @div = elem class: 'browserRow' html: html
         @div.classList.add @item.type
         @column.table.appendChild @div
@@ -36,6 +36,21 @@ class Row
             onMove:  @onDragMove
             onStop:  @onDragStop
    
+    #  0000000  00000000    0000000   000   000  
+    # 000       000   000  000   000  0000  000  
+    # 0000000   00000000   000000000  000 0 000  
+    #      000  000        000   000  000  0000  
+    # 0000000   000        000   000  000   000  
+    
+    fileSpan: (text) ->
+        base = slash.base text
+        ext  = slash.ext text
+        clss = valid(ext) and ' '+ext or ''
+        span = "<span class='text#{clss}'>"+base+"</span>"
+        if valid ext
+            span += "<span class='ext punct#{clss}'>.</span>" + "<span class='ext text#{clss}'>"+ext+"</span>"
+        span
+            
     next:        -> @index() < @column.numRows()-1 and @column.rows[@index()+1] or null
     prev:        -> @index() > 0 and @column.rows[@index()-1] or null
     index:       -> @column.rows.indexOf @    
@@ -79,7 +94,6 @@ class Row
             switch mod
                 when 'alt' 'command+alt' 'ctrl+alt'
                     if @item.type == 'file' and @item.textFile
-                        # post.toMain 'newWindowWithFile' @item.file
                         klog 'activate textFile' @item.file
                         return
             
@@ -91,22 +105,15 @@ class Row
                 
         switch @item.type
             
-            when 'dir' 
+            when 'dir' 'file'
                 
-                post.emit 'filebrowser' 'activateItem' @item, @column.index
-                
-            when 'file'
-                
-                klog 'activate file' @item
-                
-                # if slash.ext(@item.file) in ['png']
                 post.emit 'filebrowser' 'activateItem' @item, @column.index
                 
             else    
                 if @item.file? and _.isString(@item.file) and @item.type != 'obj'
                     opt.line = @item.line
                     opt.col  = @item.column
-                    # post.emit 'jumpToFile' opt
+                    klog 'jumpToFile?' opt
                 else if @column.parent.obj? and @column.parent.type == 'obj'
                     if @item.type == 'obj'
                         @browser.loadObjectItem @item, column:@column.index+1
@@ -114,10 +121,10 @@ class Row
                         if @item.obj?.file? and _.isString @item.obj.file
                             opt.line = @item.obj.line
                             opt.col  = @item.obj.column
-                            # post.emit 'jumpToFile' opt
+                            klog 'jumpToFile?' opt
                 else if @item.obj?.file? and _.isString @item.obj.file
                     opt = file:@item.obj.file, line:@item.obj.line, col:@item.obj.column, newTab:opt.newTab
-                    # post.emit 'jumpToFile' opt
+                    klog 'jumpToFile?' opt
                 else
                     @browser.clearColumnsFrom @column.index+1
         @

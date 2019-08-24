@@ -6,7 +6,7 @@
  0000000   0000000   0000000   0000000   000   000  000   000
 ###
 
-{ post, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, state, open, elem, kpos, fs, kerror, $, _ } = require 'kxk'
+{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, state, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './scroller'
@@ -156,11 +156,7 @@ class Column
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
     onClick:     (event) => @row(event.target)?.activate event
-    onDblClick:  (event) => 
-        @navigateCols 'enter'
-        if item = @activeRow()?.item
-            if item.file and item.type == 'file' # jump to top of file on double click
-                post.emit 'singleCursorAtPos' [0, 0]
+    onDblClick:  (event) => @navigateCols 'enter'
 
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
@@ -200,8 +196,7 @@ class Column
                     if type == 'dir'
                         post.emit 'filebrowser' 'loadItem' item, focus:true
                     else if item.file
-                        post.emit 'jumpTo' item
-                        post.emit 'focus' 'editor'
+                        post.emit 'openFile' item.file
         @
 
     navigateRoot: (key) -> # move to file browser?
@@ -216,13 +211,6 @@ class Column
             when '/'     then '/'
         @
             
-    openFileInNewWindow: ->  
-        
-        if item = @activeRow()?.item
-            if item.type == 'file' and item.textFile and item.file
-                post.emit 'openFiles' [item.file], newWindow: true
-        @
-
     #  0000000  00000000   0000000   00000000    0000000  000   000    
     # 000       000       000   000  000   000  000       000   000    
     # 0000000   0000000   000000000  0000000    000       000000000    
@@ -329,7 +317,7 @@ class Column
         
     toggleExtensions: =>
 
-        stateKey = "browser|hideExtensions"
+        stateKey = "browser▸hideExtensions"
         prefs.set stateKey, not prefs.get stateKey, false
         setStyle '.browserRow .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
         @
@@ -437,17 +425,22 @@ class Column
         
         { mod, key, combo, char } = keyinfo.forEvent event
 
+        klog 'column.onKey' combo
+        
         switch combo
+            when 'shift+`'             then return stopEvent event, @browser.loadDir slash.resolve '~'
+            when '/'                   then return stopEvent event, @browser.loadDir '/'
             when 'alt+e'               then return @explorer()
             when 'alt+o'               then return @open()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'enter'               then return stopEvent event, @navigateCols key
-            when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
+            # when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
             when 'command+left' 'command+up' 'command+right' 'command+down' 'ctrl+left' 'ctrl+up' 'ctrl+right' 'ctrl+down'
                 return stopEvent event, @navigateRoot key
             when 'command+backspace' 'ctrl+backspace' 'command+delete' 'ctrl+delete' 
                 return stopEvent event, @moveToTrash()
-            when 'alt+left'            then return stopEvent event, window.split.focus 'shelf'
+            when 'alt+left'            then return stopEvent event, $('shelf')?.focus?()
+            when 'alt+shift+left'      then return stopEvent event, @browser.toggleShelf()
             when 'backspace' 'delete'  then return stopEvent event, @browser.onBackspaceInColumn @
             when 'ctrl+t'              then return stopEvent event, @sortByType()
             when 'ctrl+n'              then return stopEvent event, @sortByName()
@@ -461,7 +454,6 @@ class Column
                 return stopEvent event
             when 'esc'
                 if @search.length then @clearSearch()
-                else window.split.focus 'commandline-editor'
                 return stopEvent event
 
         if key in ['up'   'down']  then return stopEvent event, @navigateRows key              

@@ -10,7 +10,7 @@
 
 #   directory list
 #
-#   callbacks with a list of objects for files and directories in dirPath
+#   calls back with a list of objects for files and directories in dirPath
 #       [
 #           type: file|dir
 #           name: basename
