@@ -1,6 +1,6 @@
 name            keks
 productName     keks
-version         0.7.0
+version         0.8.0
 description     file browser
 main            js/main.js
 bin
@@ -23,7 +23,6 @@ maintainers
 bugs
                 url  https://github.com/monsterkodi/keks/issues
 dependencies
-                file-icons-js   ^1.0.3
                 fuzzy           ^0.1.3
                 ignore          ^5.1.4
                 klor            ^1.4.0

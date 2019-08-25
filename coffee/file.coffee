@@ -6,7 +6,9 @@
 000       000  0000000  00000000
 ###
 
-{ slash, valid } = require 'kxk'
+{ slash, valid, klog } = require 'kxk'
+
+icons = require './icons.json'
 
 class File
     
@@ -18,17 +20,19 @@ class File
     
     @iconClassName: (file) ->
         
-        switch slash.ext file
-            when 'noon'   then className = 'noon-icon'
-            when 'koffee' then className = 'coffee-icon'
-            when 'xcf'    then className = 'gimp-icon'
+        ext = slash.ext file
+        switch ext
+            when 'noon'   then className = 'icon noon'
+            when 'koffee' then className = 'icon coffee'
+            when 'xcf'    then className = 'icon gimp'
             else
-                try
-                    fileIcons = require 'file-icons-js'
-                    className = fileIcons.getClass file
-                catch err
-                    true
-        className ?= 'file-icon'
+                if clss = icons.ext[ext]
+                    className = 'icon ' + clss
+                    
+        if not className
+            if clss = icons.base[slash.base(file).toLowerCase()]
+                className = 'icon ' + clss
+        className ?= 'icon file'
         className
             
     #  0000000  00000000    0000000   000   000  
@@ -42,7 +46,11 @@ class File
         base = slash.base text
         ext  = slash.ext(text).toLowerCase()
         clss = valid(ext) and ' '+ext or ''
+        
+        if base.startsWith '.' then clss += ' dotfile'
+        
         span = "<span class='text#{clss}'>"+base+"</span>"
+        
         if valid ext
             span += "<span class='ext punct#{clss}'>.</span>" + "<span class='ext text#{clss}'>"+ext+"</span>"
         span

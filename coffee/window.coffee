@@ -41,6 +41,45 @@ winMain = ->
 
 window.onload = -> klog 'win onload'
 
+# 00000000    0000000   00000000   000   000  00000000
+# 000   000  000   000  000   000  000   000  000   000
+# 00000000   000   000  00000000   000   000  00000000
+# 000        000   000  000        000   000  000
+# 000         0000000   000         0000000   000
+
+showContextMenu = (absPos) =>
+
+    if not absPos?
+        absPos = kpos @view.getBoundingClientRect().left, @view.getBoundingClientRect().top
+
+    opt = items: [
+        text:   'Browse'
+        combo:  'command+.'
+        accel:  'ctrl+.'
+        cb:     -> window.commandline.startCommand 'browse'
+    ,
+        text:   'Back'
+        combo:  'command+1'
+        cb:     -> post.emit 'menuAction', 'Navigate Backward'
+    ,
+        text:   ''
+    ,
+        text:   'Maximize'
+        combo:  'command+shift+y'
+        accel:  'ctrl+shift+y'
+        cb:     -> window.split.maximizeEditor()
+    ,
+        text:   ''
+    ]
+
+    opt.items = opt.items.concat window.titlebar.menuTemplate()
+
+    opt.x = absPos.x
+    opt.y = absPos.y
+    popup.menu opt
+
+document.body.addEventListener 'contextmenu' (event) => stopEvent event, showContextMenu kpos event
+    
 # 00     00  00000000  000   000  000   000      0000000    0000000  000000000  000   0000000   000   000
 # 000   000  000       0000  000  000   000     000   000  000          000     000  000   000  0000  000
 # 000000000  0000000   000 0 000  000   000     000000000  000          000     000  000   000  000 0 000

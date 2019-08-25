@@ -116,9 +116,13 @@ class FileBrowser extends Browser
             when 'tiff' 'tif'
                 if not slash.win()
                     @convertImage row
+                else
+                    @columns[col].table.appendChild @fileInfo file
             when 'pxm'
                 if not slash.win()
                     @convertPXM row
+                else
+                    @columns[col].table.appendChild @fileInfo file
             else
                 @columns[col].table.appendChild @fileInfo file
                     

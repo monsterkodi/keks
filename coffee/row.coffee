@@ -57,6 +57,9 @@ class Row
                 className = 'folder-icon'
             else
                 className = File.iconClassName @item.file
+                
+        if slash.base(@item.file).startsWith('.')
+            className += ' dotfile'
             
         icon = elem('span' class:className + ' browserFileIcon')
             

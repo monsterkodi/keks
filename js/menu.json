@@ -1,0 +1,27 @@
+{
+  "keks": {
+    "About": "alt+cmdctrl+/",
+    "-": null,
+    "Quit": "cmdctrl+q"
+  },
+  "Edit": {
+    "Cut": "cmdctrl+x",
+    "Copy": "cmdctrl+c",
+    "Paste": "cmdctrl+v",
+    "-": null,
+    "Screenshot": "f3"
+  },
+  "Window": {
+    "Close": "cmdctrl+w",
+    "-": null,
+    "Toggle Menu": "alt+m",
+    "Toggle Scheme": "alt+i ctrl+i",
+    "--": null,
+    "Minimize": "alt+ctrl+shift+m",
+    "Maximize": "alt+ctrl+m",
+    "Hide": "command+h h",
+    "---": null,
+    "Reload": "alt+cmdctrl+l",
+    "DevTools": "alt+cmdctrl+i"
+  }
+}
