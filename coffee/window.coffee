@@ -6,7 +6,7 @@
 00     00  000  000   000  0000000     0000000   00     00
 ###
 
-{ post, args, slash, stopEvent, scheme, klog, win, $, _ } = require 'kxk'
+{ post, args, slash, prefs, stopEvent, setStyle, scheme, popup, klog, kpos, win, $, _ } = require 'kxk'
 
 FileBrowser = require './filebrowser'
   
@@ -16,7 +16,9 @@ w = new win
     menu:   '../coffee/menu.noon'
     icon:   '../img/menu@2x.png'
     prefsSeperator: '▸'
-
+    context: false
+    dragElem: $ '#crumbs'
+    
 electron = require 'electron'
 pkg      = require '../package.json'
 
@@ -25,6 +27,7 @@ dialog   = remote.dialog
 Browser  = remote.BrowserWindow
 win      = window.win   = remote.getCurrentWindow()
 winID    = window.winID = win.id
+fileBrowser = null
 
 # 000   000  000  000   000  00     00   0000000   000  000   000
 # 000 0 000  000  0000  000  000   000  000   000  000  0000  000
@@ -32,7 +35,7 @@ winID    = window.winID = win.id
 # 000   000  000  000  0000  000 0 000  000   000  000  000  0000
 # 00     00  000  000   000  000   000  000   000  000  000   000
 
-winMain = -> 
+winMain = ->
 
     fileBrowser = new FileBrowser $ "#main"
     fileBrowser.loadItem type:'dir' file:slash.resolve '~'
@@ -47,39 +50,14 @@ window.onload = -> klog 'win onload'
 # 000        000   000  000        000   000  000
 # 000         0000000   000         0000000   000
 
-showContextMenu = (absPos) =>
-
-    if not absPos?
-        absPos = kpos @view.getBoundingClientRect().left, @view.getBoundingClientRect().top
-
-    opt = items: [
-        text:   'Browse'
-        combo:  'command+.'
-        accel:  'ctrl+.'
-        cb:     -> window.commandline.startCommand 'browse'
-    ,
-        text:   'Back'
-        combo:  'command+1'
-        cb:     -> post.emit 'menuAction', 'Navigate Backward'
-    ,
-        text:   ''
-    ,
-        text:   'Maximize'
-        combo:  'command+shift+y'
-        accel:  'ctrl+shift+y'
-        cb:     -> window.split.maximizeEditor()
-    ,
-        text:   ''
-    ]
-
-    opt.items = opt.items.concat window.titlebar.menuTemplate()
-
-    opt.x = absPos.x
-    opt.y = absPos.y
-    popup.menu opt
-
-document.body.addEventListener 'contextmenu' (event) => stopEvent event, showContextMenu kpos event
+onContextMenu = (event) -> 
     
+    return if not event.target.classList.contains 'crumb'
+    
+    fileBrowser.columns[event.target.columnIndex].onContextMenu event, true
+    
+$("#crumbs").addEventListener 'contextmenu' onContextMenu
+
 # 00     00  00000000  000   000  000   000      0000000    0000000  000000000  000   0000000   000   000
 # 000   000  000       0000  000  000   000     000   000  000          000     000  000   000  0000  000
 # 000000000  0000000   000 0 000  000   000     000000000  000          000     000  000   000  000 0 000
@@ -88,14 +66,11 @@ document.body.addEventListener 'contextmenu' (event) => stopEvent event, showCon
 
 onMenuAction = (name, args) ->
 
+    klog 'menuAction' name
+    
     switch name
 
-        when 'Undo'                  then return window.focusEditor.do.undo()
-        when 'Redo'                  then return window.focusEditor.do.redo()
-        when 'Cut'                   then return window.focusEditor.cut()
-        when 'Copy'                  then return window.focusEditor.copy()
-        when 'Paste'                 then return window.focusEditor.paste()
-        when 'New Window'            then return post.toMain 'newWindowWithFile', editor.currentFile
+        when 'Toggle Extensions'     then return toggleExtensions()
         when 'Increase'              then return changeFontSize +1
         when 'Decrease'              then return changeFontSize -1
         when 'Reset'                 then return resetFontSize()
@@ -105,6 +80,13 @@ onMenuAction = (name, args) ->
     post.toMain 'menuAction', name, args
 
 post.on 'menuAction' onMenuAction
+
+toggleExtensions = ->
+
+    stateKey = "browser▸hideExtensions"
+    prefs.set stateKey, not prefs.get stateKey, false
+    setStyle '.browserRow .ext'   'display' prefs.get(stateKey) and 'none' or 'initial'
+    setStyle '.fileInfoFile .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
 
 # 000   000  00000000  000   000
 # 000  000   000        000 000

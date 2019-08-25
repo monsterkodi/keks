@@ -670,6 +670,7 @@ ext
     ttl                   database
     twig                  twig
     txl                   txl
+    txt                   text
     u3d                   model
     uc                    unreal
     udf                   sql

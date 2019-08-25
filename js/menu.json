@@ -2,14 +2,9 @@
   "keks": {
     "About": "alt+cmdctrl+/",
     "-": null,
+    "Toggle Extensions": "ctrl+e",
+    "--": null,
     "Quit": "cmdctrl+q"
-  },
-  "Edit": {
-    "Cut": "cmdctrl+x",
-    "Copy": "cmdctrl+c",
-    "Paste": "cmdctrl+v",
-    "-": null,
-    "Screenshot": "f3"
   },
   "Window": {
     "Close": "cmdctrl+w",
@@ -21,6 +16,7 @@
     "Maximize": "alt+ctrl+m",
     "Hide": "command+h h",
     "---": null,
+    "Screenshot": "f3",
     "Reload": "alt+cmdctrl+l",
     "DevTools": "alt+cmdctrl+i"
   }

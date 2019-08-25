@@ -7,21 +7,10 @@
 
 keks
     About                   alt+cmdctrl+/
-    -
+    - 
+    Toggle Extensions       ctrl+e
+    --
     Quit                    cmdctrl+q
-
-# 00000000  0000000    000  000000000  
-# 000       000   000  000     000     
-# 0000000   000   000  000     000     
-# 000       000   000  000     000     
-# 00000000  0000000    000     000     
-
-Edit
-    Cut                     cmdctrl+x
-    Copy                    cmdctrl+c
-    Paste                   cmdctrl+v
-    -
-    Screenshot              f3
 
 # 000   000  000  000   000  0000000     0000000   000   000
 # 000 0 000  000  0000  000  000   000  000   000  000 0 000
@@ -39,6 +28,7 @@ Window
     Maximize                alt+ctrl+m
     Hide                    command+h h
     ---
+    Screenshot              f3
     Reload                  alt+cmdctrl+l
     DevTools                alt+cmdctrl+i
     

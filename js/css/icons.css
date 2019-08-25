@@ -31,7 +31,7 @@
 .icon:before {
   -webkit-font-smoothing: antialiased;
   display: inline-block;
-  text-align: center;
+  text-align: right;
 }
 .icon.binary:before {
   font-family: octicons;
@@ -123,7 +123,7 @@
 }
 .icon.file:before {
   font-family: FontAwesome;
-  content: "\f15b";
+  content: "\f016";
 }
 .icon.android:before {
   font-family: FontAwesome;

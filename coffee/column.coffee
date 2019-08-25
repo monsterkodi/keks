@@ -17,18 +17,20 @@ class Column
     
     constructor: (@browser) ->
         
-        @index = @browser.columns?.length
         @searchTimer = null
         @search = ''
         @items  = []
         @rows   = []
         
-        @div   = elem class: 'browserColumn' tabIndex: 6, id: @name()
+        @div   = elem class: 'browserColumn' tabIndex:6
         @table = elem class: 'browserColumnTable'
         @div.appendChild @table
         
         @crumb = elem class:'crumb'
+        @crumb.columnIndex = @index
         
+        @setIndex @browser.columns?.length
+                
         $('crumbs').appendChild @crumb
         
         @browser.cols?.appendChild @div
@@ -43,9 +45,13 @@ class Column
         @div.addEventListener 'mouseup'   @onClick
         @div.addEventListener 'dblclick'  @onDblClick
         
-        @div.addEventListener "contextmenu", @onContextMenu
+        @div.addEventListener 'contextmenu' @onContextMenu
         
         @scroll = new Scroller @
+        
+    setIndex: (@index) ->
+        
+        @crumb.columnIndex = @index
         
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
@@ -340,14 +346,7 @@ class Column
                 prefs.set stateKey, true
             @browser.loadDirItem @parent, @index, ignoreCache:true
         @
-        
-    toggleExtensions: =>
-
-        stateKey = "browser▸hideExtensions"
-        prefs.set stateKey, not prefs.get stateKey, false
-        setStyle '.browserRow .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
-        @
-        
+                
     # 000000000  00000000    0000000    0000000  000   000  
     #    000     000   000  000   000  000       000   000  
     #    000     0000000    000000000  0000000   000000000  
@@ -389,14 +388,40 @@ class Column
     open: =>
         
         open @activePath()
-                            
+                  
     # 00000000    0000000   00000000   000   000  00000000     
     # 000   000  000   000  000   000  000   000  000   000    
     # 00000000   000   000  00000000   000   000  00000000     
     # 000        000   000  000        000   000  000          
     # 000         0000000   000         0000000   000          
         
-    onContextMenu: (event) => stopEvent event, @showContextMenu kpos event
+    onContextMenu: (event, column) => 
+        
+        stopEvent event
+        
+        absPos = kpos event
+        
+        if not column
+            @showContextMenu absPos
+        else
+            
+            opt = items: [ 
+                text:   'Root'
+                # combo:  'enter'
+                cb:     => @browser.shiftColumnsTo @index
+            ,
+                text:   'Add to Shelf'
+                combo:  'alt+shift+.'
+                cb:     => post.emit 'addToShelf' @parent.file
+            ,
+                text:   'Explorer'
+                combo:  'alt+e' 
+                cb:     => open @parent.file
+            ]
+            
+            opt.x = absPos.x
+            opt.y = absPos.y
+            popup.menu opt    
               
     showContextMenu: (absPos) =>
         
@@ -410,7 +435,6 @@ class Column
         ,
             text:   'Toggle Extensions'
             combo:  'ctrl+e' 
-            cb:     @toggleExtensions
         ,
             text:   'Refresh'
             combo:  'ctrl+r' 
@@ -436,6 +460,8 @@ class Column
             combo:  'alt+o' 
             cb:     @open
         ]
+        
+        opt.items = opt.items.concat window.titlebar.makeTemplate require './menu.json'
         
         opt.x = absPos.x
         opt.y = absPos.y
@@ -469,7 +495,6 @@ class Column
             when 'ctrl+n'              then return stopEvent event, @sortByName()
             when 'command+i' 'ctrl+i'  then return stopEvent event, @toggleDotFiles()
             when 'command+d' 'ctrl+d'  then return stopEvent event, @duplicateFile()
-            when 'command+e' 'ctrl+e'  then return stopEvent event, @toggleExtensions()
             when 'command+k' 'ctrl+k'  then return stopEvent event if @browser.cleanUp()
             when 'f2'                  then return stopEvent event, @activeRow()?.editName()
             when 'tab'    

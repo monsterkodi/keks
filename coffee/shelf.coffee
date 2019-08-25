@@ -255,7 +255,6 @@ class Shelf extends Column
         opt = items: [ 
             text:   'Toggle Extensions'
             combo:  'ctrl+e' 
-            cb:     @toggleExtensions
         ,
             text:   'Remove'
             combo:  'backspace' 

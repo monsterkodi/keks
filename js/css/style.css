@@ -135,9 +135,11 @@ body {
   right: 0;
   top: 0;
   height: 30px;
+  pointer-events: none;
 }
 .titlebar-title {
   opacity: 0;
+  pointer-events: none;
 }
 .crumb {
   font-size: 14px;

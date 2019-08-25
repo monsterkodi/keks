@@ -87,7 +87,7 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
-        @clearColumnsFrom col+2, pop:true
+        @clearColumnsFrom col+1, pop:true
 
         switch item.type
             when 'dir'  then @loadDirItem  item, col+1

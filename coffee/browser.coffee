@@ -6,7 +6,7 @@
 0000000    000   000   0000000   00     00  0000000   00000000  000   000  
 ###
 
-{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, kerror, _ } = require 'kxk'
+{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, klog, kerror, _ } = require 'kxk'
 
 Column = require './column'
 flex   = require './flex/flex'
@@ -141,11 +141,11 @@ class Browser extends event
             if col.hasFocus() then return col.index
         0
         
-    activeColumnID: ->
-        
-        for col in @columns
-            if col.hasFocus() then return col.div.id
-        'column0'
+    # activeColumnID: ->
+#         
+        # for col in @columns
+            # if col.hasFocus() then return col.div.id
+        # 'column0'
 
     lastUsedColumn: ->
         
@@ -162,7 +162,7 @@ class Browser extends event
     numCols: -> @columns.length 
     column: (i) -> @columns[i] if 0 <= i < @numCols()
 
-    columnWithName: (name) -> @columns.find (c) -> c.name() == name
+    # columnWithName: (name) -> @columns.find (c) -> c.name() == name
 
     onBackspaceInColumn: (column) -> column.clearSearch().removeObject()    
     
@@ -187,7 +187,23 @@ class Browser extends event
     # 000        000   000  000        
     # 000         0000000   000        
     
-    clearColumn: (index) -> @columns[index].clear()
+    clearColumn: (index) -> 
+    
+        if index < @columns.length
+            @columns[index].clear()
+        else
+            klog 'clearColumn' index, @columns.length
+    
+    shiftColumn: ->
+        
+        return if not @flex
+        return if not @columns.length
+        @clearColumn 0
+        @flex.shiftPane()
+        @columns.shift()
+        
+        for i in [0...@columns.length]
+            @columns[i].setIndex i
     
     popColumn: (opt) ->
         
@@ -202,6 +218,13 @@ class Browser extends event
         
         while @numCols() > col 
             @popColumn()
+            
+    shiftColumnsTo: (col) ->
+        
+        for i in [0...col]
+            @shiftColumn()
+            
+        @updateColumnScrolls()
         
     #  0000000  000      00000000   0000000   00000000   
     # 000       000      000       000   000  000   000  
