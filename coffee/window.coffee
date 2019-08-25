@@ -42,8 +42,6 @@ winMain = ->
     
     win.on 'resize' -> fileBrowser.resized()
 
-window.onload = -> klog 'win onload'
-
 # 00000000    0000000   00000000   000   000  00000000
 # 000   000  000   000  000   000  000   000  000   000
 # 00000000   000   000  00000000   000   000  00000000
@@ -51,6 +49,8 @@ window.onload = -> klog 'win onload'
 # 000         0000000   000         0000000   000
 
 onContextMenu = (event) -> 
+    
+    klog 'maincon'
     
     return if not event.target.classList.contains 'crumb'
     
@@ -70,14 +70,14 @@ onMenuAction = (name, args) ->
     
     switch name
 
-        when 'Toggle Extensions'     then return toggleExtensions()
-        when 'Increase'              then return changeFontSize +1
-        when 'Decrease'              then return changeFontSize -1
-        when 'Reset'                 then return resetFontSize()
-        when 'Add to Shelf'          then return addToShelf()
-        when 'Reload Window'         then return reloadWin()
+        when 'Toggle Extensions' then return toggleExtensions()
+        when 'Increase'          then return changeFontSize +1
+        when 'Decrease'          then return changeFontSize -1
+        when 'Reset'             then return resetFontSize()
+        when 'Add to Shelf'      then return addToShelf()
+        when 'Reload Window'     then return reloadWin()
 
-    post.toMain 'menuAction', name, args
+    post.toMain 'menuAction' name, args
 
 post.on 'menuAction' onMenuAction
 

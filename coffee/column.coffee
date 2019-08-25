@@ -28,6 +28,7 @@ class Column
         
         @crumb = elem class:'crumb'
         @crumb.columnIndex = @index
+        @crumb.addEventListener 'dblclick'  @onCrumbDblClick
         
         @setIndex @browser.columns?.length
                 
@@ -395,6 +396,10 @@ class Column
     # 000        000   000  000        000   000  000          
     # 000         0000000   000         0000000   000          
         
+    onCrumbDblClick: (event) => 
+    
+        @browser.shiftColumnsTo @index
+    
     onContextMenu: (event, column) => 
         
         stopEvent event
@@ -407,7 +412,6 @@ class Column
             
             opt = items: [ 
                 text:   'Root'
-                # combo:  'enter'
                 cb:     => @browser.shiftColumnsTo @index
             ,
                 text:   'Add to Shelf'
@@ -432,9 +436,6 @@ class Column
             text:   'Toggle Invisible'
             combo:  'ctrl+i' 
             cb:     @toggleDotFiles
-        ,
-            text:   'Toggle Extensions'
-            combo:  'ctrl+e' 
         ,
             text:   'Refresh'
             combo:  'ctrl+r' 

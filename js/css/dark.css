@@ -1,49 +1,54 @@
 body {
-  background: #181818;
+  background: #000;
+}
+#main {
+  border-left-color: #111;
+  border-right-color: #111;
+  border-bottom-color: #111;
 }
 .split-handle {
-  background: #222;
+  background: #111;
 }
 .browser {
-  background: backColor;
+  background: #000;
   color: #fff;
 }
 .browserRow.hover {
   background: #111;
 }
 .browserRow.active {
-  background: #222;
+  background: #111;
 }
 .browserRow.active.dir {
   color: #ff8;
 }
 .rowNameInput {
   color: #ff0;
-  background-color: #222;
+  background-color: #111;
 }
 .browserColumn.focus .browserRow.active {
   background: #22a;
 }
 .browserImage {
-  border: 1px solid #222;
+  border: 1px solid #111;
 }
 .winbutton {
-  background: #222;
+  background: #111;
 }
 #crumbs {
-  background: #222;
+  background: #111;
 }
 #titlebar {
   background: none;
 }
 #shelf .browserRow.active {
-  background: backColor;
+  background: #000;
 }
 #shelf {
-  background: #1b1b1b;
+  background: #040404;
 }
 #shelf.focus {
-  background: #222;
+  background: #111;
 }
 .fileInfoData {
   margin-top: 20px;
@@ -51,10 +56,10 @@ body {
 }
 #browser {
   background: #181818;
-  border-color: #222;
+  border-color: #111;
 }
 .crumb {
-  background: #222;
+  background: #111;
 }
 .crumb,
 .dir {

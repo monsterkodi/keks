@@ -5,12 +5,18 @@
 // 000   000  000   000  000   000  000  000   
 // 0000000    000   000  000   000  000   000  
 
-bgColor    = #181818
-frameColor = #222
-darkColor  = #1b1b1b
+frameColor = #111111
+backColor  = #000000
+darkColor  = #040404
+shelfColor = #111111
 
 body
-    background  bgColor
+    background          backColor
+
+#main
+    border-left-color   frameColor
+    border-right-color  frameColor
+    border-bottom-color frameColor
     
 .split-handle
     background          frameColor
@@ -61,7 +67,7 @@ body
     background          darkColor
     
 #shelf.focus
-    background          frameColor
+    background          shelfColor
     
 .fileInfoData
     margin-top          20px
