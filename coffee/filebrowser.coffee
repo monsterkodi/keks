@@ -148,11 +148,15 @@ class FileBrowser extends Browser
             num = moment().diff t, 'seconds'
             range = 'seconds'
         
-        elem class:'browserFileInfo' children: [
+        info = elem class:'browserFileInfo' children: [
             elem 'div' class:"fileInfoIcon #{slash.ext file} #{File.iconClassName file}"
             elem 'div' class:"fileInfoFile #{slash.ext file}" html:File.span file
             elem 'table' class:"fileInfoData" html:"<tr><th>#{size[0]}</th><td>#{size[1]}</td></tr><tr><th>#{num}</th><td>#{range}</td></tr>"
         ]
+        
+        info.addEventListener 'dblclick' -> open file
+        
+        info
         
     # 0000000    000  00000000   000  000000000  00000000  00     00
     # 000   000  000  000   000  000     000     000       000   000

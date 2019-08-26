@@ -28,7 +28,7 @@ class Column
         
         @crumb = elem class:'crumb'
         @crumb.columnIndex = @index
-        @crumb.addEventListener 'dblclick'  @onCrumbDblClick
+        @crumb.addEventListener 'dblclick' @makeRoot
         
         @setIndex @browser.columns?.length
                 
@@ -82,6 +82,13 @@ class Column
         
             @scroll.update()
         @
+        
+    unshiftItem: (item) ->
+        
+        @items.unshift item
+        @rows.unshift new Row @, item
+        @table.insertBefore @table.lastChild, @table.firstChild
+        @scroll.update()
 
     setItems: (@items, opt) ->
         
@@ -396,9 +403,15 @@ class Column
     # 000        000   000  000        000   000  000          
     # 000         0000000   000         0000000   000          
         
-    onCrumbDblClick: (event) => 
-    
+    makeRoot: => 
+        
         @browser.shiftColumnsTo @index
+        
+        if @browser.columns[0].items[0].name != '..'
+            @unshiftItem 
+                name: '..'
+                type: 'dir'
+                file: slash.dir @parent.file
     
     onContextMenu: (event, column) => 
         
@@ -412,7 +425,7 @@ class Column
             
             opt = items: [ 
                 text:   'Root'
-                cb:     => @browser.shiftColumnsTo @index
+                cb:     @makeRoot
             ,
                 text:   'Add to Shelf'
                 combo:  'alt+shift+.'
