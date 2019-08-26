@@ -74,7 +74,7 @@ getFontSize = -> prefs.get 'fontSize' defaultFontSize
 setFontSize = (s) ->
         
     s = getFontSize() if not _.isFinite s
-    s = clamp 8 60 s
+    s = clamp 8 44 s
 
     prefs.set 'fontSize' s
 

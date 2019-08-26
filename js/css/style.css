@@ -77,6 +77,8 @@ body {
 }
 .fileInfoData {
   margin: auto;
+  font-size: 16px;
+  line-height: 1.1;
 }
 .fileInfoData th {
   text-align: right;
@@ -141,7 +143,8 @@ body {
   pointer-events: none;
 }
 .crumb {
-  font-size: 14px;
+  font-size: 15px;
+  padding-top: 1px;
   line-height: 30px;
   position: absolute;
   text-align: center;

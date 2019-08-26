@@ -81,7 +81,10 @@ class Column
         @items  = items
         @parent = parent
         
-        @crumb.innerHTML = slash.base @parent.file
+        if @index == 0
+            @crumb.innerHTML = slash.tilde @parent.file
+        else
+            @crumb.innerHTML = slash.base @parent.file
         
         if @parent.type == undefined
             log 'column.loadItems' String @parent
@@ -206,8 +209,11 @@ class Column
     
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
-    onClick:     (event) => @row(event.target)?.activate event
-    onDblClick:  (event) => @navigateCols 'enter'
+    onClick:     (event) => klog 'click'; @row(event.target)?.activate event
+    onDblClick:  (event) => 
+        klog 'dblck' 
+        @browser.skipOnDblClick = true
+        @navigateCols 'enter'
 
     #  0000000  00000000   000   000  00     00  0000000    
     # 000       000   000  000   000  000   000  000   000  
@@ -266,22 +272,18 @@ class Column
             when 'enter'
                 if item = @activeRow()?.item
                     type = item.type
+                    klog 'navigateCols' item
                     if type == 'dir'
                         post.emit 'filebrowser' 'loadItem' item, focus:true
                     else if item.file
                         post.emit 'openFile' item.file
         @
 
-    navigateRoot: (key) -> # move to file browser?
+    navigateRoot: (key) -> 
         
-        return if not @browser.browse?
         @browser.browse switch key
             when 'left'  then slash.dir @parent.file
-            when 'up'    then @parent.file
             when 'right' then @activeRow().item.file
-            when 'down'  then slash.pkg @parent.file
-            when '~'     then '~'
-            when '/'     then '/'
         @
             
     #  0000000  00000000   0000000   00000000    0000000  000   000    
@@ -532,8 +534,10 @@ class Column
             when 'alt+e'               then return @explorer()
             when 'alt+o'               then return @open()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
+            when 'command+up' 'ctrl+up' then return stopEvent event, @navigateRows 'home'
+            when 'command+down' 'ctrl+down' then return stopEvent event, @navigateRows 'end'
             when 'enter'               then return stopEvent event, @navigateCols key
-            when 'command+left' 'command+up' 'command+right' 'command+down' 'ctrl+left' 'ctrl+up' 'ctrl+right' 'ctrl+down'
+            when 'command+left' 'command+right' 'ctrl+left' 'ctrl+right'
                 return stopEvent event, @navigateRoot key
             when 'command+backspace' 'ctrl+backspace' 'command+delete' 'ctrl+delete' 
                 return stopEvent event, @moveToTrash()

@@ -38,7 +38,7 @@ class Shelf extends Column
         item = row.item
                 
         $('.hover')?.classList.remove 'hover'
-        row.setActive emit:true
+        row.setActive focus:false
         
         if item.type == 'file'
             klog 'shelf.activeRow file' item

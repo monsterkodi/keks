@@ -67,6 +67,12 @@ class FileBrowser extends Browser
             return 0
         Math.max -1, col-2
 
+    browse: (file) ->
+        
+        if file
+            klog 'browse' file
+            @navigateToFile file
+        
     navigateToFile: (file) ->
                 
         lastPath = @lastDirColumn()?.path()
@@ -119,8 +125,6 @@ class FileBrowser extends Browser
                 # klog 'activate' row.column.index, row.item.file
                 row.setActive()
 
-        @emit 'itemActivated' @fileItem last paths
-        
     # 000  000000000  00000000  00     00  
     # 000     000     000       000   000  
     # 000     000     0000000   000000000  
@@ -171,6 +175,10 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
+        if slash.samePath item.file, @columns[col+1]?.path()
+            klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
+            return
+        
         @clearColumnsFrom col+1, pop:true
 
         switch item.type
@@ -262,6 +270,13 @@ class FileBrowser extends Browser
 
             post.toMain 'dirLoaded' dir
 
+            if @columns.length and col >= @columns.length and @skipOnDblClick
+                delete @skipOnDblClick
+                klog 'skipload'
+                return 
+                
+            klog 'loadDirItems' col, @columns.length
+            
             @loadDirItems dir, item, items, col, opt
             post.emit 'dir' dir
 

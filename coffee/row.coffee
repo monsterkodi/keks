@@ -80,7 +80,7 @@ class Row
                     
         $('.hover')?.classList.remove 'hover'
         
-        @setActive emit:true
+        @setActive()
         
         opt = file:@item.file
                 
@@ -112,20 +112,13 @@ class Row
     
     isActive: -> @div.classList.contains 'active'
     
-    setActive: (opt = {}) ->
+    setActive: (opt={}) ->
         
         @column.activeRow()?.clearActive()
         @div.classList.add 'active'
         
         if opt?.scroll != false
-            @column.scroll.toIndex @index()
-            
-        if opt?.emit 
-            @browser.emit 'itemActivated' @item
-            if @item.type == 'dir'
-                post.emit 'setCWD' @item.file
-            else if @item.type == 'file'
-                post.emit 'setCWD' slash.dir @item.file
+            @column.scroll.toIndex @index()            
         @
                 
     clearActive: ->
