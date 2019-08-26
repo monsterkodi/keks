@@ -14,9 +14,11 @@ class File
     
     @rename: (from, to, cb) ->
         
-        fs.rename from, to, (err) ->
-            return kerror 'rename failed' err if err
-            cb to
+        fs.mkdir slash.dir(to), recursive:true, (err) ->
+            return kerror 'mkdir failed' err if err
+            fs.rename from, to, (err) ->
+                return kerror 'rename failed' err if err
+                cb to
     
     # 000   0000000   0000000   000   000  
     # 000  000       000   000  0000  000  

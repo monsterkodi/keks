@@ -43,7 +43,8 @@ class Column
         @div.addEventListener 'mouseover' @onMouseOver
         @div.addEventListener 'mouseout'  @onMouseOut
 
-        @div.addEventListener 'mouseup'   @onClick
+        # @div.addEventListener 'mouseup'   @onClick
+        @div.addEventListener 'click'     @onClick
         @div.addEventListener 'dblclick'  @onDblClick
         
         @div.addEventListener 'contextmenu' @onContextMenu
@@ -131,8 +132,8 @@ class Column
         @scroll.update()
         @
 
-    isDir:  -> @parent.type == 'dir' 
-    isFile: -> @parent.type == 'file' 
+    isDir:  -> @parent?.type == 'dir' 
+    isFile: -> @parent?.type == 'file' 
         
     isEmpty: -> empty @rows
     clear:   ->

@@ -199,10 +199,18 @@ class Row
         
         @rename targetFile
         
+    # 00000000   00000000  000   000   0000000   00     00  00000000  
+    # 000   000  000       0000  000  000   000  000   000  000       
+    # 0000000    0000000   000 0 000  000000000  000000000  0000000   
+    # 000   000  000       000  0000  000   000  000 0 000  000       
+    # 000   000  00000000  000   000  000   000  000   000  00000000  
+    
     rename: (targetFile) =>
         
         return if slash.samePath @item.file, targetFile
                 
+        klog '------------ rename' @item.file, targetFile
+        
         File.rename @item.file, targetFile, (newFile) =>
             
             @column.removeRow @

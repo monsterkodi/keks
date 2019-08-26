@@ -47,6 +47,94 @@ class FileBrowser extends Browser
 
         @initColumns()
 
+    # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000
+    # 0000  000  000   000  000   000  000  000        000   000     000     000
+    # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000
+    # 000  0000  000   000     000     000  000   000  000   000     000     000
+    # 000   000  000   000      0      000   0000000   000   000     000     00000000
+
+    sharedColumnIndex: (file) -> 
+        
+        col = 0
+        
+        for column in @columns
+            if column.isDir() and file.startsWith column.path()
+                col += 1
+                # klog 'col' col, column.path()
+            else
+                break
+        if col == 1 and slash.dir(file) != @columns[0]?.path()
+            return 0
+        Math.max -1, col-2
+
+    navigateToFile: (file) ->
+                
+        lastPath = @lastDirColumn()?.path()
+        
+        file = slash.path file
+        
+        if file == lastPath or slash.isRelative file
+            # klog 'skip' file, lastPath
+            return
+
+        col = @sharedColumnIndex file
+        
+        # klog 'navigateToFile' file, col
+        
+        filelist = slash.pathlist file
+        
+        if col >= 0
+            # for c in [0..col]
+                # klog 'keep' c, @columns[c].path()                
+            paths = filelist.slice filelist.indexOf(@columns[col].path())+1
+        else
+            # klog 'load in root' 
+            paths = filelist.slice filelist.length-2
+        # klog 'load' paths
+            
+        @popColumnsFrom   col+1+paths.length
+        @clearColumnsFrom col+1
+        
+        while @numCols() < paths.length
+            @addColumn()
+                        
+        for index in [0...paths.length]
+            
+            item = @fileItem paths[index]
+            
+            switch item.type
+                when 'file' then @loadFileItem item, col+1+index
+                when 'dir'
+                    opt = {}
+                    if index < paths.length-1
+                        opt.active = paths[index+1]
+                    # else if col == 0 == index and paths.length == 1
+                        # opt.active = paths[0]
+                    @loadDirItem item, col+1+index, opt
+                    
+        if col = @lastDirColumn()
+            
+            # klog 'col' col.index, col.parent.file
+            if row = col.row(slash.file file)
+                # klog 'activate' row.column.index, row.item.file
+                row.setActive()
+
+        @emit 'itemActivated' @fileItem last paths
+        
+    # 000  000000000  00000000  00     00  
+    # 000     000     000       000   000  
+    # 000     000     0000000   000000000  
+    # 000     000     000       000 0 000  
+    # 000     000     00000000  000   000  
+    
+    fileItem: (path) ->
+        
+        p = slash.resolve path
+        file:p
+        type:slash.isFile(p) and 'file' or 'dir'
+        name:slash.file p
+        
+        
     onFileBrowser: (action, item, arg) =>
 
         switch action
@@ -202,111 +290,6 @@ class FileBrowser extends Browser
         if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
             if col = @lastDirColumn()
                 col.div.focus()
-
-    # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000
-    # 0000  000  000   000  000   000  000  000        000   000     000     000
-    # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000
-    # 000  0000  000   000     000     000  000   000  000   000     000     000
-    # 000   000  000   000      0      000   0000000   000   000     000     00000000
-
-    navigateToFile: (file) ->
-                
-        lastPath = @lastUsedColumn()?.path()
-        
-        if file == lastPath
-            return
-
-        if slash.isRelative file
-            return
-
-        filelist = slash.pathlist file
-        lastlist = slash.pathlist lastPath
-
-        if valid lastlist
-
-            lastdir = last lastlist
-            if @lastUsedColumn()?.isFile()
-                lastdir = slash.dir lastdir
-            relative = slash.relative file, lastdir
-
-            if slash.isRelative relative
-                upCount = 0
-                while relative.startsWith '../'
-                    upCount += 1
-                    relative = relative.substr 3
-
-                if upCount < @numCols()-1
-                    col   = @numCols() - 1 - upCount
-                    relst = slash.pathlist relative
-                    paths = filelist.slice filelist.length - relst.length
-
-        if empty paths
-
-            pkgDir   = slash.pkg file
-            pkglist  = slash.pathlist pkgDir
-
-            listindex = pkglist.length - 1
-            col0index = listindex
-            col = 0
-
-            if filelist[col0index] == @columns[0]?.path()
-                while col0index < lastlist.length and col0index < filelist.length and lastlist[col0index] == filelist[col0index]
-                    col0index += 1
-                    col += 1
-
-            paths = filelist.slice col0index
-            
-        if slash.isFile last paths
-            lastType = 'file'
-        else
-            lastType = 'dir'
-
-        @popColumnsFrom   col+paths.length
-        @clearColumnsFrom col
-        
-        while @numCols() < paths.length
-            @addColumn()
-        
-        if col > 0
-            if row = @columns[col-1].row(slash.file paths[0])
-                row.setActive()
-            else
-                type = slash.isDir(file) and 'dir' or 'file'
-                item = file:file, type:type, name:slash.basename file
-                row = @columns[col-1].addItem item
-                row.setActive()
-                @columns[col-1].focus()
-
-        for index in [0...paths.length]
-            type = if index == paths.length-1 then lastType else 'dir'
-            file = paths[index]
-                      
-            if col == 0 == index and type == 'file'
-                type = 'dir'
-                file = slash.dir file
-                
-            item = file:file, type:type
-            
-            switch type
-                when 'file' then @loadFileItem item, col+index
-                when 'dir'
-                    opt = {}
-                    if index < paths.length-1
-                        opt.active = paths[index+1]
-                    else if col == 0 == index and paths.length == 1
-                        opt.active = paths[0]
-                    @loadDirItem item, col+index, opt
-                    
-        if col = @lastDirColumn()
-            
-            klog 'col' col.index, col.parent.file
-            if row = col.row(slash.file file)
-                klog 'activate' row.column.index, row.item.file
-                row.setActive()
-
-        lastItem = file:last(paths), type:lastType
-        
-        @emit 'itemActivated' lastItem
 
     #  0000000   000   000  00000000  000  000      00000000
     # 000   000  0000  000  000       000  000      000
