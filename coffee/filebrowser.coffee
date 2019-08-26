@@ -12,7 +12,6 @@ Browser  = require './browser'
 Shelf    = require './shelf'
 File     = require './file'
 dirlist  = require './dirlist'
-dirCache = require './dircache'
 pbytes   = require 'pretty-bytes'
 moment   = require 'moment'
 
@@ -28,11 +27,8 @@ class FileBrowser extends Browser
         @shelf  = new Shelf @
         @name   = 'FileBrowser'
 
-        @srcCache = {}
-
         post.on 'file'        @onFile
         post.on 'filebrowser' @onFileBrowser
-        post.on 'dircache'    @onDirCache
         post.on 'openFile'    @onOpenFile
 
         @shelfResize = elem 'div' class: 'shelfResize'
@@ -77,7 +73,7 @@ class FileBrowser extends Browser
             when 'dir'  then @loadDirItem  item, 0, active:'..'
 
         if opt.focus
-            @columns[0].focus()
+            @columns[0]?.focus()
 
     #  0000000    0000000  000000000  000  000   000   0000000   000000000  00000000
     # 000   000  000          000     000  000   000  000   000     000     000
@@ -110,8 +106,8 @@ class FileBrowser extends Browser
 
         switch slash.ext file
             when 'gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico'
-                cnt = elem class: 'browserImageContainer' child:
-                    elem 'img' class: 'browserImage' src: slash.fileUrl file
+                cnt = elem class: 'browserImageContainer' child: elem 'img' class: 'browserImage' src: slash.fileUrl file
+                cnt.addEventListener 'dblclick' -> open file
                 @columns[col].table.appendChild cnt
             when 'tiff' 'tif'
                 if not slash.win()
@@ -164,36 +160,24 @@ class FileBrowser extends Browser
     # 000   000  000  000   000  000     000     000       000 0 000
     # 0000000    000  000   000  000     000     00000000  000   000
 
-    onDirCache: (dir) =>
-
-        for column in @columns
-            if column.path() == dir
-                @loadDirItem {file:dir, type:'dir'}, column.index, active:column.activePath()
-                return
-                
     loadDirItem: (item, col=0, opt={}) ->
 
         return if col > 0 and item.name == '/'
 
         dir = item.file
 
-        if dirCache.has(dir) and not opt.ignoreCache
-            @loadDirItems dir, item, dirCache.get(dir), col, opt
+        opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
+
+        dirlist dir, opt, (err, items) =>
+
+            if err? then return
+
+            post.toMain 'dirLoaded' dir
+
+            @loadDirItems dir, item, items, col, opt
             post.emit 'dir' dir
-        else
-            opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
 
-            dirlist dir, opt, (err, items) =>
-
-                if err? then return
-
-                post.toMain 'dirLoaded' dir
-
-                dirCache.set dir, items
-                @loadDirItems dir, item, items, col, opt
-                post.emit 'dir' dir
-
-                @updateColumnScrolls()
+            @updateColumnScrolls()
                 
     loadDirItems: (dir, item, items, col, opt) =>
 
@@ -228,9 +212,6 @@ class FileBrowser extends Browser
 
     navigateToFile: (file) ->
                 
-        # klog 'filebrowser.navigateToFile' file
-                
-        lastPath = @lastUsedColumn()?.path()
         if file == lastPath
             return
 
@@ -410,9 +391,6 @@ class FileBrowser extends Browser
         @updateColumnScrolls()
         
     refresh: =>
-
-        dirCache.reset()
-        @srcCache = {}
 
         if @lastUsedColumn()
             @navigateToFile @lastUsedColumn()?.path()

@@ -50,8 +50,6 @@ winMain = ->
 
 onContextMenu = (event) -> 
     
-    klog 'maincon'
-    
     return if not event.target.classList.contains 'crumb'
     
     fileBrowser.columns[event.target.columnIndex].onContextMenu event, true

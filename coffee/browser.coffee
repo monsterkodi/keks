@@ -141,12 +141,6 @@ class Browser extends event
             if col.hasFocus() then return col.index
         0
         
-    # activeColumnID: ->
-#         
-        # for col in @columns
-            # if col.hasFocus() then return col.div.id
-        # 'column0'
-
     lastUsedColumn: ->
         
         used = null
@@ -161,8 +155,6 @@ class Browser extends event
     height: -> @flex?.height()
     numCols: -> @columns.length 
     column: (i) -> @columns[i] if 0 <= i < @numCols()
-
-    # columnWithName: (name) -> @columns.find (c) -> c.name() == name
 
     onBackspaceInColumn: (column) -> column.clearSearch().removeObject()    
     
