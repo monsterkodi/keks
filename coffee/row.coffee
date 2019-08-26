@@ -185,22 +185,29 @@ class Row
     
     onNameFocusOut: (event) => @removeInput()
     
+    #  0000000  000   000   0000000   000   000   0000000   00000000  
+    # 000       000   000  000   000  0000  000  000        000       
+    # 000       000000000  000000000  000 0 000  000  0000  0000000   
+    # 000       000   000  000   000  000  0000  000   000  000       
+    #  0000000  000   000  000   000  000   000   0000000   00000000  
+    
     onNameChange: (event) =>
         
-        trimmed = @input.value.trim()
-        if trimmed.length
-
-            newFile = slash.join slash.dir(@item.file), trimmed
-            unusedFilename = require 'unused-filename'
-            unusedFilename(newFile).then (newFile) =>
-                fs.rename @item.file, newFile, (err) =>
-                    return kerror 'rename failed' err if err
-                    @item.file = newFile
-                    @div.innerHTML = File.span @item.file
-                    @setIcon()
-                    @browser.loadFileItem @item, @column.index+1
+        targetFile = slash.join slash.dir(@item.file), @input.value.trim()
+        
         @removeInput()
         
+        @rename targetFile
+        
+    rename: (targetFile) =>
+        
+        return if slash.samePath @item.file, targetFile
+                
+        File.rename @item.file, targetFile, (newFile) =>
+            
+            @column.removeRow @
+            @browser.navigateToFile newFile
+    
     # 0000000    00000000    0000000    0000000   
     # 000   000  000   000  000   000  000        
     # 000   000  0000000    000000000  000  0000  
@@ -239,6 +246,6 @@ class Row
             delete @column.dragDiv
             
             if column = @browser.columnAtPos d.pos
-                column.dropRow? @, d.pos
+                column.dropRow @, d.pos
         
 module.exports = Row

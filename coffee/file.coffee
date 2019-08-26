@@ -6,11 +6,17 @@
 000       000  0000000  00000000
 ###
 
-{ slash, valid, klog } = require 'kxk'
+{ slash, valid, klog, fs, kerror } = require 'kxk'
 
 icons = require './icons.json'
 
 class File
+    
+    @rename: (from, to, cb) ->
+        
+        fs.rename from, to, (err) ->
+            return kerror 'rename failed' err if err
+            cb to
     
     # 000   0000000   0000000   000   000  
     # 000  000       000   000  0000  000  

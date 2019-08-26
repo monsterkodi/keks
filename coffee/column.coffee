@@ -54,6 +54,19 @@ class Column
         
         @crumb.columnIndex = @index
         
+    dropRow: (row, pos) -> 
+    
+        # klog 'drop' row.item, @rowAtPos(pos)?.item, @parent.file
+        
+        if targetRow = @rowAtPos pos
+            item = targetRow.item
+            if item.type == 'dir'
+                row.rename slash.join item.file, row.item.name
+            else
+                row.rename slash.join slash.dir(item.file), row.item.name
+        else
+            row.rename slash.join @parent.file, row.item.name
+        
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
     # 0000000   0000000      000     000     000     0000000   000000000  0000000   
@@ -89,6 +102,20 @@ class Column
         @rows.unshift new Row @, item
         @table.insertBefore @table.lastChild, @table.firstChild
         @scroll.update()
+        @rows[0]
+        
+    pushItem: (item) ->
+        
+        @items.push item
+        @rows.push new Row @, item
+        @scroll.update()
+        @rows[-1]
+        
+    addItem: (item) ->
+        
+        row = @pushItem item
+        @sortByName()
+        row
 
     setItems: (@items, opt) ->
         
@@ -145,6 +172,8 @@ class Column
     rowHeight:  -> @rows[0]?.div.clientHeight ? 0
     numVisible: -> @rowHeight() and parseInt(@browser.height() / @rowHeight()) or 0
     
+    rowAtPos: (pos) -> @row @rowIndexAtPos pos
+    
     rowIndexAtPos: (pos) ->
         
         Math.max 0, Math.floor (pos.y - @div.getBoundingClientRect().top) / @rowHeight()
@@ -186,6 +215,7 @@ class Column
     #  0000000  000   000   0000000   000   000  0000000    
     
     updateCrumb: =>
+        
         br = @div.getBoundingClientRect()
         @crumb.style.left = "#{br.left}px"
         if @index == @browser.numCols()-1

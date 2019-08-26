@@ -142,7 +142,7 @@ class Browser extends event
         for col in @columns
             if col.hasFocus() then return col.index
         0
-        
+                
     lastUsedColumn: ->
         
         used = null

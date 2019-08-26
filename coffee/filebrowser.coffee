@@ -86,7 +86,7 @@ class FileBrowser extends Browser
         @clearColumnsFrom col+1, pop:true
 
         switch item.type
-            when 'dir'  then @loadDirItem  item, col+1
+            when 'dir'  then @loadDirItem  item, col+1, focus:false
             when 'file' then @loadFileItem item, col+1
 
     # 00000000  000  000      00000000  000  000000000  00000000  00     00
@@ -132,7 +132,6 @@ class FileBrowser extends Browser
     
     fileInfo: (file) ->
         
-        klog 'fileInfo' file
         stat = slash.fileExists file
         size = pbytes(stat.size).split ' '
         
@@ -200,11 +199,9 @@ class FileBrowser extends Browser
         if opt.active
             @columns[col].row(slash.file opt.active)?.setActive()
             
-        if empty(window.activeElement) and empty $('.popup')?.outerHTML
-            col = @lastUsedColumn().prevColumn() ? @lastUsedColumn()
-            col.div.focus()
-        else
-            klog 'has active element' window.activeElement?.outerHTML
+        if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
+            if col = @lastDirColumn()
+                col.div.focus()
 
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000
     # 0000  000  000   000  000   000  000  000        000   000     000     000
@@ -214,6 +211,8 @@ class FileBrowser extends Browser
 
     navigateToFile: (file) ->
                 
+        lastPath = @lastUsedColumn()?.path()
+        
         if file == lastPath
             return
 
@@ -269,7 +268,14 @@ class FileBrowser extends Browser
             @addColumn()
         
         if col > 0
-            @columns[col-1].row(slash.file paths[0])?.setActive()
+            if row = @columns[col-1].row(slash.file paths[0])
+                row.setActive()
+            else
+                type = slash.isDir(file) and 'dir' or 'file'
+                item = file:file, type:type, name:slash.basename file
+                row = @columns[col-1].addItem item
+                row.setActive()
+                @columns[col-1].focus()
 
         for index in [0...paths.length]
             type = if index == paths.length-1 then lastType else 'dir'
@@ -291,8 +297,12 @@ class FileBrowser extends Browser
                         opt.active = paths[0]
                     @loadDirItem item, col+index, opt
                     
-            # if col == 0 == index and paths.length == 1
-                # @columns[col].row(slash.file paths[0])?.setActive()
+        if col = @lastDirColumn()
+            
+            klog 'col' col.index, col.parent.file
+            if row = col.row(slash.file file)
+                klog 'activate' row.column.index, row.item.file
+                row.setActive()
 
         lastItem = file:last(paths), type:lastType
         

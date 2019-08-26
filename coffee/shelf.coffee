@@ -6,7 +6,7 @@
 0000000   000   000  00000000  0000000  000     
 ###
 
-{ stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, kerror, $, _ } = require 'kxk'
+{ stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './scroller'
