@@ -45,7 +45,7 @@ body {
   background: #000;
 }
 #shelf {
-  background: #040404;
+  background: #0a0a0a;
 }
 #shelf.focus {
   background: #111;
@@ -153,8 +153,16 @@ body {
 .dir .dotfile {
   color: #55a;
 }
+.popup,
+.menuItem,
+.popupWindow {
+  background-color: #111;
+}
+.popupItem:not(:last-child) {
+  border-bottom: 1px solid #111;
+}
 .scroller.long {
-  color: #3c3c3c;
+  color: #191919;
 }
 .scroller.short {
   color: #9696ff;

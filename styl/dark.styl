@@ -7,7 +7,7 @@
 
 frameColor = #111111
 backColor  = #000000
-darkColor  = #040404
+darkColor  = #0a0a0a
 shelfColor = #111111
 
 body
@@ -175,6 +175,21 @@ body
 .dir .dotfile
     color           #55a
     
+// 00000000    0000000   00000000   000   000  00000000
+// 000   000  000   000  000   000  000   000  000   000
+// 00000000   000   000  00000000   000   000  00000000
+// 000        000   000  000        000   000  000
+// 000         0000000   000         0000000   000
+
+.popup
+.menuItem
+.popupWindow
+    background-color    frameColor
+
+.popupItem
+    &:not(:last-child)
+        border-bottom   1px solid frameColor
+    
 //  0000000   0000000  00000000    0000000   000      000      00000000  00000000   
 // 000       000       000   000  000   000  000      000      000       000   000  
 // 0000000   000       0000000    000   000  000      000      0000000   0000000    
@@ -182,7 +197,7 @@ body
 // 0000000    0000000  000   000   0000000   0000000  0000000  00000000  000   000  
 
 .scroller.long
-    color                   rgb(60,60,60)
+    color                   rgb(25,25,25)
 
 .scroller.short
     color                   rgb(150,150,255)

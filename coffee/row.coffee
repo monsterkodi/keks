@@ -1,3 +1,4 @@
+
 ###
 00000000    0000000   000   000
 000   000  000   000  000 0 000
@@ -23,7 +24,7 @@ class Row
             html = '<span> </span>'
         else
             html = File.span text
-        @div = elem class: 'browserRow' html: html
+        @div = elem class:'browserRow' html:html
         @div.classList.add @item.type
         @column.table.appendChild @div
 
@@ -144,7 +145,8 @@ class Row
         @input.value = slash.file @item.file
         
         @div.appendChild @input
-        @input.addEventListener 'change'   @onNameChange
+        @input.addEventListener 'change'   @
+        
         @input.addEventListener 'keydown'  @onNameKeyDown
         @input.addEventListener 'focusout' @onNameFocusOut
         @input.focus()
@@ -152,19 +154,25 @@ class Row
         @input.setSelectionRange 0, slash.base(@item.file).length
 
     onNameKeyDown: (event) =>
-        
         {mod, key, combo} = keyinfo.forEvent event
+
         switch combo
-            when 'enter' 'esc'
-                if @input.value == @file or combo != 'enter'
-                    @input.value = @file
+            when 'esc'
+                if @input.value != slash.file @item.file
+                    @input.value = slash.file @item.file
                     event.preventDefault()
                     event.stopImmediatePropagation()
-                    @onNameFocusOut()
+                @onNameFocusOut()
+            when 'enter'
+                if @input.value != slash.file @item.file
+                    @onNameChange()
+                else
+                    @removeInput()
+                stopEvent event
         event.stopPropagation()
         
     removeInput: ->
-        
+
         return if not @input?
         @input.removeEventListener 'focusout' @onNameFocusOut
         @input.removeEventListener 'change'   @onNameChange
@@ -181,12 +189,16 @@ class Row
         
         trimmed = @input.value.trim()
         if trimmed.length
+
             newFile = slash.join slash.dir(@item.file), trimmed
             unusedFilename = require 'unused-filename'
             unusedFilename(newFile).then (newFile) =>
                 fs.rename @item.file, newFile, (err) =>
                     return kerror 'rename failed' err if err
-                    post.emit 'loadFile' newFile
+                    @item.file = newFile
+                    @div.innerHTML = File.span @item.file
+                    @setIcon()
+                    @browser.loadFileItem @item, @column.index+1
         @removeInput()
         
     # 0000000    00000000    0000000    0000000   

@@ -219,6 +219,8 @@ class Column
             when 'page down' then index+@numVisible()
             else index
             
+        return if index < 0 or index >= @numRows()
+            
         error "no index #{index}? #{@numVisible()}" if not index? or Number.isNaN index        
         index = clamp 0, @numRows()-1, index
         
@@ -381,7 +383,9 @@ class Column
             if fs.copy? # fs.copyFile in node > 8.4
                 fs.copy @activePath(), fileName, (err) =>
                     return error 'copy file failed' err if err?
-                    post.emit 'loadFile' fileName
+                    item = type:'file' file:slash.join slash.dir(@activePath()), fileName
+                    post.emit 'filebrowser' 'loadItem' item, focus:true
+                    # post.emit 'loadFile' fileName
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  

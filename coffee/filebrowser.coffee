@@ -132,6 +132,7 @@ class FileBrowser extends Browser
     
     fileInfo: (file) ->
         
+        klog 'fileInfo' file
         stat = slash.fileExists file
         size = pbytes(stat.size).split ' '
         
@@ -178,23 +179,18 @@ class FileBrowser extends Browser
             post.emit 'dir' dir
 
             @updateColumnScrolls()
-                
+                            
     loadDirItems: (dir, item, items, col, opt) =>
 
         updir = slash.resolve slash.join dir, '..'
 
         if col == 0 or col-1 < @numCols() and @columns[col-1].activeRow()?.item.name == '..'
             if items[0].name not in ['..' '/']
-                if not (updir == dir == slash.resolve '/')
+                if updir != dir
                     items.unshift
                         name: '..'
                         type: 'dir'
                         file:  updir
-                else
-                    items.unshift
-                        name: '/'
-                        type: 'dir'
-                        file: dir
 
         while col >= @numCols()
             @addColumn()
@@ -203,6 +199,12 @@ class FileBrowser extends Browser
 
         if opt.active
             @columns[col].row(slash.file opt.active)?.setActive()
+            
+        if empty(window.activeElement) and empty $('.popup')?.outerHTML
+            col = @lastUsedColumn().prevColumn() ? @lastUsedColumn()
+            col.div.focus()
+        else
+            klog 'has active element' window.activeElement?.outerHTML
 
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000
     # 0000  000  000   000  000   000  000  000        000   000     000     000

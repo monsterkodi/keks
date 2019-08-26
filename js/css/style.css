@@ -45,8 +45,7 @@ body {
   padding-top: 1px;
 }
 .rowNameInput {
-  font-family: font;
-  font-size: 15px;
+  font-size: 18px;
   border: none;
   white-space: nowrap;
   position: absolute;
@@ -93,7 +92,7 @@ body {
 .browserFileIcon {
   text-align: left;
   display: inline-block;
-  width: 24px;
+  margin-right: 0.3em;
   opacity: 0.5;
 }
 .openFileIcon {

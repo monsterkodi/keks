@@ -22,6 +22,9 @@ kapp = new app
     height:     900
     minWidth:   353
     minHeight:  111
+    args: """
+            folder          to open     **
+    """
     
 post.on 'winDidShow' ->
     

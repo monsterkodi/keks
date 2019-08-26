@@ -31,4 +31,9 @@ Window
     Screenshot              f3
     Reload                  alt+cmdctrl+l
     DevTools                alt+cmdctrl+i
+    ----
+    Font Size
+        Increase            cmdctrl+=
+        Decrease            cmdctrl+-
+        Reset               cmdctrl+0
     

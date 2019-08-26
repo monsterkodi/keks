@@ -6,7 +6,7 @@
 00     00  000  000   000  0000000     0000000   00     00
 ###
 
-{ post, args, slash, prefs, stopEvent, setStyle, scheme, popup, klog, kpos, win, $, _ } = require 'kxk'
+{ post, args, slash, prefs, stopEvent, setStyle, scheme, popup, klog, clamp, kpos, win, $, _ } = require 'kxk'
 
 FileBrowser = require './filebrowser'
   
@@ -38,10 +38,14 @@ fileBrowser = null
 winMain = ->
 
     fileBrowser = new FileBrowser $ "#main"
-    fileBrowser.loadItem type:'dir' file:slash.resolve '~'
+    fileBrowser.loadItem type:'dir' file:slash.resolve args.folder[0] ? '~'
     
     win.on 'resize' -> fileBrowser.resized()
 
+# win.on 'ready-to-show' ->
+#     
+    # klog 'ready-to-show' fileBrowser.columns[0]?
+    
 # 00000000    0000000   00000000   000   000  00000000
 # 000   000  000   000  000   000  000   000  000   000
 # 00000000   000   000  00000000   000   000  00000000
@@ -56,6 +60,49 @@ onContextMenu = (event) ->
     
 $("#crumbs").addEventListener 'contextmenu' onContextMenu
 
+
+# 00000000   0000000   000   000  000000000      0000000  000  0000000  00000000
+# 000       000   000  0000  000     000        000       000     000   000
+# 000000    000   000  000 0 000     000        0000000   000    000    0000000
+# 000       000   000  000  0000     000             000  000   000     000
+# 000        0000000   000   000     000        0000000   000  0000000  00000000
+
+defaultFontSize = 18
+
+getFontSize = -> prefs.get 'fontSize' defaultFontSize
+
+setFontSize = (s) ->
+        
+    s = getFontSize() if not _.isFinite s
+    s = clamp 8 60 s
+
+    prefs.set 'fontSize' s
+
+    setStyle '#main'         'font-size' "#{s}px"
+    setStyle '.rowNameInput' 'font-size' "#{s}px"
+
+changeFontSize = (d) ->
+    
+    s = getFontSize()
+    if      s >= 30 then f = 4
+    else if s >= 20 then f = 2
+    else                 f = 1
+        
+    setFontSize s + f*d
+
+resetFontSize = ->
+    
+    prefs.set 'fontSize' defaultFontSize
+    setFontSize defaultFontSize
+     
+onWheel = (event) ->
+    
+    if 0 <= w.modifiers.indexOf 'ctrl'
+        changeFontSize -event.deltaY/100
+  
+setFontSize getFontSize()
+window.document.addEventListener 'wheel' onWheel    
+
 # 00     00  00000000  000   000  000   000      0000000    0000000  000000000  000   0000000   000   000
 # 000   000  000       0000  000  000   000     000   000  000          000     000  000   000  0000  000
 # 000000000  0000000   000 0 000  000   000     000000000  000          000     000  000   000  000 0 000
@@ -64,8 +111,6 @@ $("#crumbs").addEventListener 'contextmenu' onContextMenu
 
 onMenuAction = (name, args) ->
 
-    klog 'menuAction' name
-    
     switch name
 
         when 'Toggle Extensions' then return toggleExtensions()
@@ -74,6 +119,8 @@ onMenuAction = (name, args) ->
         when 'Reset'             then return resetFontSize()
         when 'Add to Shelf'      then return addToShelf()
         when 'Reload Window'     then return reloadWin()
+        
+    klog 'menuAction' name
 
     post.toMain 'menuAction' name, args
 

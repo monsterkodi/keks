@@ -90,6 +90,8 @@ class Browser extends event
         index += switch key
             when 'left'  then -1
             when 'right' then +1
+            
+        return if index < 0
         index = clamp 0, @numCols()-1, index
         if @columns[index].numRows()
             @columns[index].focus().activeRow().activate()
