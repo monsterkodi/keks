@@ -209,9 +209,8 @@ class Column
     
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
-    onClick:     (event) => klog 'click'; @row(event.target)?.activate event
+    onClick:     (event) => @row(event.target)?.activate event
     onDblClick:  (event) => 
-        klog 'dblck' 
         @browser.skipOnDblClick = true
         @navigateCols 'enter'
 
@@ -272,9 +271,10 @@ class Column
             when 'enter'
                 if item = @activeRow()?.item
                     type = item.type
-                    klog 'navigateCols' item
+                    # klog 'navigateCols' item
                     if type == 'dir'
-                        post.emit 'filebrowser' 'loadItem' item, focus:true
+                        # post.emit 'filebrowser' 'loadItem' item, focus:true
+                        @browser.loadItem item
                     else if item.file
                         post.emit 'openFile' item.file
         @

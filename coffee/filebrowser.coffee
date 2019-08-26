@@ -155,14 +155,14 @@ class FileBrowser extends Browser
     
     loadItem: (item, opt) ->
 
-        opt ?= {}
+        opt ?= active:'..' focus:true
         item.name ?= slash.file item.file
 
         @popColumnsFrom 1
 
         switch item.type
             when 'file' then @loadFileItem item
-            when 'dir'  then @loadDirItem  item, 0, active:'..'
+            when 'dir'  then @loadDirItem  item, 0, opt #active:'..'
 
         if opt.focus
             @columns[0]?.focus()
@@ -176,7 +176,7 @@ class FileBrowser extends Browser
     activateItem: (item, col) ->
 
         if slash.samePath item.file, @columns[col+1]?.path()
-            klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
+            # klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
             return
         
         @clearColumnsFrom col+1, pop:true
@@ -272,10 +272,9 @@ class FileBrowser extends Browser
 
             if @columns.length and col >= @columns.length and @skipOnDblClick
                 delete @skipOnDblClick
-                klog 'skipload'
                 return 
                 
-            klog 'loadDirItems' col, @columns.length
+            # klog 'loadDirItems' col, @columns.length
             
             @loadDirItems dir, item, items, col, opt
             post.emit 'dir' dir
