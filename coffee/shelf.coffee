@@ -35,16 +35,10 @@ class Shelf extends Column
    
     activateRow: (row) -> 
         
-        item = row.item
-                
         $('.hover')?.classList.remove 'hover'
         row.setActive focus:false
         
-        if item.type == 'file'
-            klog 'shelf.activeRow file' item
-        else
-            # post.emit 'filebrowser' 'loadItem' item
-            @browser.loadItem item, focus:false
+        @browser.loadItem row.item, focus:false
                 
     #  0000000   000   000      00000000  000  000      00000000  
     # 000   000  0000  000      000       000  000      000       

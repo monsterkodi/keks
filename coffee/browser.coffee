@@ -86,23 +86,24 @@ class Browser
     navigate: (key) ->
   
         if key == 'up'
-            if @lastDirColumn()?.index > 0
+            if @activeColumnIndex() > 0
+                # klog 'activeColumnIndex' @activeColumnIndex()
+                if col = @activeColumn()
+                    if row = col.activeRow()
+                        @loadItem @fileItem row.item.file
+                    else
+                        @loadItem @fileItem col.path()
             else
                 @loadItem @fileItem slash.dir @columns[0].path()
-        
-        index = @focusColumn()?.index ? 0
-        index += switch key
-            when 'left''up' then -1
-            when 'right'    then +1
-            
-        # if index < 0
-            # if key == 'up' and not slash.isRoot @columns[0].path()
-                # @loadItem @fileItem slash.dir @columns[0].path()
-            # return 
-            
-        index = clamp 0, @numCols()-1, index
-        if @columns[index].numRows()
-            @columns[index].focus().activeRow().activate()
+        else        
+            index = @focusColumn()?.index ? 0
+            index += switch key
+                when 'left''up' then -1
+                when 'right'    then +1
+                                
+            index = clamp 0, @numCols()-1, index
+            if @columns[index].numRows()
+                @columns[index].focus().activeRow().activate()
             
         @updateColumnScrolls()
         @
@@ -189,12 +190,7 @@ class Browser
     # 000        000   000  000        
     # 000         0000000   000        
     
-    clearColumn: (index) -> 
-    
-        if index < @columns.length
-            @columns[index].clear()
-        else
-            klog 'clearColumn' index, @columns.length
+    clearColumn: (index) -> if index < @columns.length then @columns[index].clear()
     
     shiftColumn: ->
         
@@ -216,10 +212,10 @@ class Browser
         
     popEmptyColumns: (opt) -> @popColumn(opt) while @hasEmptyColumns()
         
-    popColumnsFrom: (col) -> 
+    popColumnsFrom: (col) -> @clearColumnsFrom col, pop:true
         
-        while @numCols() > col 
-            @popColumn()
+        # while @numCols() > col 
+            # @popColumn()
             
     shiftColumnsTo: (col) ->
         
@@ -240,15 +236,17 @@ class Browser
         
         return kerror "clearColumnsFrom #{c}?" if not c? or c < 0
         
+        num = @numCols()
         if opt.pop
-            if c < @numCols()
-                @clearColumn c
-                c++
-            while c < @numCols()
+            if opt.clear?
+                while c <= opt.clear
+                    @clearColumn c
+                    c++
+            while c < num
                 @popColumn()
                 c++
         else
-            while c < @numCols()
+            while c < num
                 @clearColumn c
                 c++
 

@@ -86,8 +86,9 @@ class FileBrowser extends Browser
         else
             paths = filelist.slice filelist.length-2
             
-        @popColumnsFrom   col+1+paths.length
-        @clearColumnsFrom col+1
+        # @popColumnsFrom   col+1+paths.length
+        # @clearColumnsFrom col+1
+        @clearColumnsFrom col+1, pop:true clear:col+paths.length
         
         while @numCols() < paths.length
             @addColumn()
@@ -141,11 +142,14 @@ class FileBrowser extends Browser
         opt ?= active:'..' focus:true
         item.name ?= slash.file item.file
 
-        @popColumnsFrom 1
+        @clearColumnsFrom 1, pop:true, clear:1
 
         switch item.type
-            when 'file' then @loadFileItem item
             when 'dir'  then @loadDirItem  item, 0, opt
+            when 'file' 
+                opt.activate = item.file
+                while @numCols() < 2 then @addColumn()
+                @loadDirItem @fileItem(slash.dir(item.file)), 0, opt
 
         if opt.focus
             @columns[0]?.focus()
@@ -163,7 +167,7 @@ class FileBrowser extends Browser
                 klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
                 return
         
-        @clearColumnsFrom col+1, pop:true
+        @clearColumnsFrom col+1, pop:true, clear:col+1
 
         switch item.type
             when 'dir'  then @loadDirItem  item, col+1, focus:false
@@ -299,8 +303,6 @@ class FileBrowser extends Browser
                 delete @skipOnDblClick
                 return 
                 
-            # klog 'loadDirItems' col, @columns.length
-            
             @loadDirItems dir, item, items, col, opt
             post.emit 'dir' dir
 
@@ -323,7 +325,9 @@ class FileBrowser extends Browser
 
         @columns[col].loadItems items, item
 
-        if opt.active
+        if opt.activate
+            @columns[col].row(slash.file opt.activate)?.activate()
+        else if opt.active
             @columns[col].row(slash.file opt.active)?.setActive()
             
         if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
