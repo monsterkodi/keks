@@ -9,7 +9,7 @@
 { stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
-Scroller = require './scroller'
+Scroller = require './tools/scroller'
 Column   = require './column'
 fuzzy    = require 'fuzzy'
     
@@ -278,7 +278,6 @@ class Shelf extends Column
         
         switch combo
             when 'shift+alt+left''alt+left'   then return @browser.toggleShelf()
-            # when 'command+enter' 'ctrl+enter' then return @openFileInNewWindow()
             when 'backspace' 'delete' then return stopEvent event, @clearSearch().removeObject()
             when 'command+k' 'ctrl+k' then return stopEvent event if @browser.cleanUp()
             when 'tab'    
@@ -294,9 +293,6 @@ class Shelf extends Column
             when 'right' 'enter'
                 return stopEvent event, @focusBrowser()
                 
-        switch char
-            when '~' '/' then return stopEvent event, @navigateRoot char
-            
         if mod in ['shift' ''] and char then @doSearch char
         
         if key in ['left'] then return stopEvent event

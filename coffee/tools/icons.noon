@@ -150,7 +150,6 @@ ext
     def                   modula2
     der                   key
     desktop               config
-    di?                   dlang
     dif                   graph
     diff                  diff
     dll                   gears
@@ -294,6 +293,7 @@ ext
     jinja2                jinja
     jl                    julia
     jpg                   image
+    jpeg                  image
     jq                    sql
     js                    js
     js                    js

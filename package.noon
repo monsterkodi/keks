@@ -1,6 +1,6 @@
 name            keks
 productName     keks
-version         0.15.0
+version         0.16.0
 description     file browser
 main            js/main.js
 bin
@@ -29,8 +29,8 @@ dependencies
                 kxk             ^0.338.0
                 moment          ^2.24.0
                 pretty-bytes    ^5.3.0
-                trash           ^6.0.0
                 unused-filename  ^2.1.0
+                wxw             ^1.86.0
 devDependencies
                 electron        ^6.0.4
                 electron-packager  ^14.0.4

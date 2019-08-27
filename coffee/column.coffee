@@ -9,9 +9,10 @@
 { post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, state, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
-Scroller = require './scroller'
+Scroller = require './tools/scroller'
+File     = require './tools/file'
 fuzzy    = require 'fuzzy'
-trash    = require 'trash'
+wxw      = require 'wxw'
 
 class Column
     
@@ -82,7 +83,7 @@ class Column
         @parent = parent
         
         if @index == 0
-            @crumb.innerHTML = slash.tilde @parent.file
+            @crumb.innerHTML = File.crumbSpan slash.tilde @parent.file
         else
             @crumb.innerHTML = slash.base @parent.file
         
@@ -255,17 +256,17 @@ class Column
             when 'page down' then index+@numVisible()
             else index
             
-        return if index < 0 or index >= @numRows()
-            
         error "no index #{index}? #{@numVisible()}" if not index? or Number.isNaN index        
         index = clamp 0, @numRows()-1, index
         
         error "no row at index #{index}/#{@numRows()-1}?", @numRows() if not @rows[index]?.activate?
-        @rows[index].activate()
+        if not @rows[index].isActive()
+            @rows[index].activate()
     
     navigateCols: (key) -> # move to file browser?
         
         switch key
+            when 'up'    then @browser.navigate 'up'
             when 'left'  then @browser.navigate 'left'
             when 'right' then @browser.navigate 'right'
             when 'enter'
@@ -329,7 +330,6 @@ class Column
     removeObject: =>
         
         if row = @activeRow()
-            @browser.emit 'willRemoveRow' row, @
             nextOrPrev = row.next() ? row.prev()
             @removeRow row
             nextOrPrev?.activate()
@@ -401,7 +401,8 @@ class Column
         pathToTrash = @activePath()
         @removeObject()
         
-        trash([pathToTrash]).catch (err) -> error "failed to trash #{pathToTrash} #{err}"
+        wxw 'trash' pathToTrash
+        # trash([pathToTrash]).catch (err) -> error "failed to trash #{pathToTrash} #{err}"
 
     addToShelf: =>
         
@@ -529,27 +530,27 @@ class Column
         { mod, key, combo, char } = keyinfo.forEvent event
 
         switch combo
-            when 'shift+`'             then return stopEvent event, @browser.loadDir slash.resolve '~'
-            when '/'                   then return stopEvent event, @browser.loadDir '/'
-            when 'alt+e'               then return @explorer()
-            when 'alt+o'               then return @open()
+            when 'shift+`' '~'                      then return stopEvent event, @browser.browse '~'
+            when '/'                                then return stopEvent event, @browser.browse '/'
+            when 'alt+e'                            then return @explorer()
+            when 'alt+o'                            then return @open()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
-            when 'command+up' 'ctrl+up' then return stopEvent event, @navigateRows 'home'
-            when 'command+down' 'ctrl+down' then return stopEvent event, @navigateRows 'end'
-            when 'enter'               then return stopEvent event, @navigateCols key
+            when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
+            when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'
+            when 'enter''alt+up'                    then return stopEvent event, @navigateCols key
+            when 'alt+left'                         then return stopEvent event, $('shelf')?.focus?()
+            when 'alt+shift+left'                   then return stopEvent event, @browser.toggleShelf()
+            when 'backspace' 'delete'               then return stopEvent event, @browser.onBackspaceInColumn @
+            when 'ctrl+t'                           then return stopEvent event, @sortByType()
+            when 'ctrl+n'                           then return stopEvent event, @sortByName()
+            when 'command+i' 'ctrl+i'               then return stopEvent event, @toggleDotFiles()
+            when 'command+d' 'ctrl+d'               then return stopEvent event, @duplicateFile()
+            when 'command+k' 'ctrl+k'               then return stopEvent event if @browser.cleanUp()
+            when 'f2'                               then return stopEvent event, @activeRow()?.editName()
             when 'command+left' 'command+right' 'ctrl+left' 'ctrl+right'
                 return stopEvent event, @navigateRoot key
             when 'command+backspace' 'ctrl+backspace' 'command+delete' 'ctrl+delete' 
                 return stopEvent event, @moveToTrash()
-            when 'alt+left'            then return stopEvent event, $('shelf')?.focus?()
-            when 'alt+shift+left'      then return stopEvent event, @browser.toggleShelf()
-            when 'backspace' 'delete'  then return stopEvent event, @browser.onBackspaceInColumn @
-            when 'ctrl+t'              then return stopEvent event, @sortByType()
-            when 'ctrl+n'              then return stopEvent event, @sortByName()
-            when 'command+i' 'ctrl+i'  then return stopEvent event, @toggleDotFiles()
-            when 'command+d' 'ctrl+d'  then return stopEvent event, @duplicateFile()
-            when 'command+k' 'ctrl+k'  then return stopEvent event if @browser.cleanUp()
-            when 'f2'                  then return stopEvent event, @activeRow()?.editName()
             when 'tab'    
                 if @search.length then @doSearch ''
                 return stopEvent event
@@ -559,9 +560,6 @@ class Column
 
         if key in ['up'   'down']  then return stopEvent event, @navigateRows key              
         if key in ['left' 'right'] then return stopEvent event, @navigateCols key        
-            
-        switch char
-            when '~' '/' then return stopEvent event, @navigateRoot char
             
         if mod in ['shift' ''] and char then @doSearch char
                 

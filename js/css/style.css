@@ -149,6 +149,13 @@ body {
   position: absolute;
   text-align: center;
 }
+.crumb .path {
+  opacity: 0.5;
+}
+.crumb .punct {
+  padding: 0.2em;
+  opacity: 0.2;
+}
 #crumbs {
   position: absolute;
   left: 0;

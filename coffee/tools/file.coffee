@@ -63,4 +63,14 @@ class File
             span += "<span class='ext punct#{clss}'>.</span>" + "<span class='ext text#{clss}'>"+ext+"</span>"
         span
         
+    @crumbSpan: (file) ->
+        
+        spans = []
+        split = slash.split file
+        
+        for s in split[0...split.length-1]
+            spans.push "<span class='path'>#{s}</span>"
+        spans.push "<span>#{split[-1]}</span>"
+        return spans.join "<span class='punct'>/</span>"
+        
 module.exports = File

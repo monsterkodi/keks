@@ -10,8 +10,8 @@
 
 Browser  = require './browser'
 Shelf    = require './shelf'
-File     = require './file'
-dirlist  = require './dirlist'
+File     = require './tools/file'
+dirlist  = require './tools/dirlist'
 pbytes   = require 'pretty-bytes'
 moment   = require 'moment'
 
@@ -60,18 +60,13 @@ class FileBrowser extends Browser
         for column in @columns
             if column.isDir() and file.startsWith column.path()
                 col += 1
-                # klog 'col' col, column.path()
             else
                 break
         if col == 1 and slash.dir(file) != @columns[0]?.path()
             return 0
         Math.max -1, col-2
 
-    browse: (file) ->
-        
-        if file
-            klog 'browse' file
-            @navigateToFile file
+    browse: (file) -> if file then @loadItem @fileItem file
         
     navigateToFile: (file) ->
                 
@@ -80,23 +75,16 @@ class FileBrowser extends Browser
         file = slash.path file
         
         if file == lastPath or slash.isRelative file
-            # klog 'skip' file, lastPath
             return
 
         col = @sharedColumnIndex file
         
-        # klog 'navigateToFile' file, col
-        
         filelist = slash.pathlist file
         
         if col >= 0
-            # for c in [0..col]
-                # klog 'keep' c, @columns[c].path()                
             paths = filelist.slice filelist.indexOf(@columns[col].path())+1
         else
-            # klog 'load in root' 
             paths = filelist.slice filelist.length-2
-        # klog 'load' paths
             
         @popColumnsFrom   col+1+paths.length
         @clearColumnsFrom col+1
@@ -114,15 +102,11 @@ class FileBrowser extends Browser
                     opt = {}
                     if index < paths.length-1
                         opt.active = paths[index+1]
-                    # else if col == 0 == index and paths.length == 1
-                        # opt.active = paths[0]
                     @loadDirItem item, col+1+index, opt
                     
         if col = @lastDirColumn()
             
-            # klog 'col' col.index, col.parent.file
             if row = col.row(slash.file file)
-                # klog 'activate' row.column.index, row.item.file
                 row.setActive()
 
     # 000  000000000  00000000  00     00  
@@ -137,7 +121,6 @@ class FileBrowser extends Browser
         file:p
         type:slash.isFile(p) and 'file' or 'dir'
         name:slash.file p
-        
         
     onFileBrowser: (action, item, arg) =>
 
@@ -162,7 +145,7 @@ class FileBrowser extends Browser
 
         switch item.type
             when 'file' then @loadFileItem item
-            when 'dir'  then @loadDirItem  item, 0, opt #active:'..'
+            when 'dir'  then @loadDirItem  item, 0, opt
 
         if opt.focus
             @columns[0]?.focus()
@@ -175,9 +158,10 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
-        if slash.samePath item.file, @columns[col+1]?.path()
-            # klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
-            return
+        if @columns[col+1]
+            if slash.samePath item.file, @columns[col+1].path()
+                klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
+                return
         
         @clearColumnsFrom col+1, pop:true
 

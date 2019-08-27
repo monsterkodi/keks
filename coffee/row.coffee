@@ -10,7 +10,7 @@
 { elem, keyinfo, drag, clamp, stopEvent, valid, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
 
 electron  = require 'electron'
-File      = require './file'
+File      = require './tools/file'
 
 app = electron.remote.app
 
@@ -83,7 +83,7 @@ class Row
         @setActive()
         
         opt = file:@item.file
-                
+
         switch @item.type
             
             when 'dir' 'file'
@@ -202,7 +202,7 @@ class Row
         
         return if slash.samePath @item.file, targetFile
                 
-        klog '------------ rename' @item.file, targetFile
+        # klog '------------ rename' @item.file, targetFile
         
         File.rename @item.file, targetFile, (newFile) =>
             

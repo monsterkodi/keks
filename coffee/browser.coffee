@@ -10,9 +10,8 @@
 
 Column = require './column'
 flex   = require './flex/flex'
-event  = require 'events'
 
-class Browser extends event
+class Browser
     
     constructor: (@view) ->
         
@@ -36,7 +35,7 @@ class Browser extends event
             @view.appendChild @cols
             return
             
-        @cols = elem class: 'browser', id: 'columns'
+        @cols = elem class:'browser' id:'columns'
         @view.appendChild @cols
         
         @columns = []
@@ -85,13 +84,22 @@ class Browser extends event
     # 000   000  000   000      0      000   0000000   000   000     000     00000000  
     
     navigate: (key) ->
+  
+        if key == 'up'
+            if @lastDirColumn()?.index > 0
+            else
+                @loadItem @fileItem slash.dir @columns[0].path()
         
         index = @focusColumn()?.index ? 0
         index += switch key
-            when 'left'  then -1
-            when 'right' then +1
+            when 'left''up' then -1
+            when 'right'    then +1
             
-        return if index < 0
+        # if index < 0
+            # if key == 'up' and not slash.isRoot @columns[0].path()
+                # @loadItem @fileItem slash.dir @columns[0].path()
+            # return 
+            
         index = clamp 0, @numCols()-1, index
         if @columns[index].numRows()
             @columns[index].focus().activeRow().activate()
