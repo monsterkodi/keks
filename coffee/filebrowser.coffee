@@ -186,9 +186,7 @@ class FileBrowser extends Browser
 
         switch slash.ext file
             when 'gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico'
-                cnt = elem class: 'browserImageContainer' child: elem 'img' class: 'browserImage' src: slash.fileUrl file
-                cnt.addEventListener 'dblclick' -> open file
-                @columns[col].table.appendChild cnt
+                @columns[col].table.appendChild @imageInfo file
             when 'tiff' 'tif'
                 if not slash.win()
                     @convertImage row
@@ -204,12 +202,55 @@ class FileBrowser extends Browser
                     
         @updateColumnScrolls()
 
+    # 000  00     00   0000000    0000000   00000000      000  000   000  00000000   0000000   
+    # 000  000   000  000   000  000        000           000  0000  000  000       000   000  
+    # 000  000000000  000000000  000  0000  0000000       000  000 0 000  000000    000   000  
+    # 000  000 0 000  000   000  000   000  000           000  000  0000  000       000   000  
+    # 000  000   000  000   000   0000000   00000000      000  000   000  000        0000000   
+    
+    imageInfo: (file) ->
+            
+        img = elem 'img' class:'browserImage' src:slash.fileUrl file
+        cnt = elem class:'browserImageContainer' child:img
+        cnt.addEventListener 'dblclick' -> open file
+                    
+        img.onload = ->
+            img =$ '.browserImage'
+            br = img.getBoundingClientRect()
+            x = img.clientX
+            width  = parseInt br.right - br.left - 2
+            height = parseInt br.bottom - br.top - 2
+
+            img.style.opacity   = '1'
+            img.style.maxWidth  = '100%'
+            img.style.maxHeight = '75vh'
+            
+            stat = slash.fileExists file
+            size = pbytes(stat.size).split ' '
+            
+            age = moment().to(moment(stat.mtime), true)
+            [num, range] = age.split ' '
+            num = '1' if num[0] == 'a'
+            
+            html  = "<tr><th colspan=2>#{width}<span class='punct'>x</span>#{height}</th></tr>"
+            html += "<tr><th>#{size[0]}</th><td>#{size[1]}</td></tr>"
+            html += "<tr><th>#{num}</th><td>#{range}</td></tr>"
+            
+            info = elem class:'browserFileInfo' children: [
+                elem 'div' class:"fileInfoFile #{slash.ext file}" html:File.span file
+                elem 'table' class:"fileInfoData" html:html
+            ]
+            cnt =$ '.browserImageContainer'
+            cnt.appendChild info
+        
+        cnt
+    
     # 00000000  000  000      00000000        000  000   000  00000000   0000000   
     # 000       000  000      000             000  0000  000  000       000   000  
     # 000000    000  000      0000000         000  000 0 000  000000    000   000  
     # 000       000  000      000             000  000  0000  000       000   000  
     # 000       000  0000000  00000000        000  000   000  000        0000000   
-    
+        
     fileInfo: (file) ->
         
         stat = slash.fileExists file

@@ -59,10 +59,19 @@ body {
 .browserImageContainer {
   position: relative;
   padding: 6px;
+  text-align: center;
+}
+.browserImage {
+  opacity: 0;
+  border: 1px solid;
+  cursor: pointer;
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
 }
 .browserFileInfo {
   position: relative;
   padding: 6px;
+  cursor: pointer;
 }
 .fileInfoIcon {
   text-align: center;
@@ -85,11 +94,6 @@ body {
 }
 .fileInfoData td {
   text-align: left;
-}
-.browserImage {
-  max-width: 600px;
-  max-height: 600px;
-  border: 1px solid;
 }
 .browserFileIcon {
   text-align: left;

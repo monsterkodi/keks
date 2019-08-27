@@ -65,6 +65,8 @@ class File
         
     @crumbSpan: (file) ->
         
+        return "<span>/</span>" if file in ['/' '']
+        
         spans = []
         split = slash.split file
         

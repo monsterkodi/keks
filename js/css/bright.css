@@ -35,6 +35,7 @@ body {
 }
 .browserImage {
   border: 1px solid #eee;
+  background-image: linear-gradient(45deg, #eee 25%, transparent 25%), linear-gradient(-45deg, #eee 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #eee 75%), linear-gradient(-45deg, transparent 75%, #eee 75%);
 }
 .browserRow.array {
   color: #666;
