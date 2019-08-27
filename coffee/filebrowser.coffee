@@ -144,7 +144,7 @@ class FileBrowser extends Browser
         opt ?= active:'..' focus:true
         item.name ?= slash.file item.file
 
-        @clearColumnsFrom 1, pop:true, clear:1
+        @clearColumnsFrom 1, pop:true, clear:opt.clear ? 1
 
         switch item.type
             when 'dir'  then @loadDirItem item, 0, opt

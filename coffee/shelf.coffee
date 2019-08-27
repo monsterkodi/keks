@@ -38,7 +38,7 @@ class Shelf extends Column
         $('.hover')?.classList.remove 'hover'
         row.setActive focus:false
         
-        @browser.loadItem row.item, focus:false
+        @browser.loadItem row.item, focus:false, clear:0
                 
     #  0000000   000   000      00000000  000  000      00000000  
     # 000   000  0000  000      000       000  000      000       
