@@ -139,7 +139,7 @@ class Column
     isDir:  -> @parent?.type == 'dir' 
     isFile: -> @parent?.type == 'file' 
         
-    isEmpty: -> empty @rows
+    isEmpty: -> empty @parent
     clear:   ->
         @clearSearch()
         delete @parent

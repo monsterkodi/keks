@@ -62,11 +62,13 @@ class FileBrowser extends Browser
                 col += 1
             else
                 break
+                
+        klog 'col' @columns.length, col
         if col == 1 and slash.dir(file) != @columns[0]?.path()
             return 0
         Math.max -1, col-2
 
-    browse: (file) -> if file then @loadItem @fileItem file
+    browse: (file, opt) -> if file then @loadItem @fileItem(file), opt
         
     navigateToFile: (file) ->
                 
@@ -86,8 +88,8 @@ class FileBrowser extends Browser
         else
             paths = filelist.slice filelist.length-2
             
-        # @popColumnsFrom   col+1+paths.length
-        # @clearColumnsFrom col+1
+        # klog 'navigateToFile' col , paths
+        
         @clearColumnsFrom col+1, pop:true clear:col+paths.length
         
         while @numCols() < paths.length
@@ -145,7 +147,7 @@ class FileBrowser extends Browser
         @clearColumnsFrom 1, pop:true, clear:1
 
         switch item.type
-            when 'dir'  then @loadDirItem  item, 0, opt
+            when 'dir'  then @loadDirItem item, 0, opt
             when 'file' 
                 opt.activate = item.file
                 while @numCols() < 2 then @addColumn()
@@ -153,7 +155,7 @@ class FileBrowser extends Browser
 
         if opt.focus
             @columns[0]?.focus()
-
+            
     #  0000000    0000000  000000000  000  000   000   0000000   000000000  00000000
     # 000   000  000          000     000  000   000  000   000     000     000
     # 000000000  000          000     000   000 000   000000000     000     0000000
@@ -164,7 +166,6 @@ class FileBrowser extends Browser
 
         if @columns[col+1]
             if slash.samePath item.file, @columns[col+1].path()
-                klog 'activateItem skip already active' col+1, item, @columns[col+1]?.path()
                 return
         
         @clearColumnsFrom col+1, pop:true, clear:col+1
@@ -188,6 +189,9 @@ class FileBrowser extends Browser
 
         file = item.file
 
+        # @columns[col].items = [item]
+        @columns[col].parent = item
+        
         switch slash.ext file
             when 'gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico'
                 @columns[col].table.appendChild @imageInfo file
@@ -203,7 +207,9 @@ class FileBrowser extends Browser
                     @columns[col].table.appendChild @fileInfo file
             else
                 @columns[col].table.appendChild @fileInfo file
-                    
+
+        post.emit 'load' column:col, item:item
+                
         @updateColumnScrolls()
 
     # 000  00     00   0000000    0000000   00000000      000  000   000  00000000   0000000   
@@ -297,15 +303,12 @@ class FileBrowser extends Browser
 
             if err? then return
 
-            post.toMain 'dirLoaded' dir
-
             if @columns.length and col >= @columns.length and @skipOnDblClick
                 delete @skipOnDblClick
                 return 
                 
             @loadDirItems dir, item, items, col, opt
-            post.emit 'dir' dir
-
+            
             @updateColumnScrolls()
                             
     loadDirItems: (dir, item, items, col, opt) =>
@@ -325,14 +328,20 @@ class FileBrowser extends Browser
 
         @columns[col].loadItems items, item
 
+        post.emit 'load' column:col, item:item
+                            
         if opt.activate
-            @columns[col].row(slash.file opt.activate)?.activate()
+            if row = @columns[col].row slash.file opt.activate
+                row.activate()
+                post.emit 'load' column:col+1 item:row.item
         else if opt.active
             @columns[col].row(slash.file opt.active)?.setActive()
             
         if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
             if col = @lastDirColumn()
                 col.div.focus()
+                
+        opt.cb? column:col, item:item
 
     #  0000000   000   000  00000000  000  000      00000000
     # 000   000  0000  000  000       000  000      000

@@ -6,7 +6,7 @@
 0000000    000   000   0000000   00     00  0000000   00000000  000   000  
 ###
 
-{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, klog, kerror, _ } = require 'kxk'
+{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, klog, kerror, $, _ } = require 'kxk'
 
 Column = require './column'
 flex   = require './flex/flex'
@@ -51,32 +51,6 @@ class Browser
                 return column
         null
                             
-    # 000       0000000    0000000   0000000         000  000000000  00000000  00     00   0000000  
-    # 000      000   000  000   000  000   000       000     000     000       000   000  000       
-    # 000      000   000  000000000  000   000       000     000     0000000   000000000  0000000   
-    # 000      000   000  000   000  000   000       000     000     000       000 0 000       000  
-    # 0000000   0000000   000   000  0000000         000     000     00000000  000   000  0000000   
-    
-    loadItems: (items, opt) ->
-
-        return if not @flex
-        col = @emptyColumn opt?.column
-        @clearColumnsFrom col.index
-        col.setItems items, opt
-
-        if opt.activate?
-            col.row(opt.activate)?.activate()
-                
-        if opt.row?
-            col.focus()
-            
-        if opt.focus
-            @focus()
-            @lastUsedColumn()?.activeRow()?.setActive()            
-            
-        @popEmptyColumns relax:false
-        @
-
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
     # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
@@ -87,7 +61,6 @@ class Browser
   
         if key == 'up'
             if @activeColumnIndex() > 0
-                # klog 'activeColumnIndex' @activeColumnIndex()
                 if col = @activeColumn()
                     if row = col.activeRow()
                         @loadItem @fileItem row.item.file
@@ -115,7 +88,7 @@ class Browser
     # 000        0000000    0000000   0000000   0000000   
     
     focus: (opt) => 
-        @lastUsedColumn()?.focus opt
+        @lastDirColumn()?.focus opt
         @
     
     focusColumn: -> 
@@ -161,7 +134,7 @@ class Browser
             else break
         used
 
-    hasEmptyColumns: -> _.last(@columns).isEmpty()
+    hasEmptyColumns: -> @columns[-1].isEmpty()
 
     height: -> @flex?.height()
     numCols: -> @columns.length 
@@ -210,13 +183,12 @@ class Browser
         @flex.popPane opt
         @columns.pop()
         
-    popEmptyColumns: (opt) -> @popColumn(opt) while @hasEmptyColumns()
+    popEmptyColumns: (opt) -> 
         
-    popColumnsFrom: (col) -> @clearColumnsFrom col, pop:true
+        klog 'popEmptyColumns' opt, @lastDirColumn()?.index
+        @clearColumnsFrom @lastDirColumn()?.index ? 0, pop:true
+        # @popColumn(opt) while @hasEmptyColumns()
         
-        # while @numCols() > col 
-            # @popColumn()
-            
     shiftColumnsTo: (col) ->
         
         for i in [0...col]
@@ -265,7 +237,17 @@ class Browser
         @flex.relax()
         true
 
-    resized: -> @updateColumnScrolls()
+    resized: -> 
+    
+        if col = @lastUsedColumn() # workaround weird flicker bug
+            if col.parent.type == 'file'
+                if img =$ '.browserImage'
+                    img.style.maxWidth  = '0%'
+                    img.style.maxHeight = '75vh'
+                    img.clientX
+                    img.style.maxWidth  = '100%'
+        
+        @updateColumnScrolls()
     
     updateColumnScrolls: =>
         
@@ -287,8 +269,8 @@ class Browser
     
     convertPXM: (row) ->
         
-        item = row.item
-        file = item.file
+        item   = row.item
+        file   = item.file
         tmpPXM = slash.join os.tmpdir(), "ko-#{slash.base file}.pxm"
         tmpPNG = slash.swapExt tmpPXM, '.png'
 
@@ -301,13 +283,13 @@ class Browser
 
     convertImage: (row) ->
         
-        item = row.item
-        file = item.file
-        tmpImage = slash.join os.tmpdir(), "ko-#{slash.basename file}.png"
+        item   = row.item
+        file   = item.file
+        tmpImg = slash.join os.tmpdir(), "ko-#{slash.basename file}.png"
         
-        childp.exec "/usr/bin/sips -s format png \"#{file}\" --out \"#{tmpImage}\"", (err) =>
+        childp.exec "/usr/bin/sips -s format png \"#{file}\" --out \"#{tmpImg}\"", (err) =>
             return kerror "can't convert image #{file}: #{err}" if err?
-            @loadImage row, tmpImage
+            @loadImage row, tmpImg
 
     loadImage: (row, file) ->
         

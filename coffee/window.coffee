@@ -38,7 +38,19 @@ fileBrowser = null
 winMain = ->
 
     fileBrowser = new FileBrowser $ "#main"
-    fileBrowser.loadItem type:'dir' file:slash.resolve args.folder[0] ? '~'
+    
+    if args.folder[0]
+        fileBrowser.browse args.folder[0]
+    else
+        if load = prefs.get 'load'
+            klog 'init load' load
+            if load.last != load.first
+                active = load.last[load.first.length..]
+                active = load.first + '/' + slash.split(active)[0]
+            fileBrowser.browse load.first, active:active, cb: ->
+                fileBrowser.navigateToFile load.last
+        else
+            fileBrowser.browse '~'
     
     win.on 'resize' -> fileBrowser.resized()
 
@@ -125,6 +137,15 @@ onMenuAction = (name, args) ->
     post.toMain 'menuAction' name, args
 
 post.on 'menuAction' onMenuAction
+post.on 'load' (info) ->
+    
+    load = prefs.get 'load' {}
+    if info.column
+        load.last = info.item.file
+    else
+        load.first = info.item.file
+        load.last  = info.item.file
+    prefs.set 'load' load
 
 toggleExtensions = ->
 
@@ -139,17 +160,12 @@ toggleExtensions = ->
 # 000  000   000          000
 # 000   000  00000000     000
 
-onCombo = (combo, info) ->
+# onCombo = (combo, info) ->
 
-    return if not combo
+    # return if not combo
 
-    { mod, key, combo, char, event } = info
+    # { mod, key, combo, char, event } = info
 
-    # switch combo
-        # when 'command+shift+='    then return stopEvent event, @changeZoom +1
-        # when 'command+shift+-'    then return stopEvent event, @changeZoom -1
-        # when 'command+shift+0'    then return stopEvent event, @resetZoom()
-
-post.on 'combo' onCombo
+# post.on 'combo' onCombo
 
 winMain()

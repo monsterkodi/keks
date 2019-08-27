@@ -1,6 +1,6 @@
 name            keks
 productName     keks
-version         0.17.0
+version         0.18.0
 description     file browser
 main            js/main.js
 bin
