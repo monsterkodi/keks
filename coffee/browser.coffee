@@ -238,15 +238,7 @@ class Browser
         true
 
     resized: -> 
-    
-        if col = @lastUsedColumn() # workaround weird flicker bug
-            if col.parent.type == 'file'
-                if img =$ '.browserImage'
-                    img.style.maxWidth  = '0%'
-                    img.style.maxHeight = '75vh'
-                    img.clientX
-                    img.style.maxWidth  = '100%'
-        
+            
         @updateColumnScrolls()
     
     updateColumnScrolls: =>
