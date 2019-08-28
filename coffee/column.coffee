@@ -11,6 +11,7 @@
 Row      = require './row'
 Scroller = require './tools/scroller'
 File     = require './tools/file'
+Crumb    = require './crumb'
 fuzzy    = require 'fuzzy'
 wxw      = require 'wxw'
 
@@ -27,13 +28,7 @@ class Column
         @table = elem class: 'browserColumnTable'
         @div.appendChild @table
         
-        @crumb = elem class:'crumb'
-        @crumb.columnIndex = @index
-        @crumb.addEventListener 'dblclick' @makeRoot
-        
         @setIndex @browser.columns?.length
-                
-        $('crumbs').appendChild @crumb
         
         @browser.cols?.appendChild @div
         
@@ -50,11 +45,12 @@ class Column
         
         @div.addEventListener 'contextmenu' @onContextMenu
         
+        @crumb  = new Crumb @
         @scroll = new Scroller @
         
     setIndex: (@index) ->
         
-        @crumb.columnIndex = @index
+        @crumb?.elem.columnIndex = @index
         
     dropRow: (row, pos) -> 
     
@@ -82,11 +78,8 @@ class Column
         @items  = items
         @parent = parent
         
-        if @index == 0
-            @crumb.innerHTML = File.crumbSpan slash.tilde @parent.file
-        else
-            @crumb.innerHTML = slash.base @parent.file
-        
+        @crumb.setFile @parent.file
+                
         if @parent.type == undefined
             log 'column.loadItems' String @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
@@ -146,7 +139,7 @@ class Column
         @div.scrollTop = 0
         @editor?.del()
         @table.innerHTML = ''
-        @crumb.innerHTML = ''
+        @crumb.clear()
         @rows = []
         @scroll.update()
                     
@@ -221,20 +214,8 @@ class Column
     # 000       000   000  000   000  000 0 000  000   000  
     #  0000000  000   000   0000000   000   000  0000000    
     
-    updateCrumb: =>
-        
-        br = @div.getBoundingClientRect()
-        @crumb.style.left = "#{br.left}px"
-        if @index == @browser.numCols()-1
-            width = br.right - br.left - 135
-            @crumb.style.width = "#{width}px"
-            if width < 50
-                @crumb.style.display = 'none'
-            else
-                @crumb.style.display = null
-        else
-            @crumb.style.width = "#{br.right - br.left}px"
-    
+    updateCrumb: => @crumb.updateRect @div.getBoundingClientRect()
+            
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
     # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
