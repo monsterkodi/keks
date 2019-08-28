@@ -55,10 +55,6 @@ winMain = ->
     win.on 'resize' -> fileBrowser.resized()
     
     prefs.apply 'browser▸hideExtensions' hideExtensions
-
-# win.on 'ready-to-show' ->
-#     
-    # klog 'ready-to-show' fileBrowser.columns[0]?
     
 # 00000000    0000000   00000000   000   000  00000000
 # 000   000  000   000  000   000  000   000  000   000

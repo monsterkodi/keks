@@ -6,7 +6,7 @@
  0000000  000   000   0000000   000   000  0000000  
 ###
 
-{ slash, elem, $ } = require 'kxk'
+{ slash, elem, klog, $ } = require 'kxk'
 
 File = require './tools/file'
 
@@ -22,7 +22,10 @@ class Crumb
     onClick: (event) =>
         
         if @column.index == 0
-            klog event.target.outerHTML
+            if event.target.id
+                @column.browser.browse event.target.id
+            else
+                @column.browser.browse @column.parent.file
         else
             @column.makeRoot()
         

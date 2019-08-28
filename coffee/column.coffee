@@ -431,6 +431,8 @@ class Column
                 name: '..'
                 type: 'dir'
                 file: slash.dir @parent.file
+                
+        @crumb.setFile @parent.file
     
     onContextMenu: (event, column) => 
         
