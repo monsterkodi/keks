@@ -53,6 +53,8 @@ winMain = ->
             fileBrowser.browse '~'
     
     win.on 'resize' -> fileBrowser.resized()
+    
+    prefs.apply 'browser▸hideExtensions' hideExtensions
 
 # win.on 'ready-to-show' ->
 #     
@@ -146,12 +148,16 @@ post.on 'load' (info) ->
         load.last  = info.item.file
     prefs.set 'load' load
 
-toggleExtensions = ->
+toggleExtensions = -> prefs.toggle 'browser▸hideExtensions' setExtensions
+hideExtensions = (hide=true) ->
 
-    stateKey = "browser▸hideExtensions"
-    prefs.set stateKey, not prefs.get stateKey, false
-    setStyle '.browserRow .ext'   'display' prefs.get(stateKey) and 'none' or 'initial'
-    setStyle '.fileInfoFile .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
+    setStyle '.browserRow .ext'   'display' hide and 'none' or 'initial'
+    setStyle '.fileInfoFile .ext' 'display' hide and 'none' or 'initial'
+
+    # stateKey = "browser▸hideExtensions"
+    # prefs.set stateKey, not prefs.get stateKey, false
+    # setStyle '.browserRow .ext'   'display' prefs.get(stateKey) and 'none' or 'initial'
+    # setStyle '.fileInfoFile .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
 
 # 000   000  00000000  000   000
 # 000  000   000        000 000

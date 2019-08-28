@@ -233,7 +233,6 @@ class FileBrowser extends Browser
 
             img.style.opacity   = '1'
             img.style.maxWidth  = '100%'
-            img.style.maxHeight = '96vh !important'
             
             stat = slash.fileExists file
             size = pbytes(stat.size).split ' '
