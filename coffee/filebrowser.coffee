@@ -63,7 +63,6 @@ class FileBrowser extends Browser
             else
                 break
                 
-        klog 'col' @columns.length, col
         if col == 1 and slash.dir(file) != @columns[0]?.path()
             return 0
         Math.max -1, col-2
@@ -88,8 +87,6 @@ class FileBrowser extends Browser
         else
             paths = filelist.slice filelist.length-2
             
-        # klog 'navigateToFile' col , paths
-        
         @clearColumnsFrom col+1, pop:true clear:col+paths.length
         
         while @numCols() < paths.length
@@ -189,7 +186,6 @@ class FileBrowser extends Browser
 
         file = item.file
 
-        # @columns[col].items = [item]
         @columns[col].parent = item
         
         switch slash.ext file

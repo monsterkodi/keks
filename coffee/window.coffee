@@ -43,7 +43,7 @@ winMain = ->
         fileBrowser.browse args.folder[0]
     else
         if load = prefs.get 'load'
-            klog 'init load' load
+            # klog 'init load' load
             if load.last != load.first
                 active = load.last[load.first.length..]
                 active = load.first + '/' + slash.split(active)[0]
@@ -144,16 +144,11 @@ post.on 'load' (info) ->
         load.last  = info.item.file
     prefs.set 'load' load
 
-toggleExtensions = -> prefs.toggle 'browser▸hideExtensions' setExtensions
+toggleExtensions = -> prefs.toggle 'browser▸hideExtensions' hideExtensions
 hideExtensions = (hide=true) ->
 
     setStyle '.browserRow .ext'   'display' hide and 'none' or 'initial'
     setStyle '.fileInfoFile .ext' 'display' hide and 'none' or 'initial'
-
-    # stateKey = "browser▸hideExtensions"
-    # prefs.set stateKey, not prefs.get stateKey, false
-    # setStyle '.browserRow .ext'   'display' prefs.get(stateKey) and 'none' or 'initial'
-    # setStyle '.fileInfoFile .ext' 'display' prefs.get(stateKey) and 'none' or 'initial'
 
 # 000   000  00000000  000   000
 # 000  000   000        000 000

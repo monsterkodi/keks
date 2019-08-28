@@ -6,7 +6,7 @@
  0000000  000   000   0000000   000   000  0000000  
 ###
 
-{ slash, elem, klog, $ } = require 'kxk'
+{ slash, elem, kpos, klog, $ } = require 'kxk'
 
 File = require './tools/file'
 
@@ -25,7 +25,12 @@ class Crumb
             if event.target.id
                 @column.browser.browse event.target.id
             else
-                @column.browser.browse @column.parent.file
+                root = @elem.firstChild
+                br = root.getBoundingClientRect()
+                if kpos(event).x < br.left
+                    @column.browser.browse root.id
+                else
+                    @column.browser.browse @column.parent.file
         else
             @column.makeRoot()
         
