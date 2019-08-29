@@ -31,5 +31,6 @@ post.on 'menuAction' (action) ->
     
     switch action
         when 'New Window' then kapp.createWindow()
-    
-       
+        # else     
+            # klog 'menuAction' action
+            

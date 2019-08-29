@@ -8,9 +8,10 @@
   },
   "View": {
     "Toggle Extensions": "ctrl+e",
-    "Toggle Shelf": "alt+shift+left",
-    "Focus Shelf": "alt+left",
     "-": null,
+    "Focus Shelf": "alt+left",
+    "Toggle Shelf": "alt+shift+left alt+shift+right",
+    "--": null,
     "Font Size": {
       "Increase": "cmdctrl+=",
       "Decrease": "cmdctrl+-",

@@ -131,8 +131,6 @@ onMenuAction = (name, args) ->
         when 'Reload Window'     then return reloadWin()
         when 'Toggle Shelf'      then return fileBrowser.toggleShelf()
         
-    klog 'menuAction' name
-
     post.toMain 'menuAction' name, args
 
 post.on 'menuAction' onMenuAction

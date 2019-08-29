@@ -20,9 +20,10 @@ keks
 
 View
     Toggle Extensions       ctrl+e
-    Toggle Shelf            alt+shift+left
-    Focus Shelf             alt+left
     -
+    Focus Shelf             alt+left
+    Toggle Shelf            alt+shift+left alt+shift+right
+    --
     Font Size
         Increase            cmdctrl+=
         Decrease            cmdctrl+-

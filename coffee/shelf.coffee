@@ -281,7 +281,7 @@ class Shelf extends Column
                 return stopEvent event
             when 'up' 'down' 'page up' 'page down' 'home' 'end' 
                 return stopEvent event, @navigateRows key
-            when 'right' 'enter'
+            when 'right' 'alt+right' 'enter'
                 return stopEvent event, @focusBrowser()
                 
         if mod in ['shift' ''] and char then @doSearch char
