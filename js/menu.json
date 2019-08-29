@@ -2,9 +2,20 @@
   "keks": {
     "About": "alt+cmdctrl+/",
     "-": null,
-    "Toggle Extensions": "ctrl+e",
+    "New Window": "cmdctrl+n",
     "--": null,
     "Quit": "cmdctrl+q"
+  },
+  "View": {
+    "Toggle Extensions": "ctrl+e",
+    "Toggle Shelf": "alt+shift+left",
+    "Focus Shelf": "alt+left",
+    "-": null,
+    "Font Size": {
+      "Increase": "cmdctrl+=",
+      "Decrease": "cmdctrl+-",
+      "Reset": "cmdctrl+0"
+    }
   },
   "Window": {
     "Close": "cmdctrl+w",
@@ -14,16 +25,10 @@
     "--": null,
     "Minimize": "alt+ctrl+shift+m",
     "Maximize": "alt+ctrl+m",
-    "Hide": "command+h h",
+    "Hide": "command+h",
     "---": null,
     "Screenshot": "f3",
     "Reload": "alt+cmdctrl+l",
-    "DevTools": "alt+cmdctrl+i",
-    "----": null,
-    "Font Size": {
-      "Increase": "cmdctrl+=",
-      "Decrease": "cmdctrl+-",
-      "Reset": "cmdctrl+0"
-    }
+    "DevTools": "alt+cmdctrl+i"
   }
 }

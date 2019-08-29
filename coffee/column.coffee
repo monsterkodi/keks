@@ -39,7 +39,6 @@ class Column
         @div.addEventListener 'mouseover' @onMouseOver
         @div.addEventListener 'mouseout'  @onMouseOut
 
-        # @div.addEventListener 'mouseup'   @onClick
         @div.addEventListener 'click'     @onClick
         @div.addEventListener 'dblclick'  @onDblClick
         
@@ -54,8 +53,6 @@ class Column
         
     dropRow: (row, pos) -> 
     
-        # klog 'drop' row.item, @rowAtPos(pos)?.item, @parent.file
-        
         if targetRow = @rowAtPos pos
             item = targetRow.item
             if item.type == 'dir'
@@ -81,7 +78,7 @@ class Column
         @crumb.setFile @parent.file
                 
         if @parent.type == undefined
-            log 'column.loadItems' String @parent
+            # log 'column.loadItems' String @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
         
         kerror "no parent item?" if not @parent?
@@ -253,9 +250,7 @@ class Column
             when 'enter'
                 if item = @activeRow()?.item
                     type = item.type
-                    # klog 'navigateCols' item
                     if type == 'dir'
-                        # post.emit 'filebrowser' 'loadItem' item, focus:true
                         @browser.loadItem item
                     else if item.file
                         post.emit 'openFile' item.file
@@ -383,7 +378,6 @@ class Column
         @removeObject()
         
         wxw 'trash' pathToTrash
-        # trash([pathToTrash]).catch (err) -> error "failed to trash #{pathToTrash} #{err}"
 
     addToShelf: =>
         
@@ -400,7 +394,6 @@ class Column
                     return error 'copy file failed' err if err?
                     item = type:'file' file:slash.join slash.dir(@activePath()), fileName
                     post.emit 'filebrowser' 'loadItem' item, focus:true
-                    # post.emit 'loadFile' fileName
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  
@@ -521,8 +514,6 @@ class Column
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'
             when 'enter''alt+up'                    then return stopEvent event, @navigateCols key
-            when 'alt+left'                         then return stopEvent event, $('shelf')?.focus?()
-            when 'alt+shift+left'                   then return stopEvent event, @browser.toggleShelf()
             when 'backspace' 'delete'               then return stopEvent event, @browser.onBackspaceInColumn @
             when 'ctrl+t'                           then return stopEvent event, @sortByType()
             when 'ctrl+n'                           then return stopEvent event, @sortByName()
@@ -541,8 +532,8 @@ class Column
                 if @search.length then @clearSearch()
                 return stopEvent event
 
-        if key in ['up'   'down']  then return stopEvent event, @navigateRows key              
-        if key in ['left' 'right'] then return stopEvent event, @navigateCols key        
+        if combo in ['up'   'down']  then return stopEvent event, @navigateRows key              
+        if combo in ['left' 'right'] then return stopEvent event, @navigateCols key
             
         if mod in ['shift' ''] and char then @doSearch char
                 

@@ -6,7 +6,7 @@
 000   000  000   000  000  000   000
 ###
 
-{ app, args, post, klog } = require 'kxk'
+{ post, app, args, post, klog } = require 'kxk'
 
 kapp = new app
     dir:        __dirname
@@ -27,5 +27,9 @@ kapp = new app
     """
     
 post.on 'winDidShow' ->
+post.on 'menuAction' (action) ->
+    
+    switch action
+        when 'New Window' then kapp.createWindow()
     
        

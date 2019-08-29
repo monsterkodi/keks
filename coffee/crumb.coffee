@@ -9,6 +9,7 @@
 { slash, elem, kpos, klog, $ } = require 'kxk'
 
 File = require './tools/file'
+electron = require 'electron'
 
 class Crumb
 
@@ -20,6 +21,8 @@ class Crumb
         $('crumbs').appendChild @elem
 
     onClick: (event) =>
+        
+        return if window.win.titleDrag == true
         
         if @column.index == 0
             if event.target.id

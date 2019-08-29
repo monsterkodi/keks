@@ -127,7 +127,9 @@ onMenuAction = (name, args) ->
         when 'Decrease'          then return changeFontSize -1
         when 'Reset'             then return resetFontSize()
         when 'Add to Shelf'      then return addToShelf()
+        when 'Focus Shelf'       then return $('shelf')?.focus?()
         when 'Reload Window'     then return reloadWin()
+        when 'Toggle Shelf'      then return fileBrowser.toggleShelf()
         
     klog 'menuAction' name
 
