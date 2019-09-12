@@ -53,34 +53,36 @@ dirList = (dirPath, opt, cb) ->
         if base.toLowerCase().startsWith '$recycle'
             return true
         
-        if /\d\d\d\d\d\d\d\d\d?\d?/.test slash.ext p 
-            return true
+        # if /\d\d\d\d\d\d\d\d\d?\d?/.test slash.ext p 
+            # return true
             
         false
     
-    onDir = (d) -> 
+    onDir = (d, stat) -> 
         if not filter(d) 
             dir = 
                 type: 'dir'
                 file: slash.path d
                 name: slash.basename d
+                stat: stat
             dirs.push  dir
             
-    onFile = (f) -> 
+    onFile = (f, stat) -> 
         if not filter(f) 
             file = 
                 type: 'file'
                 file: slash.path f
                 name: slash.basename f
+                stat: stat
             files.push file
 
     try
         fileSort = (a,b) -> a.name.localeCompare b.name
         walker = walkdir.walk dirPath, no_recurse: true
-        walker.on 'directory', onDir
-        walker.on 'file',      onFile
-        walker.on 'end',         -> cb null, dirs.sort(fileSort).concat files.sort(fileSort)
-        walker.on 'error', (err) -> cb err
+        walker.on 'directory' onDir
+        walker.on 'file'      onFile
+        walker.on 'end'         -> cb null, dirs.sort(fileSort).concat files.sort(fileSort)
+        walker.on 'error' (err) -> cb err
         walker
     catch err
         cb err

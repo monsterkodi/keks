@@ -1,15 +1,15 @@
 {
   "name": "keks",
   "productName": "keks",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "description": "file browser",
   "main": "js/main.js",
   "bin": {
     "keks": "./bin/keks"
   },
-  "scripts": [
-    "konrad build"
-  ],
+  "scripts": {
+    "build": "konrad --build"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/monsterkodi/keks.git"

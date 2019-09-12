@@ -89,6 +89,9 @@ class Column
                 @rows.push new Row @, item
         
             @scroll.update()
+            
+        if @parent.type == 'dir' and slash.samePath '~/Downloads' @parent.file
+            @sortByDateAdded()
         @
         
     unshiftItem: (item) ->
@@ -344,7 +347,16 @@ class Column
         for row in @rows
             @table.appendChild row.div
         @
-  
+
+    sortByDateAdded: ->
+        
+        @rows.sort (a,b) -> b.item.stat?.atimeMs - a.item.stat?.atimeMs
+            
+        @table.innerHTML = ''
+        for row in @rows
+            @table.appendChild row.div
+        @
+        
     # 000000000   0000000    0000000    0000000   000      00000000  
     #    000     000   000  000        000        000      000       
     #    000     000   000  000  0000  000  0000  000      0000000   
@@ -354,7 +366,7 @@ class Column
     toggleDotFiles: =>
 
         if @parent.type == undefined
-            log 'column.toggleDotFiles' @parent
+            # log 'column.toggleDotFiles' @parent
             @parent.type = slash.isDir(@parent.file) and 'dir' or 'file'
             
         if @parent.type == 'dir'            
@@ -517,6 +529,7 @@ class Column
             when 'backspace' 'delete'               then return stopEvent event, @browser.onBackspaceInColumn @
             when 'ctrl+t'                           then return stopEvent event, @sortByType()
             when 'ctrl+n'                           then return stopEvent event, @sortByName()
+            when 'ctrl+a'                           then return stopEvent event, @sortByDateAdded()
             when 'command+i' 'ctrl+i'               then return stopEvent event, @toggleDotFiles()
             when 'command+d' 'ctrl+d'               then return stopEvent event, @duplicateFile()
             when 'command+k' 'ctrl+k'               then return stopEvent event if @browser.cleanUp()
