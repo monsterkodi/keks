@@ -24,18 +24,22 @@ class Row
             html = '<span> </span>'
         else
             html = File.span text
-        @div = elem class:'browserRow' html:html
+        @div = elem class:'browserRow' html:html, draggable:true
         @div.classList.add @item.type
         @column.table.appendChild @div
 
         if @item.type in ['file' 'dir'] or @item.icon
             @setIcon()
         
-        @drag = new drag
-            target:  @div
-            onStart: @onDragStart
-            onMove:  @onDragMove
-            onStop:  @onDragStop
+        @div.ondragstart = @onDragStart
+        @div.ondragover  = @onDragOver
+        @div.ondrop      = @onDrop
+        
+        # @drag = new drag
+            # target:  @div
+            # onStart: @onDragStart
+            # onMove:  @onDragMove
+            # onStop:  @onDragStop
                
     next:        -> @index() < @column.numRows()-1 and @column.rows[@index()+1] or null
     prev:        -> @index() > 0 and @column.rows[@index()-1] or null
@@ -215,38 +219,55 @@ class Row
     # 000   000  000   000  000   000  000   000  
     # 0000000    000   000  000   000   0000000   
     
-    onDragStart: (d, e) =>
+    onDragStart: (event) =>
+
+        event.dataTransfer.setData 'text/plain' @item?.file
 
         @column.focus activate:false
         @setActive scroll:false
+        
+    onDragOver: (event) =>
+        
+        # if @item?.file != event.dataTransfer.getData 'text/plain'
+        event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
+        event.preventDefault()
+        
+    onDrop: (event) => 
+    
+        action = event.getModifierState('Shift') and 'copy' or 'move'
+        source = event.dataTransfer.getData 'text/plain'
+        target = @item?.file
+        @browser.dropAction action, source, target
+        stopEvent event
 
-    onDragMove: (d,e) =>
-        
-        if not @column.dragDiv
-            
-            return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
-            
-            @column.dragDiv = @div.cloneNode true
-            br = @div.getBoundingClientRect()
-            @column.dragDiv.style.position = 'absolute'
-            @column.dragDiv.style.top  = "#{br.top}px"
-            @column.dragDiv.style.left = "#{br.left}px"
-            @column.dragDiv.style.width = "#{br.width-12}px"
-            @column.dragDiv.style.height = "#{br.height-3}px"
-            @column.dragDiv.style.flex = 'unset'
-            @column.dragDiv.style.pointerEvents = 'none'
-            document.body.appendChild @column.dragDiv
-        
-        @column.dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
+    # onDragMove: (d,e) =>
+#         
+        # klog 'onDragMove' @item?.file
+        # if not @column.dragDiv
+#             
+            # return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
+#             
+            # @column.dragDiv = @div.cloneNode true
+            # br = @div.getBoundingClientRect()
+            # @column.dragDiv.style.position = 'absolute'
+            # @column.dragDiv.style.top  = "#{br.top}px"
+            # @column.dragDiv.style.left = "#{br.left}px"
+            # @column.dragDiv.style.width = "#{br.width-12}px"
+            # @column.dragDiv.style.height = "#{br.height-3}px"
+            # @column.dragDiv.style.flex = 'unset'
+            # @column.dragDiv.style.pointerEvents = 'none'
+            # document.body.appendChild @column.dragDiv
+#         
+        # @column.dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
 
-    onDragStop: (d,e) =>
-        
-        if @column.dragDiv?
-            
-            @column.dragDiv.remove()
-            delete @column.dragDiv
-            
-            if column = @browser.columnAtPos d.pos
-                column.dropRow @, d.pos
+    # onDragStop: (d,e) =>
+#         
+        # if @column.dragDiv?
+#             
+            # @column.dragDiv.remove()
+            # delete @column.dragDiv
+#             
+            # if column = @browser.columnAtPos d.pos
+                # column.dropRow @, d.pos
         
 module.exports = Row

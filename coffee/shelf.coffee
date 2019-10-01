@@ -6,7 +6,7 @@
 0000000   000   000  00000000  0000000  000     
 ###
 
-{ stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, klog, kerror, $, _ } = require 'kxk'
+{ stopEvent, keyinfo, slash, post, prefs, popup, elem, clamp, empty, first, last, kpos, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './tools/scroller'
@@ -154,8 +154,16 @@ class Shelf extends Column
             
         @setItems @items
                         
-    dropRow: (row, pos) -> @addItem row.item, pos:pos
-            
+    # dropRow: (row, pos) -> @addItem row.item, pos:pos
+         
+    onDrop: (event) => 
+    
+        action = event.getModifierState('Shift') and 'copy' or 'move'
+        source = event.dataTransfer.getData 'text/plain'
+        
+        item = @browser.fileItem source
+        @addItem item, pos:kpos event
+    
     isEmpty: -> empty @rows
     
     clear: ->

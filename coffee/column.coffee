@@ -44,6 +44,9 @@ class Column
         
         @div.addEventListener 'contextmenu' @onContextMenu
         
+        @div.ondragover  = @onDragOver
+        @div.ondrop      = @onDrop
+        
         @crumb  = new Crumb @
         @scroll = new Scroller @
         
@@ -51,22 +54,57 @@ class Column
         
         @crumb?.elem.columnIndex = @index
         
-    dropRow: (row, pos) -> 
+    # 0000000    00000000    0000000    0000000   
+    # 000   000  000   000  000   000  000        
+    # 000   000  0000000    000000000  000  0000  
+    # 000   000  000   000  000   000  000   000  
+    # 0000000    000   000  000   000   0000000   
     
-        if targetRow = @rowAtPos pos
-            item = targetRow.item
-            if item.type == 'dir'
-                row.rename slash.join item.file, row.item.name
-            else
-                row.rename slash.join slash.dir(item.file), row.item.name
-        else
-            row.rename slash.join @parent.file, row.item.name
+    onDragOver: (event) =>
+        
+        # if @item?.file != event.dataTransfer.getData 'text/plain'
+        event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
+        event.preventDefault()
+        
+    onDrop: (event) => 
+    
+        action = event.getModifierState('Shift') and 'copy' or 'move'
+        source = event.dataTransfer.getData 'text/plain'
+        target = @parent?.file
+        @browser.dropAction action, source, target
+        
+    # dropRow: (row, pos) ->
+#     
+        # if targetRow = @rowAtPos pos
+            # item = targetRow.item
+            # if item.type == 'dir'
+                # row.rename slash.join item.file, row.item.name
+            # else
+                # row.rename slash.join slash.dir(item.file), row.item.name
+        # else
+            # row.rename slash.join @parent.file, row.item.name
         
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
     # 0000000   0000000      000     000     000     0000000   000000000  0000000   
     #      000  000          000     000     000     000       000 0 000       000  
     # 0000000   00000000     000     000     000     00000000  000   000  0000000   
+    
+    removeFile: (file) => 
+        if row = @row slash.file file
+            if row == @activeRow()
+                klog 'remove active'
+                @removeObject()
+            else
+                index = row.index()
+                klog 'remove row' index
+                @removeRow row
+        @scroll.update()
+            
+    insertFile: (file) => 
+        klog 'insertFile' file
+        item = @browser.fileItem file
+        @rows.push new Row @, item
     
     loadItems: (items, parent) ->
         

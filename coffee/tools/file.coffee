@@ -13,13 +13,34 @@ icons = require './icons.json'
 class File
     
     @rename: (from, to, cb) ->
-        
         fs.mkdir slash.dir(to), recursive:true, (err) ->
             return kerror 'mkdir failed' err if err
+            if slash.isDir(to)
+                to = slash.join to, slash.file from
+            else
+                to = slash.join slash.dir(to), slash.file from
+            klog "rename #{from} #{to}"
             fs.rename from, to, (err) ->
                 return kerror 'rename failed' err if err
                 cb to
-    
+
+    @copy: (from, to, cb) ->
+        
+        if slash.dir(from) == to
+            unusedFilename = require 'unused-filename'
+            unusedFilename(from).then (fileName) => 
+                @copy from, fileName, cb
+            return
+            
+        if slash.isDir(to)
+            to = slash.join to, slash.file from
+        else
+            to = slash.join slash.dir(to), slash.file from
+        klog "copyFile #{from} #{to}"    
+        fs.copyFile from, to, (err) ->
+            return kerror 'copy failed' err if err
+            cb to
+                
     # 000   0000000   0000000   000   000  
     # 000  000       000   000  0000  000  
     # 000  000       000   000  000 0 000  

@@ -46,7 +46,41 @@ class FileBrowser extends Browser
         @shelfSize = prefs.get 'shelf▸size' 200
 
         @initColumns()
-
+        
+    # 0000000    00000000    0000000   00000000    0000000    0000000  000000000  000   0000000   000   000  
+    # 000   000  000   000  000   000  000   000  000   000  000          000     000  000   000  0000  000  
+    # 000   000  0000000    000   000  00000000   000000000  000          000     000  000   000  000 0 000  
+    # 000   000  000   000  000   000  000        000   000  000          000     000  000   000  000  0000  
+    # 0000000    000   000   0000000   000        000   000   0000000     000     000   0000000   000   000  
+    
+    dropAction: (action, source, target) ->
+        
+        if action == 'move' 
+            if source == target or slash.dir(source) == target
+                klog 'noop'
+                return
+            
+        # klog action, source, target
+        switch action
+            when 'move'
+                File.rename source, target, (newFile) =>
+                    klog 'moved' source, target
+                    if sourceColumn = @columnForFile source 
+                        sourceColumn.removeFile source
+                    if targetColumn = @columnForFile newFile
+                        targetColumn.insertFile newFile
+            when 'copy'
+                File.copy source, target, (newFile) =>
+                    klog 'copied' source, target
+                    if targetColumn = @columnForFile newFile
+                        targetColumn.addFile newFile
+                    
+    columnForFile: (file) ->
+        
+        for column in @columns
+            if column.parent?.file == slash.dir file
+                return column
+        
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000
     # 0000  000  000   000  000   000  000  000        000   000     000     000
     # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000
