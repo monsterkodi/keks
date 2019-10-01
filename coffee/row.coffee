@@ -1,4 +1,3 @@
-
 ###
 00000000    0000000   000   000
 000   000  000   000  000 0 000
@@ -34,13 +33,7 @@ class Row
         @div.ondragstart = @onDragStart
         @div.ondragover  = @onDragOver
         @div.ondrop      = @onDrop
-        
-        # @drag = new drag
-            # target:  @div
-            # onStart: @onDragStart
-            # onMove:  @onDragMove
-            # onStop:  @onDragStop
-               
+                       
     next:        -> @index() < @column.numRows()-1 and @column.rows[@index()+1] or null
     prev:        -> @index() > 0 and @column.rows[@index()-1] or null
     index:       -> @column.rows.indexOf @    
@@ -206,8 +199,6 @@ class Row
         
         return if slash.samePath @item.file, targetFile
                 
-        # klog '------------ rename' @item.file, targetFile
-        
         File.rename @item.file, targetFile, (newFile) =>
             
             @column.removeRow @
@@ -221,6 +212,10 @@ class Row
     
     onDragStart: (event) =>
 
+        if @item.name == '..'
+            event.preventDefault()
+            return 
+        
         event.dataTransfer.setData 'text/plain' @item?.file
 
         @column.focus activate:false
@@ -228,7 +223,6 @@ class Row
         
     onDragOver: (event) =>
         
-        # if @item?.file != event.dataTransfer.getData 'text/plain'
         event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
         event.preventDefault()
         
@@ -240,34 +234,4 @@ class Row
         @browser.dropAction action, source, target
         stopEvent event
 
-    # onDragMove: (d,e) =>
-#         
-        # klog 'onDragMove' @item?.file
-        # if not @column.dragDiv
-#             
-            # return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
-#             
-            # @column.dragDiv = @div.cloneNode true
-            # br = @div.getBoundingClientRect()
-            # @column.dragDiv.style.position = 'absolute'
-            # @column.dragDiv.style.top  = "#{br.top}px"
-            # @column.dragDiv.style.left = "#{br.left}px"
-            # @column.dragDiv.style.width = "#{br.width-12}px"
-            # @column.dragDiv.style.height = "#{br.height-3}px"
-            # @column.dragDiv.style.flex = 'unset'
-            # @column.dragDiv.style.pointerEvents = 'none'
-            # document.body.appendChild @column.dragDiv
-#         
-        # @column.dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
-
-    # onDragStop: (d,e) =>
-#         
-        # if @column.dragDiv?
-#             
-            # @column.dragDiv.remove()
-            # delete @column.dragDiv
-#             
-            # if column = @browser.columnAtPos d.pos
-                # column.dropRow @, d.pos
-        
 module.exports = Row

@@ -60,7 +60,6 @@ class FileBrowser extends Browser
                 klog 'noop'
                 return
             
-        # klog action, source, target
         switch action
             when 'move'
                 File.rename source, target, (newFile) =>
@@ -345,7 +344,7 @@ class FileBrowser extends Browser
         updir = slash.resolve slash.join dir, '..'
 
         if col == 0 or col-1 < @numCols() and @columns[col-1].activeRow()?.item.name == '..'
-            if items[0].name not in ['..' '/']
+            if items[0]?.name not in ['..' '/']
                 if updir != dir
                     items.unshift
                         name: '..'

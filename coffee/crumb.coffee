@@ -9,7 +9,6 @@
 { slash, elem, kpos, klog, $ } = require 'kxk'
 
 File = require './tools/file'
-electron = require 'electron'
 
 class Crumb
 
@@ -17,12 +16,19 @@ class Crumb
         
         @elem = elem class:'crumb'
         @elem.columnIndex = @column.index
-        @elem.addEventListener 'click' @onClick
+        @elem.addEventListener 'mousedown' @onMouseDown
+        @elem.addEventListener 'mouseup' @onMouseUp
         $('crumbs').appendChild @elem
 
-    onClick: (event) =>
+    onMouseDown: (event) =>
         
-        return if window.win.titleDrag == true
+        @downPos = kpos window.win.getBounds()
+            
+    onMouseUp: (event) =>
+        
+        upPos = kpos window.win.getBounds()
+        
+        return if upPos.to(@downPos).length() > 0
         
         if @column.index == 0
             if event.target.id
