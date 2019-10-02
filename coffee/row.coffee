@@ -85,6 +85,7 @@ class Row
             
             when 'dir' 'file'
                 
+                # klog 'row.activateItem' @item.file, @column.index
                 post.emit 'filebrowser' 'activateItem' @item, @column.index
                 
             else    
@@ -117,9 +118,25 @@ class Row
         if opt?.scroll != false
             @column.scroll.toIndex @index()            
         @
-                
+                 
     clearActive: ->
         @div.classList.remove 'active'
+        @
+        
+    #  0000000  00000000  000      00000000   0000000  000000000  00000000  0000000    
+    # 000       000       000      000       000          000     000       000   000  
+    # 0000000   0000000   000      0000000   000          000     0000000   000   000  
+    #      000  000       000      000       000          000     000       000   000  
+    # 0000000   00000000  0000000  00000000   0000000     000     00000000  0000000    
+    
+    isSelected: -> @div.classList.contains 'selected'
+    
+    setSelected: ->
+        @div.classList.add 'selected'
+        @
+        
+    clearSelected: ->
+        @div.classList.remove 'selected'
         @
 
     # 000   000   0000000   00     00  00000000  

@@ -10,6 +10,7 @@
 
 Browser  = require './browser'
 Shelf    = require './shelf'
+Select   = require './select'
 File     = require './tools/file'
 dirlist  = require './tools/dirlist'
 pbytes   = require 'pretty-bytes'
@@ -25,6 +26,7 @@ class FileBrowser extends Browser
 
         @loadID = 0
         @shelf  = new Shelf @
+        @select = new Select @
         @name   = 'FileBrowser'
 
         post.on 'file'        @onFile
@@ -194,16 +196,20 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
-        if @columns[col+1]
-            if slash.samePath item.file, @columns[col+1].path()
-                return
+        klog 'activateItem' col, item?.file
+        # if @columns[col+1]
+            # if slash.samePath item.file, @columns[col+1].path()
+                # klog 'skip'
+                # return
         
         @clearColumnsFrom col+1, pop:true, clear:col+1
 
         switch item.type
             when 'dir'  then @loadDirItem  item, col+1, focus:false
             when 'file' then @loadFileItem item, col+1
-
+            
+        @select.row @columns[col].row slash.file item.file
+            
     # 00000000  000  000      00000000  000  000000000  00000000  00     00
     # 000       000  000      000       000     000     000       000   000
     # 000000    000  000      0000000   000     000     0000000   000000000

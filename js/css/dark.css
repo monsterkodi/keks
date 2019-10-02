@@ -22,6 +22,9 @@ body {
 .browserRow.active.dir {
   color: #ff8;
 }
+.browserRow.selected {
+  background: #116;
+}
 .rowNameInput {
   color: #ff0;
   background-color: #111;

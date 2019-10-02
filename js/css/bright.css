@@ -30,6 +30,9 @@ body {
 .browserRow.active {
   background: #eee;
 }
+.browserRow.selected {
+  background: #eef;
+}
 .browserColumn.focus .browserRow.active {
   background: #ddf;
 }

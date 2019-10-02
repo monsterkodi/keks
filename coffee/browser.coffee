@@ -59,6 +59,8 @@ class Browser
     
     navigate: (key) ->
   
+        @select.clear()
+        
         if key == 'up'
             if @activeColumnIndex() > 0
                 if col = @activeColumn()

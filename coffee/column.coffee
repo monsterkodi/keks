@@ -173,7 +173,7 @@ class Column
     # 000   000  000          000     000     000     000       
     # 000   000   0000000     000     000      0      00000000  
    
-    activateRow:  (row) -> @row(row)?.activate()
+    activateRow: (row) -> @row(row)?.activate()
        
     activeRow: -> _.find @rows, (r) -> r.isActive()
     activePath: -> @activeRow()?.path()
@@ -227,8 +227,20 @@ class Column
     
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
-    onClick:     (event) => @row(event.target)?.activate event
+    
+    onClick: (event) =>
+        
+        if row = @row event.target
+            if event.shiftKey
+                @browser.select.to row
+            else if event.metaKey or event.altKey or event.ctrlKey
+                @browser.select.toggle row
+            else
+                @browser.select.row row
+                # row.activate event
+    
     onDblClick:  (event) => 
+        
         @browser.skipOnDblClick = true
         @navigateCols 'enter'
 
@@ -261,12 +273,15 @@ class Column
             when 'page down' then index+@numVisible()
             else index
             
-        error "no index #{index}? #{@numVisible()}" if not index? or Number.isNaN index        
+        if not index? or Number.isNaN index        
+            error "no index #{index}? #{@numVisible()}"
+            
         index = clamp 0, @numRows()-1, index
         
-        error "no row at index #{index}/#{@numRows()-1}?", @numRows() if not @rows[index]?.activate?
-        if not @rows[index].isActive()
-            @rows[index].activate()
+        if not @rows[index]?.activate?
+            error "no row at index #{index}/#{@numRows()-1}?", @numRows() 
+            
+        @browser.select.row @rows[index]
     
     navigateCols: (key) -> # move to file browser?
         
@@ -410,10 +425,22 @@ class Column
     
     moveToTrash: =>
         
-        pathToTrash = @activePath()
-        @removeObject()
+        index = @browser.select.freeIndex()
+        if index >= 0
+            selectRow = @row index
+            klog 'selectRow' index, selectRow?.item.file
         
-        wxw 'trash' pathToTrash
+        for row in @browser.select.rows
+        
+            klog 'trash' row.path()
+            wxw 'trash' row.path()
+            @removeRow row
+           
+        if selectRow
+            @browser.select.row selectRow
+        else
+            klog 'navigate left'
+            @navigateCols 'left'
 
     addToShelf: =>
         
