@@ -91,7 +91,9 @@ class Column
     insertFile: (file) => 
 
         item = @browser.fileItem file
-        @rows.push new Row @, item
+        row = new Row @, item
+        @rows.push row
+        row
     
     loadItems: (items, parent) ->
         
@@ -428,18 +430,14 @@ class Column
         index = @browser.select.freeIndex()
         if index >= 0
             selectRow = @row index
-            klog 'selectRow' index, selectRow?.item.file
         
         for row in @browser.select.rows
-        
-            klog 'trash' row.path()
             wxw 'trash' row.path()
             @removeRow row
            
         if selectRow
             @browser.select.row selectRow
         else
-            klog 'navigate left'
             @navigateCols 'left'
 
     addToShelf: =>
@@ -447,16 +445,26 @@ class Column
         if pathToShelf = @activePath()
             post.emit 'addToShelf' pathToShelf
         
+    newFolder: =>
+        
+        unused = require 'unused-filename'
+        unused(slash.join @path(), 'New folder').then (newDir) =>
+            fs.mkdir newDir, (err) =>
+                if empty err
+                    row = @insertFile newDir
+                    @browser.select.row row
+                    row.editName()
+            
     duplicateFile: =>
         
-        unusedFilename = require 'unused-filename'
-        unusedFilename(@activePath()).then (fileName) =>
+        unused = require 'unused-filename'
+        unused(@activePath()).then (fileName) =>
             fileName = slash.path fileName
-            if fs.copy? # fs.copyFile in node > 8.4
-                fs.copy @activePath(), fileName, (err) =>
-                    return error 'copy file failed' err if err?
-                    item = type:'file' file:slash.join slash.dir(@activePath()), fileName
-                    post.emit 'filebrowser' 'loadItem' item, focus:true
+            fs.copyFile @activePath(), fileName, (err) =>
+                return error 'copy file failed' err if err?
+                newFile = slash.join slash.dir(@activePath()), fileName
+                row = @insertFile newFile
+                @browser.select.row row
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  
@@ -543,6 +551,10 @@ class Column
             combo:  'alt+shift+.'
             cb:     @addToShelf
         ,
+            text:   'New Folder'
+            combo:  'alt+n' 
+            cb:     @newFolder
+        ,
             text:   'Explorer'
             combo:  'alt+e' 
             cb:     @explorer
@@ -573,6 +585,7 @@ class Column
             when '/'                                then return stopEvent event, @browser.browse '/'
             when 'alt+e'                            then return @explorer()
             when 'alt+o'                            then return @open()
+            when 'alt+n'                            then return @newFolder()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'

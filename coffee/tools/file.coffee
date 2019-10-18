@@ -13,12 +13,15 @@ icons = require './icons.json'
 class File
     
     @rename: (from, to, cb) ->
+        
         fs.mkdir slash.dir(to), recursive:true, (err) ->
+            
             return kerror 'mkdir failed' err if err
+            
             if slash.isDir(to)
                 to = slash.join to, slash.file from
-            else
-                to = slash.join slash.dir(to), slash.file from
+            # else
+                # to = slash.join slash.dir(to), slash.file from
             klog "rename #{from} #{to}"
             fs.rename from, to, (err) ->
                 return kerror 'rename failed' err if err

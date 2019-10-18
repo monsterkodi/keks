@@ -34,8 +34,6 @@ class Select
         
     clear: ->
         
-        # @active?.clearActive()
-        
         for row in @rows ? []
             row.clearSelected()
             

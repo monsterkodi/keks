@@ -196,11 +196,7 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
-        klog 'activateItem' col, item?.file
-        # if @columns[col+1]
-            # if slash.samePath item.file, @columns[col+1].path()
-                # klog 'skip'
-                # return
+        # klog 'activateItem' col, item?.file
         
         @clearColumnsFrom col+1, pop:true, clear:col+1
 

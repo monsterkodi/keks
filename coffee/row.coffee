@@ -161,6 +161,7 @@ class Row
         @input.setSelectionRange 0, slash.base(@item.file).length
 
     onNameKeyDown: (event) =>
+        
         {mod, key, combo} = keyinfo.forEvent event
 
         switch combo
@@ -245,6 +246,10 @@ class Row
         
     onDrop: (event) => 
     
+        if @column.index < 0 and not event.getModifierState('Shift') and not event.getModifierState('Control')
+            @column.onDrop event
+            return
+            
         action = event.getModifierState('Shift') and 'copy' or 'move'
         source = event.dataTransfer.getData 'text/plain'
         target = @item?.file
