@@ -41,6 +41,32 @@ body
 #shelfResize
     background          transparent
     
+// 000   000  000  00000000  000   000  00000000  00000000   
+// 000   000  000  000       000 0 000  000       000   000  
+//  000 000   000  0000000   000000000  0000000   0000000    
+//    000     000  000       000   000  000       000   000  
+//     0      000  00000000  00     00  00000000  000   000  
+
+.viewer
+    overflow            scroll
+    position            absolute
+    bottom              0
+    right               0
+    left                0
+    top                 0
+    
+.viewerImageContainer
+    position            relative
+    padding             frameWidth
+    text-align          center
+
+.viewerImage
+    max-width           -webkit-fill-available
+    border              1px solid
+    cursor              pointer
+    background-size     12px 12px
+    background-position 0 0, 0 6px, 6px -6px, -6px 0px
+    
 // 0000000    00000000    0000000   000   000   0000000  00000000  00000000
 // 000   000  000   000  000   000  000 0 000  000       000       000   000
 // 0000000    0000000    000   000  000000000  0000000   0000000   0000000

@@ -12,6 +12,8 @@ icons = require './icons.json'
 
 class File
     
+    @isImage: (file) -> slash.ext(file) in ['gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico']
+    
     @rename: (from, to, cb) ->
         
         fs.mkdir slash.dir(to), recursive:true, (err) ->

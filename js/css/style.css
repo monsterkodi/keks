@@ -16,6 +16,26 @@ body {
 #shelfResize {
   background: transparent;
 }
+.viewer {
+  overflow: scroll;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+}
+.viewerImageContainer {
+  position: relative;
+  padding: 6px;
+  text-align: center;
+}
+.viewerImage {
+  max-width: -webkit-fill-available;
+  border: 1px solid;
+  cursor: pointer;
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+}
 .browser {
   position: absolute;
   bottom: 0;

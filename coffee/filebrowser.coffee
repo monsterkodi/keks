@@ -223,21 +223,22 @@ class FileBrowser extends Browser
 
         @columns[col].parent = item
         
-        switch slash.ext file
-            when 'gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico'
-                @columns[col].table.appendChild @imageInfo file
-            when 'tiff' 'tif'
-                if not slash.win()
-                    @convertImage row
+        if File.isImage file
+            @columns[col].table.appendChild @imageInfo file
+        else
+            switch slash.ext file
+                when 'tiff' 'tif'
+                    if not slash.win()
+                        @convertImage row
+                    else
+                        @columns[col].table.appendChild @fileInfo file
+                when 'pxm'
+                    if not slash.win()
+                        @convertPXM row
+                    else
+                        @columns[col].table.appendChild @fileInfo file
                 else
                     @columns[col].table.appendChild @fileInfo file
-            when 'pxm'
-                if not slash.win()
-                    @convertPXM row
-                else
-                    @columns[col].table.appendChild @fileInfo file
-            else
-                @columns[col].table.appendChild @fileInfo file
 
         post.emit 'load' column:col, item:item
                 
@@ -329,9 +330,7 @@ class FileBrowser extends Browser
 
         opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
 
-        dirlist dir, opt, (err, items) =>
-
-            if err? then return
+        dirlist dir, opt, (items) =>
 
             if @columns.length and col >= @columns.length and @skipOnDblClick
                 delete @skipOnDblClick

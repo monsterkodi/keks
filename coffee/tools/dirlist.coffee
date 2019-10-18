@@ -6,7 +6,7 @@
 0000000    000  000   000  0000000  000  0000000      000     
 ###
 
-{ fs, walkdir, slash, _ } = require 'kxk'
+{ fs, walkdir, slash, kerror, _ } = require 'kxk'
 
 #   directory list
 #
@@ -81,10 +81,10 @@ dirList = (dirPath, opt, cb) ->
         walker = walkdir.walk dirPath, no_recurse: true
         walker.on 'directory' onDir
         walker.on 'file'      onFile
-        walker.on 'end'         -> cb null, dirs.sort(fileSort).concat files.sort(fileSort)
-        walker.on 'error' (err) -> cb err
+        walker.on 'end'         -> cb dirs.sort(fileSort).concat files.sort(fileSort)
+        walker.on 'error' (err) -> kerror err
         walker
     catch err
-        cb err
+        kerror err
 
 module.exports = dirList

@@ -6,11 +6,12 @@
  0000000   0000000   0000000   0000000   000   000  000   000
 ###
 
-{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, state, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
+{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './tools/scroller'
 File     = require './tools/file'
+Viewer   = require './viewer'
 Crumb    = require './crumb'
 fuzzy    = require 'fuzzy'
 wxw      = require 'wxw'
@@ -453,6 +454,7 @@ class Column
             imgDir = @path()
             
         klog 'viewImages' imgDir
+        @viewer = new Viewer imgDir
         
     newFolder: =>
         
