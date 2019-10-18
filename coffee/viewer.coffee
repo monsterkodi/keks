@@ -6,7 +6,7 @@
     0      000  00000000  00     00  00000000  000   000
 ###
 
-{ slash, open, elem, stopEvent, keyinfo, klog, $ } = require 'kxk'
+{ slash, empty, open, elem, stopEvent, keyinfo, klog, $ } = require 'kxk'
 
 dirlist = require './tools/dirlist'
 File    = require './tools/file'
@@ -19,6 +19,8 @@ class Viewer
 
             images = items.filter (item) -> File.isImage item.file
 
+            return if empty images
+            
             @div = elem class:'viewer' tabindex:1
             
             @focus = document.activeElement
@@ -43,10 +45,9 @@ class Viewer
 
         switch combo
             when 'esc' then @close()
-            else klog 'combo' combo
+            # else klog 'combo' combo
             
         event.stopPropagation?()
-        # stopEvent event
             
     close: =>
         klog 'close'

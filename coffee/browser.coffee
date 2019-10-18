@@ -193,6 +193,8 @@ class Browser
         
     shiftColumnsTo: (col) ->
         
+        @closeViewer()
+        
         for i in [0...col]
             @shiftColumn()
             

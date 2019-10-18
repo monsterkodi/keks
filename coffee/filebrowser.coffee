@@ -102,10 +102,21 @@ class FileBrowser extends Browser
             return 0
         Math.max -1, col-2
 
-    browse: (file, opt) -> if file then @loadItem @fileItem(file), opt
+    closeViewer: ->
+        
+        @viewer?.close()
+        @viewer = null
+        
+    browse: (file, opt) -> 
+    
+        @closeViewer()
+        
+        if file then @loadItem @fileItem(file), opt
         
     navigateToFile: (file) ->
-                
+
+        @closeViewer()
+        
         lastPath = @lastDirColumn()?.path()
         
         file = slash.path file

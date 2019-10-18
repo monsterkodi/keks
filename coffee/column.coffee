@@ -240,7 +240,6 @@ class Column
                 @browser.select.toggle row
             else
                 @browser.select.row row
-                # row.activate event
     
     onDblClick:  (event) => 
         
@@ -453,8 +452,7 @@ class Column
         else
             imgDir = @path()
             
-        klog 'viewImages' imgDir
-        @viewer = new Viewer imgDir
+        @browser.viewer = new Viewer imgDir
         
     newFolder: =>
         
