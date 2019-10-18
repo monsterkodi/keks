@@ -245,12 +245,6 @@ class Column
         
         @browser.skipOnDblClick = true
         @navigateCols 'enter'
-
-    #  0000000  00000000   000   000  00     00  0000000    
-    # 000       000   000  000   000  000   000  000   000  
-    # 000       0000000    000   000  000000000  0000000    
-    # 000       000   000  000   000  000 0 000  000   000  
-    #  0000000  000   000   0000000   000   000  0000000    
     
     updateCrumb: => @crumb.updateRect @div.getBoundingClientRect()
             
@@ -444,6 +438,21 @@ class Column
         
         if pathToShelf = @activePath()
             post.emit 'addToShelf' pathToShelf
+
+    # 000  00     00   0000000    0000000   00000000   0000000  
+    # 000  000   000  000   000  000        000       000       
+    # 000  000000000  000000000  000  0000  0000000   0000000   
+    # 000  000 0 000  000   000  000   000  000            000  
+    # 000  000   000  000   000   0000000   00000000  0000000   
+    
+    viewImages: =>
+        
+        if @activeRow()?.item.name != '..' and slash.isDir @activePath()
+            imgDir = @activePath()
+        else
+            imgDir = @path()
+            
+        klog 'viewImages' imgDir
         
     newFolder: =>
         
@@ -455,6 +464,12 @@ class Column
                     @browser.select.row row
                     row.editName()
             
+    # 0000000    000   000  00000000   000      000   0000000   0000000   000000000  00000000  
+    # 000   000  000   000  000   000  000      000  000       000   000     000     000       
+    # 000   000  000   000  00000000   000      000  000       000000000     000     0000000   
+    # 000   000  000   000  000        000      000  000       000   000     000     000       
+    # 0000000     0000000   000        0000000  000   0000000  000   000     000     00000000  
+    
     duplicateFile: =>
         
         unused = require 'unused-filename'
@@ -555,6 +570,10 @@ class Column
             combo:  'alt+n' 
             cb:     @newFolder
         ,
+            text:   'View Images'
+            combo:  'alt+v' 
+            cb:     @viewImages
+        ,
             text:   'Explorer'
             combo:  'alt+e' 
             cb:     @explorer
@@ -586,6 +605,7 @@ class Column
             when 'alt+e'                            then return @explorer()
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
+            when 'alt+v'                            then return @viewImages()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'

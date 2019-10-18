@@ -32,7 +32,7 @@ dependencies
                 unused-filename  ^2.1.0
                 wxw             ^1.87.0
 devDependencies
-                electron        ^6.0.10
+                electron        ^6.0.12
                 electron-packager  ^14.0.6
                 electron-rebuild  ^1.8.6
                 koffee          ^1.4.0
