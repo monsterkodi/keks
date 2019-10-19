@@ -54,20 +54,10 @@ class File
     
     @iconClassName: (file) ->
         
-        ext = slash.ext file
-        switch ext
-            when 'noon'   then className = 'icon noon'
-            when 'koffee' then className = 'icon coffee'
-            when 'xcf'    then className = 'icon gimp'
-            else
-                if clss = icons.ext[ext]
-                    className = 'icon ' + clss
-                    
-        if not className
-            if clss = icons.base[slash.base(file).toLowerCase()]
-                className = 'icon ' + clss
-        className ?= 'icon file'
-        className
+        clss  = icons.ext[slash.ext file]
+        clss ?= icons.base[slash.base(file).toLowerCase()]
+        clss ?= 'file'
+        "icon #{clss}"
             
     #  0000000  00000000    0000000   000   000  
     # 000       000   000  000   000  0000  000  

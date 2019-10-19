@@ -307,6 +307,7 @@ ext
     kid                   genshi
     knt                   keynote
     ko                    binary
+    koffee                coffee
     ksh                   terminal
     kt                    kotlin
     ktm                   kotlin
@@ -411,6 +412,7 @@ ext
     nix                   nix
     njs                   node
     nlogo                 netlogo
+    noon                  noon
     nse                   nmap
     nu                    recycle
     numpy                 numpy
