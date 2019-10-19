@@ -147,8 +147,8 @@ post.on 'load' (info) ->
 toggleExtensions = -> prefs.toggle 'browser▸hideExtensions' hideExtensions
 hideExtensions = (hide=true) ->
 
-    setStyle '.browserRow .ext'   'display' hide and 'none' or 'initial'
-    setStyle '.fileInfoFile .ext' 'display' hide and 'none' or 'initial'
+    setStyle '.browserRow.file .ext' 'display' hide and 'none' or 'initial'
+    setStyle '.fileInfoFile .ext'    'display' hide and 'none' or 'initial'
 
 # 000   000  00000000  000   000
 # 000  000   000        000 000
