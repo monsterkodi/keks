@@ -543,11 +543,14 @@ class Column
     viewImages: =>
         
         if @activeRow()?.item.name != '..' and slash.isDir @activePath()
-            imgDir = @activePath()
+            path = @activePath()
         else
-            imgDir = @path()
+            if File.isImage @activeRow()?.item.file
+                path = @activeRow()?.item.file
+            else
+                path = @path()
             
-        @browser.viewer = new Viewer imgDir
+        @browser.viewer = new Viewer path
         
     newFolder: =>
         

@@ -13,31 +13,40 @@ File    = require './tools/file'
 
 class Viewer
 
-    @: (@dir) ->
+    @: (path) ->
         
-        dirlist @dir, (items) =>
-
-            images = items.filter (item) -> File.isImage item.file
-
-            return if empty images
+        if slash.isDir path
             
-            @div = elem class:'viewer' tabindex:1
-            
-            @focus = document.activeElement
-            
-            for {file} in images
+            dirlist path, (items) =>
+    
+                images = items.filter (item) -> File.isImage item.file
+    
+                return if empty images
                 
-                img = elem 'img' class:'viewerImage' src:slash.fileUrl file
-                cnt = elem class:'viewerImageContainer' child:img
-                cnt.addEventListener 'dblclick' ((file) -> -> open file)(file)
-                @div.appendChild cnt
+                @loadImages images.map (item) -> item.file
+        else
+            if File.isImage path
+                @loadImages [path]
             
-                main =$ '#main'
-                
-            main.appendChild @div
+    loadImages: (images) ->
+            
+        @div = elem class:'viewer' tabindex:1
+        
+        @focus = document.activeElement
+        
+        for file in images
+            
+            img = elem 'img' class:'viewerImage' src:slash.fileUrl file
+            cnt = elem class:'viewerImageContainer' child:img
+            cnt.addEventListener 'dblclick' ((file) -> -> open file)(file)
+            @div.appendChild cnt
+        
+            main =$ '#main'
+            
+        main.appendChild @div
 
-            @div.addEventListener 'keydown' @onKey
-            @div.focus()
+        @div.addEventListener 'keydown' @onKey
+        @div.focus()
             
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
