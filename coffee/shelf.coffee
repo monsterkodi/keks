@@ -15,7 +15,7 @@ fuzzy    = require 'fuzzy'
     
 class Shelf extends Column
 
-    constructor: (browser) ->
+    @: (browser) ->
 
         super browser
         

@@ -18,7 +18,7 @@ moment   = require 'moment'
 
 class FileBrowser extends Browser
 
-    constructor: (view) ->
+    @: (view) ->
 
         super view
 

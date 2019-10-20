@@ -15,7 +15,7 @@ app = electron.remote.app
 
 class Row
     
-    constructor: (@column, @item) ->
+    @: (@column, @item) ->
 
         @browser = @column.browser
         text = @item.text ? @item.name

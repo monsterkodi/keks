@@ -18,7 +18,7 @@ wxw      = require 'wxw'
 
 class Column
     
-    constructor: (@browser) ->
+    @: (@browser) ->
         
         @searchTimer = null
         @search = ''
@@ -63,10 +63,6 @@ class Column
     # 000   000  000   000  000   000  000   000  
     # 0000000    000   000  000   000   0000000   
     
-    # onDrop: (event) => 
-#     
-        # @browser.dropAction event, @parent?.file
-       
     onDragStart: (d, e) => 
     
         row = @row e.target
@@ -74,7 +70,6 @@ class Column
         delete @toggle
         
         if row
-            # klog 'onDragStart' row.item.file
             
             if e.shiftKey
                 @browser.select.to row
@@ -137,14 +132,11 @@ class Column
             delete @dragDiv
             
             if row = @browser.rowAtPos d.pos
-                klog 'drop row' row.column.index, row.item.file, @browser.select.files()
                 column = row.column
                 target = row.item.file
             else if column = @browser.columnAtPos d.pos
-                klog 'drop column' column.index, column.parent?.file, @browser.select.files()
                 target = column.parent?.file
             else if column = @browser.columnAtX d.pos.x
-                klog 'drop crumb' column.index, column.parent?.file, @browser.select.files()
                 target = column.parent?.file
             else
                 klog 'no drop target'
@@ -153,7 +145,6 @@ class Column
             action = e.shiftKey and 'copy' or 'move'
                 
             if column == @browser.shelf 
-                klog 'drop shelf'
                 if target and (e.ctrlKey or e.shiftKey or e.metaKey or e.altKey)
                     @browser.dropAction action, @browser.select.files(), target
                 else
@@ -331,19 +322,6 @@ class Column
     
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
-    
-    # onClick: (event) =>
-#         
-        # if row = @row event.target
-#             
-            # klog 'onClick'
-            # row.activate()
-            # if event.shiftKey
-                # @browser.select.to row
-            # else if event.metaKey or event.altKey or event.ctrlKey
-                # @browser.select.toggle row
-            # else
-                # @browser.select.row row
     
     onDblClick:  (event) => 
         

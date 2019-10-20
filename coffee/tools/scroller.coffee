@@ -12,7 +12,7 @@ class Scroller
 
     @colors = {}
     
-    constructor: (@column) ->
+    @: (@column) ->
 
         @elem = elem class: 'scrollbar right'
         @column.div.insertBefore @elem, @column.table

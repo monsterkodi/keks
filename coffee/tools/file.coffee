@@ -22,10 +22,8 @@ class File
             
             if slash.isDir(to)
                 to = slash.join to, slash.file from
-            # else
-                # to = slash.join slash.dir(to), slash.file from
-            # klog "rename #{from} #{to}"
-            fs.rename from, to, (err) ->
+
+            fs.move from, to, overwrite:true, (err) ->
                 return kerror 'rename failed' err if err
                 cb from, to
 
@@ -41,8 +39,8 @@ class File
             to = slash.join to, slash.file from
         else
             to = slash.join slash.dir(to), slash.file from
-        # klog "copyFile #{from} #{to}"    
-        fs.copyFile from, to, (err) ->
+
+        fs.copy from, to, (err) ->
             return kerror 'copy failed' err if err
             cb from, to
                 

@@ -13,7 +13,7 @@ flex   = require './flex/flex'
 
 class Browser
     
-    constructor: (@view) ->
+    @: (@view) ->
         
         @columns = []
         
