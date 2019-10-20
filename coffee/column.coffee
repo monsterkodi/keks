@@ -284,7 +284,7 @@ class Column
     row: (row) -> # accepts element, index, string or row
         if      _.isNumber  row then return 0 <= row < @numRows() and @rows[row] or null
         else if _.isElement row then return _.find @rows, (r) -> r.div.contains row
-        else if _.isString  row then return _.find @rows, (r) -> r.item.name == row
+        else if _.isString  row then return _.find @rows, (r) -> r.item.name == row or r.item.file == row
         else return row
             
     nextColumn: -> @browser.column @index+1

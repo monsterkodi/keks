@@ -62,30 +62,37 @@ class FileBrowser extends Browser
         
         # sources = event.dataTransfer.getData('text/plain').split '\n'
         
+        if slash.isFile target
+            target = slash.dir target
+        
         for source in sources
         
             if action == 'move' 
                 if source == target or slash.dir(source) == target
                     klog 'noop'
                     return
-                
-        klog 'dropAction' sources
+                        
+        # klog "dropAction #{target}" sources
         
         for source in sources
             
             switch action
                 when 'move'
                     File.rename source, target, (source, target) =>
-                        klog 'moved' source, target
+                        klog action, source
+                        klog action, target
                         if sourceColumn = @columnForFile source 
                             sourceColumn.removeFile source
                         if targetColumn = @columnForFile target
-                            targetColumn.insertFile target
+                            if not targetColumn.row target
+                                targetColumn.insertFile target
                 when 'copy'
                     File.copy source, target, (source, target) =>
-                        klog 'copied' source, target
+                        klog action, source
+                        klog action, target
                         if targetColumn = @columnForFile target
-                            targetColumn.addFile target
+                            if not targetColumn.row target
+                                targetColumn.insertFile target
                     
     columnForFile: (file) ->
         
