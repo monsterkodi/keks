@@ -157,8 +157,6 @@ class Browser
     height: -> @flex?.height()
     numCols: -> @columns.length 
     column: (i) -> @columns[i] if 0 <= i < @numCols()
-
-    onBackspaceInColumn: (column) -> column.clearSearch().removeObject()    
     
     #  0000000   0000000    0000000     0000000   0000000   000      
     # 000   000  000   000  000   000  000       000   000  000      

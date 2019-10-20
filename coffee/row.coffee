@@ -87,7 +87,7 @@ class Row
             when 'dir' 'file'
                 
                 col = @column.index
-                klog 'row.activateItem' col, @item.file
+                # klog 'row.activateItem' col, @item.file
                 @browser.clearColumnsFrom col+1, pop:true, clear:col+1
         
                 switch @item.type

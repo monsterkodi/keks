@@ -71,10 +71,10 @@ class Column
     
         row = @row e.target
         
-        delete @toggle 
+        delete @toggle
         
         if row
-            klog 'onDragStart' row.item.file
+            # klog 'onDragStart' row.item.file
             
             if e.shiftKey
                 @browser.select.to row
@@ -90,7 +90,6 @@ class Column
                     @activeRow()?.clearActive()
                     @browser.select.row row, false
         else
-            klog 'empty start'
             if @hasFocus()
                 @browser.select.row @activeRow() ? @browser.select.active
 
@@ -99,20 +98,20 @@ class Column
         if not @dragDiv and valid @browser.select.files()
             
             return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
-            # return if not @row e.target
 
             delete @toggle 
             delete @deselect
             
             @dragDiv = elem 'div'
-            pos = kpos e
+            @dragDiv.drag = d
+            pos = kpos e.pageX, e.pageY
             row = @browser.select.rows[0]
             br  = row.div.getBoundingClientRect()
-            # klog 'onDragMove' @browser.select.files(), br.top, br.left, pos.x, pos.y
+
             @dragDiv.style.position = 'absolute'
             @dragDiv.style.opacity  = "0.7"
-            @dragDiv.style.top  = "#{pos.y+20}px"
-            @dragDiv.style.left = "#{pos.x-15}px"
+            @dragDiv.style.top  = "#{pos.y-d.deltaSum.y}px"
+            @dragDiv.style.left = "#{pos.x-d.deltaSum.x}px"
             @dragDiv.style.width = "#{br.width-12}px"
             @dragDiv.style.pointerEvents = 'none'
                         
@@ -125,18 +124,17 @@ class Column
                 @dragDiv.appendChild rowClone
                 
             document.body.appendChild @dragDiv
-        
-        @dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
+            
+        if @dragDiv
+            
+            @dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
 
     onDragStop: (d,e) =>
         
         if @dragDiv?
             
-            # klog 'onDragStop' d
             @dragDiv.remove()
             delete @dragDiv
-            
-            klog 'onDragStop' d.pos, kpos e
             
             if row = @browser.rowAtPos d.pos
                 klog 'drop row' row.column.index, row.item.file, @browser.select.files()
@@ -162,8 +160,6 @@ class Column
                     @browser.shelf.addFiles @browser.select.files(), pos:d.pos
             else
                 @browser.dropAction action, @browser.select.files(), target
-                
-                # column.dropRow @, d.pos
         else
             
             @focus activate:false
@@ -175,7 +171,6 @@ class Column
                             delete @toggle
                             @browser.select.toggle row
                     else
-                        klog 'dragStop click' row.item.file
                         if @deselect
                             delete @deselect
                             @browser.select.row row
@@ -191,10 +186,6 @@ class Column
     removeFile: (file) => 
         
         if row = @row slash.file file
-            # if row == @activeRow()
-                # @removeObject()
-            # else
-                # index = row.index()
             @removeRow row
             @scroll.update()
             
@@ -321,9 +312,7 @@ class Column
     hasFocus: -> @div.classList.contains 'focus'
 
     focus: (opt={}) ->
-        
-        klog 'column focus' @index
-        
+                
         if not @activeRow() and @numRows() and opt?.activate != false
             @rows[0].setActive()
         @div.focus()
@@ -426,17 +415,25 @@ class Column
         
         return if not @numRows()
         
-        clearTimeout @searchTimer
-        @searchTimer = setTimeout @clearSearch, 2000
-        @search += char
-        
         if not @searchDiv
             @searchDiv = elem class: 'browserSearch'
             
+        @setSearch @search + char
+        
+    backspaceSearch: ->
+        
+        if @searchDiv and @search.length
+            @setSearch @search[0...@search.length-1]
+            
+    setSearch: (@search) ->
+            
+        clearTimeout @searchTimer
+        @searchTimer = setTimeout @clearSearch, 2000
+        
         @searchDiv.textContent = @search
 
         activeIndex  = @activeRow()?.index() ? 0
-        activeIndex += 1 if (@search.length == 1) or (char == '')
+        activeIndex += 1 if (@search.length == 1) #or (char == '')
         activeIndex  = 0 if activeIndex >= @numRows()
         
         for rows in [@rows.slice(activeIndex), @rows.slice(0,activeIndex+1)]
@@ -468,7 +465,7 @@ class Column
         
         if row == @activeRow()
             if @nextColumn()?.parent?.file == row.item?.file
-                klog 'removeRow clear'
+                # klog 'removeRow clear'
                 @browser.clearColumnsFrom @index + 1
             
         row.div.remove()
@@ -593,13 +590,17 @@ class Column
     duplicateFile: =>
         
         unused = require 'unused-filename'
-        unused(@activePath()).then (fileName) =>
-            fileName = slash.path fileName
-            fs.copyFile @activePath(), fileName, (err) =>
-                return error 'copy file failed' err if err?
-                newFile = slash.join slash.dir(@activePath()), fileName
-                row = @insertFile newFile
-                @browser.select.row row
+        
+        for file in @browser.select.files()
+        
+            unused(file).then (fileName) =>
+                fileName = slash.path fileName
+                fs.copyFile file, fileName, (err) =>
+                    return error 'copy file failed' err if err?
+                    # newFile = slash.join slash.dir(@activePath()), fileName
+                    klog 'fileName' fileName
+                    row = @insertFile fileName
+                    @browser.select.row row
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  
@@ -730,7 +731,8 @@ class Column
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'
             when 'enter''alt+up'                    then return stopEvent event, @navigateCols key
-            when 'backspace' 'delete'               then return stopEvent event, @browser.onBackspaceInColumn @
+            when 'backspace'                        then return stopEvent event, @browser.onBackspaceInColumn @
+            when 'delete'                           then return stopEvent event, @browser.onDeleteInColumn @
             when 'ctrl+t'                           then return stopEvent event, @sortByType()
             when 'ctrl+n'                           then return stopEvent event, @sortByName()
             when 'ctrl+a'                           then return stopEvent event, @sortByDateAdded()
@@ -747,6 +749,7 @@ class Column
                 return stopEvent event
             when 'esc'
                 if @dragDiv
+                    @dragDiv.drag.dragStop()
                     @dragDiv.remove()
                     delete @dragDiv
                 else if @browser.select.files().length > 1

@@ -452,9 +452,15 @@ class FileBrowser extends Browser
 
     onBackspaceInColumn: (column) ->
 
-        column.clearSearch()
-        @navigate 'left'
-
+        column.backspaceSearch()
+        
+    onDeleteInColumn: (column) -> 
+    
+        if column.searchDiv
+            column.clearSearch()
+        else
+            column.moveToTrash()
+        
     updateColumnScrolls: =>
 
         super()
