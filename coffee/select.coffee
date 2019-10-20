@@ -38,7 +38,7 @@ class Select
         -1
         
     clear: ->
-        
+                
         for row in @rows ? []
             row.clearSelected()
             
@@ -47,13 +47,18 @@ class Select
     
     toggle: (row) ->
 
-        return if row == @active
+        # return if row == @active
+            
         if row.column != @active.column
             @row row
             return
         
         if row.isSelected()
-            row.clearSelected()
+            
+            klog 'unselect' row.item.file
+            
+            row.clearActive()
+            row.clearSelected()            
             @rows.splice @rows.indexOf(row), 1
         else
             row.setSelected()
@@ -61,11 +66,11 @@ class Select
     
     row: (row, activate=true) ->
                 
-        @clear()
-                
-        if @active?.column == row.column #and activate
-            @active.clearActive()
+        if @active?.column == row.column and activate
+            @active?.clearActive()
         
+        @clear()
+                        
         @rows = [row]
         @active = row
         row.setSelected()
@@ -76,6 +81,8 @@ class Select
     to: (row) -> 
         
         return if row == @active
+        return if not @active
+        
         if row.column != @active.column
             @row row
             return

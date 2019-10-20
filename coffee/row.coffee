@@ -6,7 +6,7 @@
 000   000   0000000   00     00
 ###
 
-{ elem, keyinfo, drag, clamp, stopEvent, valid, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
+{ elem, keyinfo, clamp, stopEvent, valid, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
 
 electron  = require 'electron'
 File      = require './tools/file'
@@ -23,17 +23,17 @@ class Row
             html = '<span> </span>'
         else
             html = File.span text
-        @div = elem class:'browserRow' html:html, draggable:true
+        @div = elem class:'browserRow' html:html #, draggable:true
         @div.classList.add @item.type
         @column.table.appendChild @div
 
         if @item.type in ['file' 'dir'] or @item.icon
             @setIcon()
         
-        @div.onmousedown = @onMouseDown
-        @div.ondragstart = @onDragStart
-        @div.ondragover  = @onDragOver
-        @div.ondrop      = @onDrop
+        # @div.onmousedown = @onMouseDown
+        # @div.ondragstart = @onDragStart
+        # @div.ondragover  = @onDragOver
+        # @div.ondrop      = @onDrop
                        
     next:        -> @index() < @column.numRows()-1 and @column.rows[@index()+1] or null
     prev:        -> @index() > 0 and @column.rows[@index()-1] or null
@@ -86,8 +86,15 @@ class Row
             
             when 'dir' 'file'
                 
-                # klog 'row.activateItem' @item.file, @column.index
-                post.emit 'filebrowser' 'activateItem' @item, @column.index
+                col = @column.index
+                klog 'row.activateItem' col, @item.file
+                @browser.clearColumnsFrom col+1, pop:true, clear:col+1
+        
+                switch @item.type
+                    when 'dir'  then @browser.loadDirItem  @item, col+1, focus:false
+                    when 'file' then @browser.loadFileItem @item, col+1
+
+                @browser.select.row @, false
                 
             else    
                 if @item.file? and _.isString(@item.file) and @item.type != 'obj'
@@ -113,7 +120,9 @@ class Row
     
     setActive: (opt={}) ->
         
-        @column.activeRow()?.clearActive()
+        if @column.activeRow() != @
+            @column.activeRow()?.clearActive()
+            
         @div.classList.add 'active'
         
         if opt?.scroll != false
@@ -229,49 +238,49 @@ class Row
     # 000   000  000   000  000   000  000   000  
     # 0000000    000   000  000   000   0000000   
     
-    onMouseDown: (event) =>
-        
-        klog 'onMouseDown' event.shiftKey, event.altKey, event.ctrlKey
-        
-        if event.shiftKey
-            @browser.select.to @
-        else if event.metaKey or event.altKey or event.ctrlKey
-            @browser.select.toggle @
-        else
-            @browser.select.row @, false
-    
-    onDragStart: (event) =>
-        
-        klog 'dragStart' event.shiftKey
-        
-        if empty @browser.select.files()
-            event.preventDefault()
-            return 
-        
-        if not @isSelected()
-            @column.onClick event
-        klog 'dragStart' @isActive(), @isSelected(), @browser.select.files()
-        
-        event.dataTransfer.setData 'text/plain' @browser.select.files().join '\n'
+    # onMouseDown: (event) =>
+#         
+        # klog 'onMouseDown' event.shiftKey, event.altKey, event.ctrlKey
+#         
+        # if event.shiftKey
+            # @browser.select.to @
+        # else if event.metaKey or event.altKey or event.ctrlKey
+            # @browser.select.toggle @
+        # else
+            # @browser.select.row @, false
+#     
+    # onDragStart: (event) =>
+#         
+        # klog 'dragStart' event.shiftKey
+#         
+        # if empty @browser.select.files()
+            # event.preventDefault()
+            # return 
+#         
+        # if not @isSelected()
+            # @column.onClick event
+        # klog 'dragStart' @isActive(), @isSelected(), @browser.select.files()
+#         
+        # event.dataTransfer.setData 'text/plain' @browser.select.files().join '\n'
 
-        @column.focus activate:false
-        @setActive scroll:false
-        
-    onDragOver: (event) =>
-        
-        event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
-        event.preventDefault()
-        
-    onDrop: (event) => 
-    
-        if @column.index < 0 and not event.getModifierState('Shift') and not event.getModifierState('Control')
-            @column.onDrop event
-            return
-            
-        action = event.getModifierState('Shift') and 'copy' or 'move'
-        target = @item?.file
-        source = event.dataTransfer.getData 'text/plain'
-        @browser.dropAction event, @item?.file
-        stopEvent event
+        # @column.focus activate:false
+        # @setActive scroll:false
+#         
+    # onDragOver: (event) =>
+#         
+        # event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
+        # event.preventDefault()
+#         
+    # onDrop: (event) => 
+#     
+        # if @column.index < 0 and not event.getModifierState('Shift') and not event.getModifierState('Control')
+            # @column.onDrop event
+            # return
+#             
+        # action = event.getModifierState('Shift') and 'copy' or 'move'
+        # target = @item?.file
+        # source = event.dataTransfer.getData 'text/plain'
+        # @browser.dropAction event, @item?.file
+        # stopEvent event
 
 module.exports = Row

@@ -6,7 +6,7 @@
  0000000   0000000   0000000   0000000   000   000  000   000
 ###
 
-{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
+{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, drag, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './tools/scroller'
@@ -40,13 +40,15 @@ class Column
         @div.addEventListener 'mouseover' @onMouseOver
         @div.addEventListener 'mouseout'  @onMouseOut
 
-        @div.addEventListener 'click'     @onClick
         @div.addEventListener 'dblclick'  @onDblClick
         
         @div.addEventListener 'contextmenu' @onContextMenu
-        
-        @div.ondragover  = @onDragOver
-        @div.ondrop      = @onDrop
+  
+        @drag = new drag
+            target:  @div
+            onStart: @onDragStart
+            onMove:  @onDragMove
+            onStop:  @onDragStop
         
         @crumb  = new Crumb @
         @scroll = new Scroller @
@@ -61,15 +63,99 @@ class Column
     # 000   000  000   000  000   000  000   000  
     # 0000000    000   000  000   000   0000000   
     
-    onDragOver: (event) =>
-        
-        event.dataTransfer.dropEffect = event.getModifierState('Shift') and 'copy' or 'move'
-        event.preventDefault()
-        
-    onDrop: (event) => 
+    # onDrop: (event) => 
+#     
+        # @browser.dropAction event, @parent?.file
+       
+    onDragStart: (d, e) => 
     
-        @browser.dropAction event, @parent?.file
+        row = @row e.target
+        
+        delete @toggle 
+        
+        if row
+            klog 'onDragStart' row.item.file
+            
+            if e.shiftKey
+                @browser.select.to row
+            else if e.metaKey or e.altKey or e.ctrlKey
+                if not row.isSelected()
+                    @browser.select.toggle row
+                else
+                    @toggle = true
+            else
+                if row.isSelected()
+                    @deselect = true
+                else
+                    @browser.select.row row, false
+        else
+            klog 'empty start'
+            if @hasFocus()
+                @browser.select.row @activeRow() ? @browser.select.active
+
+    onDragMove: (d,e) =>
+        
+        if not @dragDiv and valid @browser.select.files()
+            
+            return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
+            return if not @row e.target
+
+            delete @toggle 
+            delete @deselect
+            
+            @dragDiv = elem 'div'
+            pos = kpos e
+            row = @browser.select.rows[0]
+            br  = row.div.getBoundingClientRect()
+            klog 'onDragMove' @browser.select.files(), br.top, br.left, pos.x, pos.y
+            @dragDiv.style.position = 'absolute'
+            @dragDiv.style.opacity  = "0.7"
+            @dragDiv.style.top  = "#{pos.y+20}px"
+            @dragDiv.style.left = "#{pos.x-15}px"
+            @dragDiv.style.width = "#{br.width-12}px"
+            @dragDiv.style.pointerEvents = 'none'
+                        
+            for row in @browser.select.rows
+                rowClone = row.div.cloneNode true
+                rowClone.style.flex = 'unset'
+                rowClone.style.pointerEvents = 'none'
+                rowClone.style.border = 'none'
+                rowClone.style.marginBottom = '-1px'
+                @dragDiv.appendChild rowClone
                 
+            document.body.appendChild @dragDiv
+        
+        @dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
+
+    onDragStop: (d,e) =>
+        
+        if @dragDiv?
+            
+            klog 'onDragStop' d
+            @dragDiv.remove()
+            delete @dragDiv
+            
+            if column = @browser.columnAtPos d.pos
+                klog 'drop column' column.index, column.parent.file, @browser.select.files()
+                # column.dropRow @, d.pos
+        else
+            
+            @focus()
+            
+            if row = @row e.target
+                if row.isSelected()
+                    if e.metaKey or e.altKey or e.ctrlKey or e.shiftKey
+                        if @toggle
+                            delete @toggle
+                            @browser.select.toggle row
+                    else
+                        klog 'dragStop click' row.item.file
+                        if @deselect
+                            delete @deselect
+                            @browser.select.row row
+                        else
+                            row.activate()
+        
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
     # 0000000   0000000      000     000     000     0000000   000000000  0000000   
@@ -209,6 +295,9 @@ class Column
     hasFocus: -> @div.classList.contains 'focus'
 
     focus: (opt={}) ->
+        
+        klog 'column focus' @index
+        
         if not @activeRow() and @numRows() and opt?.activate != false
             @rows[0].setActive()
         @div.focus()
@@ -228,12 +317,12 @@ class Column
     onMouseOver: (event) => @row(event.target)?.onMouseOver()
     onMouseOut:  (event) => @row(event.target)?.onMouseOut()
     
-    onClick: (event) =>
-        
-        if row = @row event.target
-            
-            klog 'onClick'
-            row.activate()
+    # onClick: (event) =>
+#         
+        # if row = @row event.target
+#             
+            # klog 'onClick'
+            # row.activate()
             # if event.shiftKey
                 # @browser.select.to row
             # else if event.metaKey or event.altKey or event.ctrlKey
@@ -631,7 +720,12 @@ class Column
                 if @search.length then @doSearch ''
                 return stopEvent event
             when 'esc'
-                if @search.length then @clearSearch()
+                if @dragDiv
+                    @dragDiv.remove()
+                    delete @dragDiv
+                else if @browser.select.files().length > 1
+                    @browser.select.row @activeRow()
+                else if @search.length then @clearSearch()
                 return stopEvent event
 
         if combo in ['up'   'down']  then return stopEvent event, @navigateRows key              

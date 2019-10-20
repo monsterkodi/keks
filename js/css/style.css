@@ -48,6 +48,9 @@ body {
   position: relative;
   line-height: 1.25;
 }
+.browserColumn.focus {
+  border-bottom: 1px solid #333;
+}
 .browserColumnTable {
   display: table;
   width: 100%;
