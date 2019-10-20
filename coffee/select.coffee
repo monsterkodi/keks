@@ -15,6 +15,11 @@ class Select
         @rows = []
         @active = null
         
+    files: -> 
+    
+        rows = @rows.filter (row) -> row.item.name != '..'
+        rows.map (row) -> row.item.file
+        
     freeIndex: ->
         
         return -1 if not @active
@@ -54,20 +59,20 @@ class Select
             row.setSelected()
             @rows.push row
     
-    row: (row) -> 
+    row: (row, activate=true) ->
                 
         @clear()
-        
-        if @active?.column == row.column
+                
+        if @active?.column == row.column #and activate
             @active.clearActive()
         
         @rows = [row]
         @active = row
         row.setSelected()
         
-        if not row.isActive()
+        if not row.isActive() and activate
             row.activate()
-        
+            
     to: (row) -> 
         
         return if row == @active
@@ -84,7 +89,7 @@ class Select
             
         for index in [from..to]
             row = @active.column.rows[index]
-            if not row.isSelected()
+            if not row.isSelected() 
                 row.setSelected()
                 @rows.push row
 

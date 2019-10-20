@@ -68,10 +68,7 @@ class Column
         
     onDrop: (event) => 
     
-        action = event.getModifierState('Shift') and 'copy' or 'move'
-        source = event.dataTransfer.getData 'text/plain'
-        target = @parent?.file
-        @browser.dropAction action, source, target
+        @browser.dropAction event, @parent?.file
                 
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
@@ -82,12 +79,12 @@ class Column
     removeFile: (file) => 
         
         if row = @row slash.file file
-            if row == @activeRow()
-                @removeObject()
-            else
-                index = row.index()
-                @removeRow row
-        @scroll.update()
+            # if row == @activeRow()
+                # @removeObject()
+            # else
+                # index = row.index()
+            @removeRow row
+            @scroll.update()
             
     insertFile: (file) => 
 
@@ -234,12 +231,15 @@ class Column
     onClick: (event) =>
         
         if row = @row event.target
-            if event.shiftKey
-                @browser.select.to row
-            else if event.metaKey or event.altKey or event.ctrlKey
-                @browser.select.toggle row
-            else
-                @browser.select.row row
+            
+            klog 'onClick'
+            row.activate()
+            # if event.shiftKey
+                # @browser.select.to row
+            # else if event.metaKey or event.altKey or event.ctrlKey
+                # @browser.select.toggle row
+            # else
+                # @browser.select.row row
     
     onDblClick:  (event) => 
         
@@ -351,6 +351,11 @@ class Column
 
     removeRow: (row) ->
         
+        if row == @activeRow()
+            if @nextColumn()?.parent?.file == row.item?.file
+                klog 'removeRow clear'
+                @browser.clearColumnsFrom @index + 1
+            
         row.div.remove()
         @items.splice row.index(), 1
         @rows.splice row.index(), 1
@@ -605,7 +610,7 @@ class Column
             when 'alt+e'                            then return @explorer()
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
-            when 'alt+v'                            then return @viewImages()
+            when 'space' 'alt+v'                    then return @viewImages()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'

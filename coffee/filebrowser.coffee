@@ -55,26 +55,36 @@ class FileBrowser extends Browser
     # 000   000  000   000  000   000  000        000   000  000          000     000  000   000  000  0000  
     # 0000000    000   000   0000000   000        000   000   0000000     000     000   0000000   000   000  
     
-    dropAction: (action, source, target) ->
+    dropAction: (event, target) ->
         
-        if action == 'move' 
-            if source == target or slash.dir(source) == target
-                klog 'noop'
-                return
+        action = event.getModifierState('Shift') and 'copy' or 'move'
+        
+        sources = event.dataTransfer.getData('text/plain').split '\n'
+        
+        for source in sources
+        
+            if action == 'move' 
+                if source == target or slash.dir(source) == target
+                    klog 'noop'
+                    return
+                
+        klog 'dropAction' sources
+        
+        for source in sources
             
-        switch action
-            when 'move'
-                File.rename source, target, (newFile) =>
-                    klog 'moved' source, target
-                    if sourceColumn = @columnForFile source 
-                        sourceColumn.removeFile source
-                    if targetColumn = @columnForFile newFile
-                        targetColumn.insertFile newFile
-            when 'copy'
-                File.copy source, target, (newFile) =>
-                    klog 'copied' source, target
-                    if targetColumn = @columnForFile newFile
-                        targetColumn.addFile newFile
+            switch action
+                when 'move'
+                    File.rename source, target, (newFile) =>
+                        klog 'moved' source, target
+                        if sourceColumn = @columnForFile source 
+                            sourceColumn.removeFile source
+                        if targetColumn = @columnForFile newFile
+                            targetColumn.insertFile newFile
+                when 'copy'
+                    File.copy source, target, (newFile) =>
+                        klog 'copied' source, target
+                        if targetColumn = @columnForFile newFile
+                            targetColumn.addFile newFile
                     
     columnForFile: (file) ->
         
@@ -207,7 +217,7 @@ class FileBrowser extends Browser
 
     activateItem: (item, col) ->
 
-        # klog 'activateItem' col, item?.file
+        klog 'activateItem' col, item?.file
         
         @clearColumnsFrom col+1, pop:true, clear:col+1
 
@@ -215,7 +225,8 @@ class FileBrowser extends Browser
             when 'dir'  then @loadDirItem  item, col+1, focus:false
             when 'file' then @loadFileItem item, col+1
             
-        @select.row @columns[col].row slash.file item.file
+        # if row = @columns[col].row slash.file item.file
+            # @select.row row
             
     # 00000000  000  000      00000000  000  000000000  00000000  00     00
     # 000       000  000      000       000     000     000       000   000

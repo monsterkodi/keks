@@ -30,6 +30,7 @@ class Row
         if @item.type in ['file' 'dir'] or @item.icon
             @setIcon()
         
+        @div.onmousedown = @onMouseDown
         @div.ondragstart = @onDragStart
         @div.ondragover  = @onDragOver
         @div.ondrop      = @onDrop
@@ -228,13 +229,30 @@ class Row
     # 000   000  000   000  000   000  000   000  
     # 0000000    000   000  000   000   0000000   
     
+    onMouseDown: (event) =>
+        
+        klog 'onMouseDown' event.shiftKey, event.altKey, event.ctrlKey
+        
+        if event.shiftKey
+            @browser.select.to @
+        else if event.metaKey or event.altKey or event.ctrlKey
+            @browser.select.toggle @
+        else
+            @browser.select.row @, false
+    
     onDragStart: (event) =>
-
-        if @item.name == '..'
+        
+        klog 'dragStart' event.shiftKey
+        
+        if empty @browser.select.files()
             event.preventDefault()
             return 
         
-        event.dataTransfer.setData 'text/plain' @item?.file
+        if not @isSelected()
+            @column.onClick event
+        klog 'dragStart' @isActive(), @isSelected(), @browser.select.files()
+        
+        event.dataTransfer.setData 'text/plain' @browser.select.files().join '\n'
 
         @column.focus activate:false
         @setActive scroll:false
@@ -251,9 +269,9 @@ class Row
             return
             
         action = event.getModifierState('Shift') and 'copy' or 'move'
-        source = event.dataTransfer.getData 'text/plain'
         target = @item?.file
-        @browser.dropAction action, source, target
+        source = event.dataTransfer.getData 'text/plain'
+        @browser.dropAction event, @item?.file
         stopEvent event
 
 module.exports = Row

@@ -39,18 +39,24 @@ class Viewer
             @div.addEventListener 'keydown' @onKey
             @div.focus()
             
+    # 000   000  00000000  000   000  
+    # 000  000   000        000 000   
+    # 0000000    0000000     00000    
+    # 000  000   000          000     
+    # 000   000  00000000     000     
+    
     onKey: (event) =>
 
         { mod, key, combo, char } = keyinfo.forEvent event
 
         switch combo
-            when 'esc' then @close()
+            when 'esc' 'space' then @close()
             # else klog 'combo' combo
             
         event.stopPropagation?()
             
     close: =>
-        klog 'close'
+
         @div.remove()
         @focus.focus()
 
