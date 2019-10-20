@@ -26,9 +26,13 @@ class Crumb
             
     onMouseUp: (event) =>
         
+        return if not @downPos
+        
         upPos = kpos window.win.getBounds()
         
-        return if upPos.to(@downPos).length() > 0
+        if upPos.to(@downPos).length() > 0
+            delete @downPos
+            return
         
         if @column.index == 0
             if event.target.id
@@ -42,6 +46,8 @@ class Crumb
                     @column.browser.browse @column.parent.file
         else
             @column.makeRoot()
+            
+        delete @downPos
         
     setFile: (file) ->
         

@@ -140,7 +140,18 @@ class Shelf extends Column
             name: slash.file file
             type: 'file'
             file: slash.path file
+            
         @addItem item, opt
+        
+    addFiles: (files, opt) ->
+        klog 'files' files
+        for file in files
+            if slash.isDir file
+                klog 'addDir' file
+                @addDir file, opt
+            else
+                klog 'addFile' file
+                @addFile file, opt
         
     addItem:  (item, opt) ->
         

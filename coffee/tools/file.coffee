@@ -24,10 +24,10 @@ class File
                 to = slash.join to, slash.file from
             # else
                 # to = slash.join slash.dir(to), slash.file from
-            klog "rename #{from} #{to}"
+            # klog "rename #{from} #{to}"
             fs.rename from, to, (err) ->
                 return kerror 'rename failed' err if err
-                cb to
+                cb from, to
 
     @copy: (from, to, cb) ->
         
@@ -41,10 +41,10 @@ class File
             to = slash.join to, slash.file from
         else
             to = slash.join slash.dir(to), slash.file from
-        klog "copyFile #{from} #{to}"    
+        # klog "copyFile #{from} #{to}"    
         fs.copyFile from, to, (err) ->
             return kerror 'copy failed' err if err
-            cb to
+            cb from, to
                 
     # 000   0000000   0000000   000   000  
     # 000  000       000   000  0000  000  

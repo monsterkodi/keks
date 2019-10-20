@@ -6,7 +6,7 @@
 0000000    000   000   0000000   00     00  0000000   00000000  000   000  
 ###
 
-{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, klog, kerror, $, _ } = require 'kxk'
+{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, kpos, klog, kerror, $, _ } = require 'kxk'
 
 Column = require './column'
 flex   = require './flex/flex'
@@ -49,6 +49,22 @@ class Browser
         for column in @columns
             if elem.containsPos column.div, pos
                 return column
+        null
+        
+    columnAtX: (x) ->
+        
+        for column in @columns
+            cpos = kpos column.div.getBoundingClientRect().left, column.div.getBoundingClientRect().top
+            klog x, cpos
+            pos = kpos x, cpos.y
+            if elem.containsPos column.div, pos
+                return column
+        null
+        
+    rowAtPos: (pos) ->
+        
+        if column = @columnAtPos pos
+            return column.rowAtPos pos
         null
                             
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  

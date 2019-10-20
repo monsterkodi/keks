@@ -227,10 +227,10 @@ class Row
         
         return if slash.samePath @item.file, targetFile
                 
-        File.rename @item.file, targetFile, (newFile) =>
+        File.rename @item.file, targetFile, (source, target) =>
             
             @column.removeRow @
-            @browser.navigateToFile newFile
+            @browser.navigateToFile target
     
     # 0000000    00000000    0000000    0000000   
     # 000   000  000   000  000   000  000        

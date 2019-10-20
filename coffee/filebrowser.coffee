@@ -55,11 +55,12 @@ class FileBrowser extends Browser
     # 000   000  000   000  000   000  000        000   000  000          000     000  000   000  000  0000  
     # 0000000    000   000   0000000   000        000   000   0000000     000     000   0000000   000   000  
     
-    dropAction: (event, target) ->
+    # dropAction: (event, target) ->
+    dropAction: (action, sources, target) ->
         
-        action = event.getModifierState('Shift') and 'copy' or 'move'
+        # action = event.getModifierState('Shift') and 'copy' or 'move'
         
-        sources = event.dataTransfer.getData('text/plain').split '\n'
+        # sources = event.dataTransfer.getData('text/plain').split '\n'
         
         for source in sources
         
@@ -74,17 +75,17 @@ class FileBrowser extends Browser
             
             switch action
                 when 'move'
-                    File.rename source, target, (newFile) =>
+                    File.rename source, target, (source, target) =>
                         klog 'moved' source, target
                         if sourceColumn = @columnForFile source 
                             sourceColumn.removeFile source
-                        if targetColumn = @columnForFile newFile
-                            targetColumn.insertFile newFile
+                        if targetColumn = @columnForFile target
+                            targetColumn.insertFile target
                 when 'copy'
-                    File.copy source, target, (newFile) =>
+                    File.copy source, target, (source, target) =>
                         klog 'copied' source, target
-                        if targetColumn = @columnForFile newFile
-                            targetColumn.addFile newFile
+                        if targetColumn = @columnForFile target
+                            targetColumn.addFile target
                     
     columnForFile: (file) ->
         
@@ -435,7 +436,7 @@ class FileBrowser extends Browser
 
         if elem.containsPos @shelf.div, pos
             return @shelf
-
+            
     lastColumnPath: ->
 
         if lastColumn = @lastUsedColumn()

@@ -62,6 +62,7 @@ class Select
             @rows.splice @rows.indexOf(row), 1
         else
             row.setSelected()
+            @active = row
             @rows.push row
     
     row: (row, activate=true) ->

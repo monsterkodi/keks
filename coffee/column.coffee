@@ -87,6 +87,7 @@ class Column
                 if row.isSelected()
                     @deselect = true
                 else
+                    @activeRow()?.clearActive()
                     @browser.select.row row, false
         else
             klog 'empty start'
@@ -98,7 +99,7 @@ class Column
         if not @dragDiv and valid @browser.select.files()
             
             return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
-            return if not @row e.target
+            # return if not @row e.target
 
             delete @toggle 
             delete @deselect
@@ -107,7 +108,7 @@ class Column
             pos = kpos e
             row = @browser.select.rows[0]
             br  = row.div.getBoundingClientRect()
-            klog 'onDragMove' @browser.select.files(), br.top, br.left, pos.x, pos.y
+            # klog 'onDragMove' @browser.select.files(), br.top, br.left, pos.x, pos.y
             @dragDiv.style.position = 'absolute'
             @dragDiv.style.opacity  = "0.7"
             @dragDiv.style.top  = "#{pos.y+20}px"
@@ -131,16 +132,41 @@ class Column
         
         if @dragDiv?
             
-            klog 'onDragStop' d
+            # klog 'onDragStop' d
             @dragDiv.remove()
             delete @dragDiv
             
-            if column = @browser.columnAtPos d.pos
-                klog 'drop column' column.index, column.parent.file, @browser.select.files()
+            klog 'onDragStop' d.pos, kpos e
+            
+            if row = @browser.rowAtPos d.pos
+                klog 'drop row' row.column.index, row.item.file, @browser.select.files()
+                column = row.column
+                target = row.item.file
+            else if column = @browser.columnAtPos d.pos
+                klog 'drop column' column.index, column.parent?.file, @browser.select.files()
+                target = column.parent?.file
+            else if column = @browser.columnAtX d.pos.x
+                klog 'drop crumb' column.index, column.parent?.file, @browser.select.files()
+                target = column.parent?.file
+            else
+                klog 'no drop target'
+                return
+                
+            action = e.shiftKey and 'copy' or 'move'
+                
+            if column == @browser.shelf 
+                klog 'drop shelf'
+                if target and (e.ctrlKey or e.shiftKey or e.metaKey or e.altKey)
+                    @browser.dropAction action, @browser.select.files(), target
+                else
+                    @browser.shelf.addFiles @browser.select.files(), pos:d.pos
+            else
+                @browser.dropAction action, @browser.select.files(), target
+                
                 # column.dropRow @, d.pos
         else
             
-            @focus()
+            @focus activate:false
             
             if row = @row e.target
                 if row.isSelected()
