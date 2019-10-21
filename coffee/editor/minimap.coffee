@@ -269,7 +269,7 @@ class Minimap
         y = parseInt -@height/4-@scroll.offsetTop/2
         x = parseInt @width/4
         t = "translate3d(#{x}px, #{y}px, 0px) scale3d(0.5, 0.5, 1)"
-        klog 'onScroll' t
+
         @selecti.style.transform = t
         @highlig.style.transform = t
         @cursors.style.transform = t

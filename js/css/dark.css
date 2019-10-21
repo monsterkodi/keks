@@ -340,11 +340,11 @@ body {
   background: rgba(0,255,0,0.3);
 }
 *:focus .selection {
-  background: #444;
+  background: #222;
 }
 .selection {
   color: #444;
-  background: #282828;
+  background: #111;
 }
 .autocomplete-span {
   background: #22a;

@@ -768,7 +768,7 @@ class TextEditor extends Editor
         result = @handleModKeyComboCharEvent mod, key, combo, char, event
 
         if 'unhandled' != result
-            klog 'stopEvent'
+            # klog 'stopEvent'
             stopEvent event
 
     log: ->

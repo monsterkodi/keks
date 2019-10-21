@@ -45,6 +45,12 @@ class Editor
 
         switch combo
             when 'ctrl+w' then return stopEvent event, @close()
+            when 'esc'    then if not @editor.dirty then return stopEvent event, @close()
+            when 'space' 
+                c = @editor.mainCursor()
+                if c[0] == 1 and c[1] == 0
+                    return stopEvent event, @close()
+        klog 'onKey' mod, key, combo
             
     close: =>
 
