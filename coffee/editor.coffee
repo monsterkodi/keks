@@ -44,10 +44,7 @@ class Editor
         { mod, key, combo, char } = keyinfo.forEvent event
 
         switch combo
-            when 'ctrl+w' then @close()
-            # else klog 'combo' combo
-            
-        event.stopPropagation?()
+            when 'ctrl+w' then return stopEvent event, @close()
             
     close: =>
 
@@ -55,6 +52,8 @@ class Editor
         @focus.focus()
         @editor.del()
         delete @editor
+        
+    resized: -> @editor?.resized()
         
     # 00     00  00000000  000   000  000   000      0000000    0000000  000000000  000   0000000   000   000
     # 000   000  000       0000  000  000   000     000   000  000          000     000  000   000  0000  000

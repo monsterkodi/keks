@@ -6,16 +6,18 @@
 000   000  000  000   000  000  000   000  000   000  000
 ###
 
-{ getStyle, clamp, elem, drag } = require 'kxk' 
+{ getStyle, clamp, elem, drag, klog } = require 'kxk' 
 
 MapScroll = require './mapscroll'
 
 class Minimap
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
-        minimapWidth = parseInt getStyle '.minimap', 'width'
+        minimapWidth = parseInt getStyle('.minimap' 'width') ? 130
 
+        klog 'minimapWidth' minimapWidth
+        
         @editor.layerScroll.style.right = "#{minimapWidth}px"
 
         @width = 2*minimapWidth
@@ -38,11 +40,11 @@ class Minimap
         @elem.addEventListener 'wheel', @editor.scrollbar?.onWheel
 
         @editor.view.appendChild    @elem
-        @editor.on 'viewHeight',    @onEditorViewHeight
-        @editor.on 'numLines',      @onEditorNumLines
-        @editor.on 'changed',       @onChanged
-        @editor.on 'highlight',     @drawHighlights
-        @editor.scroll.on 'scroll', @onEditorScroll
+        @editor.on 'viewHeight'     @onEditorViewHeight
+        @editor.on 'numLines'       @onEditorNumLines
+        @editor.on 'changed'        @onChanged
+        @editor.on 'highlight'      @drawHighlights
+        @editor.scroll.on 'scroll'  @onEditorScroll
 
         @scroll = new MapScroll
             exposeMax:  @height/4
@@ -57,11 +59,11 @@ class Minimap
             onMove:  @onDrag
             cursor: 'pointer'
 
-        @scroll.on 'clearLines',  @clearAll
-        @scroll.on 'scroll',      @onScroll
-        @scroll.on 'exposeLines', @onExposeLines
-        @scroll.on 'vanishLines', @onVanishLines
-        @scroll.on 'exposeLine',  @exposeLine
+        @scroll.on 'clearLines'  @clearAll
+        @scroll.on 'scroll'      @onScroll
+        @scroll.on 'exposeLines' @onExposeLines
+        @scroll.on 'vanishLines' @onVanishLines
+        @scroll.on 'exposeLine'  @exposeLine
 
         @onScroll()
         @drawLines()
@@ -267,6 +269,7 @@ class Minimap
         y = parseInt -@height/4-@scroll.offsetTop/2
         x = parseInt @width/4
         t = "translate3d(#{x}px, #{y}px, 0px) scale3d(0.5, 0.5, 1)"
+        klog 'onScroll' t
         @selecti.style.transform = t
         @highlig.style.transform = t
         @cursors.style.transform = t

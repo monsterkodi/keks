@@ -257,10 +257,10 @@ body {
   color: #ff0;
 }
 .meta.href {
-  background-color: titleColor;
+  background-color: #333;
 }
 .meta.gitInfoFile {
-  background: titleColor;
+  background: #333;
   opacity: 0.5;
   padding-right: 10px;
   border-top-right-radius: 4px;
@@ -324,7 +324,7 @@ body {
   border-left-color: #111;
 }
 .topbot {
-  background-color: bgColor;
+  background-color: #181818;
 }
 .minimapTopBot {
   background-color: #000;
@@ -357,7 +357,7 @@ body {
   background: #111;
 }
 .autocomplete-list::-webkit-scrollbar {
-  background-color: titleColor;
+  background-color: #333;
 }
 .autocomplete-list::-webkit-scrollbar-thumb {
   background-color: #44f;

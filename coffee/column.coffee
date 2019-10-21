@@ -535,18 +535,19 @@ class Column
         if pathToShelf = @activePath()
             post.emit 'addToShelf' pathToShelf
 
-    # 000  00     00   0000000    0000000   00000000   0000000  
-    # 000  000   000  000   000  000        000       000       
-    # 000  000000000  000000000  000  0000  0000000   0000000   
-    # 000  000 0 000  000   000  000   000  000            000  
-    # 000  000   000  000   000   0000000   00000000  0000000   
+    # 000   000  000  00000000  000   000  00000000  00000000   
+    # 000   000  000  000       000 0 000  000       000   000  
+    #  000 000   000  0000000   000000000  0000000   0000000    
+    #    000     000  000       000   000  000       000   000  
+    #     0      000  00000000  00     00  00000000  000   000  
     
-    viewImages: =>
+    openViewer: =>
         
         if @activeRow()?.item.name != '..' and slash.isDir @activePath()
             path = @activePath()
         else
             path = @activeRow()?.item.file
+            
             if File.isText path
                 @browser.viewer = new Editor path
                 return
@@ -676,9 +677,9 @@ class Column
             combo:  'alt+n' 
             cb:     @newFolder
         ,
-            text:   'View Images'
+            text:   'Viewer'
             combo:  'alt+v' 
-            cb:     @viewImages
+            cb:     @openViewer
         ,
             text:   'Explorer'
             combo:  'alt+e' 
@@ -711,7 +712,7 @@ class Column
             when 'alt+e'                            then return @explorer()
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
-            when 'space' 'alt+v'                    then return @viewImages()
+            when 'space' 'alt+v'                    then return @openViewer()
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'

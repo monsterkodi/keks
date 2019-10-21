@@ -335,7 +335,7 @@ class FileEditor extends TextEditor
             absPos = kpos @view.getBoundingClientRect().left, @view.getBoundingClientRect().top
 
         popup.menu 
-            items: [text:'Close Editor'].concat Menu()
+            items: [text:'Close Editor' combo:'ctrl+w'].concat Menu()
             x: absPos.x
             y: absPos.y
 

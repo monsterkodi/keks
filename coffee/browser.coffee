@@ -256,7 +256,9 @@ class Browser
         true
 
     resized: -> 
-            
+
+        @viewer?.resized()
+        
         @updateColumnScrolls()
     
     updateColumnScrolls: =>

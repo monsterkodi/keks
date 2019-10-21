@@ -43,26 +43,27 @@ class TextEditor extends Editor
 
         @config.lineHeight ?= 1.2
 
-        @setFontSize prefs.get "#{@name}FontSize", @config.fontSize ? 19
+        @setFontSize prefs.get "#{@name}FontSize" @config.fontSize ? 19
         @scroll = new EditorScroll @
-        @scroll.on 'shiftLines', @shiftLines
-        @scroll.on 'showLines',  @showLines
+        @scroll.on 'shiftLines' @shiftLines
+        @scroll.on 'showLines'  @showLines
 
-        @view.addEventListener 'blur',     @onBlur
-        @view.addEventListener 'focus',    @onFocus
-        @view.addEventListener 'keydown',  @onKeyDown
+        @view.addEventListener 'blur'     @onBlur
+        @view.addEventListener 'focus'    @onFocus
+        @view.addEventListener 'keydown'  @onKeyDown
 
-        @initDrag()        
+        @initDrag()
 
         for feature in @config.features
             if feature == 'CursorLine'
-                @cursorLine = elem 'div', class:'cursor-line'
+                @cursorLine = elem 'div' class:'cursor-line'
             else
                 featureName = feature.toLowerCase()
                 featureClss = require "./#{featureName}"
                 @[featureName] = new featureClss @
 
-        post.on 'schemeChanged', @onSchemeChanged
+        # post.on 'combo' @onCombo
+        post.on 'schemeChanged' @onSchemeChanged
 
     # 0000000    00000000  000
     # 000   000  000       000
@@ -191,8 +192,8 @@ class TextEditor extends Editor
                 lineIndex: li
                 text: @line li
 
-        @emit 'linesAppended', ls
-        @emit 'numLines', @numLines()
+        @emit 'linesAppended' ls
+        @emit 'numLines' @numLines()
 
     # 00000000   0000000   000   000  000000000
     # 000       000   000  0000  000     000
@@ -230,15 +231,15 @@ class TextEditor extends Editor
                 
                 when 'changed'
                     @updateLine li, di
-                    @emit 'lineChanged', li
+                    @emit 'lineChanged' li
                     
                 when 'deleted'
                     @spanCache = @spanCache.slice 0, di
-                    @emit 'lineDeleted', di
+                    @emit 'lineDeleted' di
                     
                 when 'inserted'
                     @spanCache = @spanCache.slice 0, di
-                    @emit 'lineInserted', li, di
+                    @emit 'lineInserted' li, di
 
         if changeInfo.inserts or changeInfo.deletes
             @layersWidth = @layerScroll.offsetWidth
@@ -258,7 +259,7 @@ class TextEditor extends Editor
             @renderSelection()
             @emit 'selection'
 
-        @emit 'changed', changeInfo
+        @emit 'changed' changeInfo
 
     # 000   000  00000000   0000000     0000000   000000000  00000000
     # 000   000  000   000  000   000  000   000     000     000
@@ -271,7 +272,7 @@ class TextEditor extends Editor
         oi = li if not oi?
 
         if li < @scroll.top or li > @scroll.bot
-            kerror "dangling line div? #{li}", @lineDivs[li] if @lineDivs[li]?
+            kerror "dangling line div? #{li}" @lineDivs[li] if @lineDivs[li]?
             delete @spanCache[li]
             return
             
@@ -303,8 +304,8 @@ class TextEditor extends Editor
 
         @updateLinePositions()
         @updateLayers()
-        @emit 'linesExposed', top:top, bot:bot, num:num
-        @emit 'linesShown', top, bot, num
+        @emit 'linesExposed' top:top, bot:bot, num:num
+        @emit 'linesShown' top, bot, num
 
     appendLine: (li) ->
 
@@ -335,7 +336,7 @@ class TextEditor extends Editor
 
             if @showInvisibles
                 tx = @line(li).length * @size.charWidth + 1
-                span = elem 'span', class: "invisible newline", html: '&#9687'
+                span = elem 'span' class:"invisible newline" html:'&#9687'
                 span.style.transform = "translate(#{tx}px, -1.5px)"
                 @lineDivs[li].appendChild span
 
@@ -418,7 +419,7 @@ class TextEditor extends Editor
                 return if mc[1] < 0
 
                 if mc[1] > @numLines()-1
-                    return kerror "#{@name}.renderCursors mainCursor DAFUK?", @numLines(), str @mainCursor()
+                    return kerror "#{@name}.renderCursors mainCursor DAFUK?" @numLines(), str @mainCursor()
 
                 ri = mc[1]-@scroll.top
                 cursorLine = @state.line(mc[1])
@@ -477,7 +478,7 @@ class TextEditor extends Editor
 
         return if not @blinkTimer
         @stopBlink()
-        @cursorDiv()?.classList.toggle 'blink', false
+        @cursorDiv()?.classList.toggle 'blink' false
         clearTimeout @suspendTimer
         blinkDelay = prefs.get 'cursorBlinkDelay', [800,200]
         @suspendTimer = setTimeout @releaseBlink, blinkDelay[0]
@@ -490,7 +491,7 @@ class TextEditor extends Editor
 
     toggleBlink: ->
 
-        blink = not prefs.get 'blink', false
+        blink = not prefs.get 'blink' false
         prefs.set 'blink', blink
         if blink
             @startBlink()
@@ -501,11 +502,11 @@ class TextEditor extends Editor
 
         @blink = not @blink
         
-        @cursorDiv()?.classList.toggle 'blink', @blink
+        @cursorDiv()?.classList.toggle 'blink' @blink
         @minimap?.drawMainCursor @blink
         
         clearTimeout @blinkTimer
-        blinkDelay = prefs.get 'cursorBlinkDelay', [800,200]
+        blinkDelay = prefs.get 'cursorBlinkDelay' [800,200]
         @blinkTimer = setTimeout @doBlink, @blink and blinkDelay[1] or blinkDelay[0]
 
     startBlink: -> 
@@ -515,7 +516,7 @@ class TextEditor extends Editor
 
     stopBlink: ->
 
-        @cursorDiv()?.classList.toggle 'blink', false
+        @cursorDiv()?.classList.toggle 'blink' false
         
         clearTimeout @blinkTimer
         delete @blinkTimer
@@ -577,7 +578,6 @@ class TextEditor extends Editor
                     return span: e, offsetLeft: offset, offsetChar: parseInt offset/@size.charWidth
         null
 
-    # numFullLines: -> Math.floor(@viewHeight() / @size.lineHeight)
     numFullLines: -> @scroll.fullLines
     
     viewHeight: -> 
@@ -708,12 +708,13 @@ class TextEditor extends Editor
         if @autocomplete?
             return if 'unhandled' != @autocomplete.handleModKeyComboEvent mod, key, combo, event
 
-        # klog 'handleModKeyComboCharEvent' mod, key, combo
-        
         switch combo
             
-            # when 'backspace' then return 'unhandled' # has char set on windows?
-            
+            when 'ctrl+z'               then return @do.undo()
+            when 'ctrl+shift+z'         then return @do.redo()
+            when 'ctrl+x'               then return @cut()
+            when 'ctrl+c'               then return @copy()
+            when 'ctrl+v'               then return @paste()
             when 'esc'
                 if @salterMode          then return @setSalterMode false
                 if @numHighlights()     then return @clearHighlights()
@@ -730,10 +731,9 @@ class TextEditor extends Editor
                 switch combo
                     when 'ctrl+a' 'command+a' then return @selectAll()
                 if action.key? and _.isFunction @[action.key]
-                    klog action
                     @[action.key] key, combo: combo, mod: mod, event: event
                     return
-                klog 'unhandled'
+                # klog 'unhandled'
                 return 'unhandled'
                 
             if action.accels? and os.platform() != 'darwin'
@@ -755,7 +755,7 @@ class TextEditor extends Editor
             
             return @insertCharacter char
 
-        klog 'handleModKeyComboCharEvent unhandled' mod, key, combo
+        # klog 'handleModKeyComboCharEvent unhandled' mod, key, combo
         'unhandled'
 
     onKeyDown: (event) =>
@@ -768,6 +768,7 @@ class TextEditor extends Editor
         result = @handleModKeyComboCharEvent mod, key, combo, char, event
 
         if 'unhandled' != result
+            klog 'stopEvent'
             stopEvent event
 
     log: ->

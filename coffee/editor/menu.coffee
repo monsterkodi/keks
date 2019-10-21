@@ -39,7 +39,19 @@ module.exports = ->
 
     mainMenu = template noon.load __dirname + '../../../coffee/menu.noon'
     
-    editMenu = text:'Edit' menu:[]
+    editMenu = text:'Edit' menu:[
+        text:'Undo'  accel:'ctrl+z'
+    ,
+        text:'Redo'  accel:'ctrl+shift+z'
+    ,
+        text:'-'     
+    ,
+        text:'Cut'   accel:'ctrl+x'
+    ,
+        text:'Copy'  accel:'ctrl+c'
+    ,
+        text:'Paste' accel:'ctrl+v'
+    ]
 
     actionFiles = filelist slash.join __dirname, '../editor/actions'
     submenu = Misc: []
