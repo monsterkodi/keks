@@ -66,25 +66,25 @@ class Column
     
     onDragStart: (d, e) => 
     
-        row = @row e.target
+        @dragStartRow = @row e.target
         
         delete @toggle
         
-        if row
+        if @dragStartRow
             
             if e.shiftKey
-                @browser.select.to row
+                @browser.select.to @dragStartRow
             else if e.metaKey or e.altKey or e.ctrlKey
                 if not row.isSelected()
-                    @browser.select.toggle row
+                    @browser.select.toggle @dragStartRow
                 else
                     @toggle = true
             else
-                if row.isSelected()
+                if @dragStartRow.isSelected()
                     @deselect = true
                 else
                     @activeRow()?.clearActive()
-                    @browser.select.row row, false
+                    @browser.select.row @dragStartRow, false
         else
             if @hasFocus()
                 if @activeRow() ? @browser.select.active
@@ -92,7 +92,7 @@ class Column
 
     onDragMove: (d,e) =>
         
-        if not @dragDiv and valid @browser.select.files()
+        if @dragStartRow and not @dragDiv and valid @browser.select.files()
             
             return if Math.abs(d.deltaSum.x) < 20 and Math.abs(d.deltaSum.y) < 10
 
@@ -132,6 +132,7 @@ class Column
             
             @dragDiv.remove()
             delete @dragDiv
+            delete @dragStartRow
             
             if row = @browser.rowAtPos d.pos
                 column = row.column

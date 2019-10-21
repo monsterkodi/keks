@@ -1,7 +1,7 @@
 {
   "name": "keks",
   "productName": "keks",
-  "version": "0.28.0",
+  "version": "0.31.0",
   "description": "file browser",
   "main": "js/main.js",
   "bin": {
@@ -48,7 +48,7 @@
     "electron-rebuild": "^1.8.6",
     "koffee": "^1.4.0",
     "konrad": "^0.159.0",
-    "node-abi": "^2.11.0",
+    "node-abi": "^2.12.0",
     "sds": "^3.2.0"
   }
 }

@@ -19,11 +19,14 @@ keks
 #     0      000  00000000  00     00  
 
 View
+    Toggle Invisible        ctrl+i
     Toggle Extensions       ctrl+e
     -
     Focus Shelf             alt+left
     Toggle Shelf            alt+shift+left alt+shift+right
     --
+    Refresh                 ctrl+r
+    ---
     Font Size
         Increase            cmdctrl+=
         Decrease            cmdctrl+-

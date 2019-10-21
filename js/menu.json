@@ -7,11 +7,14 @@
     "Quit": "cmdctrl+q"
   },
   "View": {
+    "Toggle Invisible": "ctrl+i",
     "Toggle Extensions": "ctrl+e",
     "-": null,
     "Focus Shelf": "alt+left",
     "Toggle Shelf": "alt+shift+left alt+shift+right",
     "--": null,
+    "Refresh": "ctrl+r",
+    "---": null,
     "Font Size": {
       "Increase": "cmdctrl+=",
       "Decrease": "cmdctrl+-",

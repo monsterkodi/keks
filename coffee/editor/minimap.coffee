@@ -16,8 +16,6 @@ class Minimap
 
         minimapWidth = parseInt getStyle('.minimap' 'width') ? 130
 
-        klog 'minimapWidth' minimapWidth
-        
         @editor.layerScroll.style.right = "#{minimapWidth}px"
 
         @width = 2*minimapWidth
@@ -26,10 +24,10 @@ class Minimap
 
         @elem    = elem class: 'minimap'
         @topbot  = elem class: 'topbot'
-        @selecti = elem 'canvas', class: 'minimapSelections', width: @width, height: @height
-        @lines   = elem 'canvas', class: 'minimapLines',      width: @width, height: @height
-        @highlig = elem 'canvas', class: 'minimapHighlights', width: @width, height: @height
-        @cursors = elem 'canvas', class: 'minimapCursors',    width: @width, height: @height
+        @selecti = elem 'canvas' class: 'minimapSelections' width: @width, height: @height
+        @lines   = elem 'canvas' class: 'minimapLines'      width: @width, height: @height
+        @highlig = elem 'canvas' class: 'minimapHighlights' width: @width, height: @height
+        @cursors = elem 'canvas' class: 'minimapCursors'    width: @width, height: @height
 
         @elem.appendChild @topbot
         @elem.appendChild @selecti

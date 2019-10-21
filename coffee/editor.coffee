@@ -50,13 +50,13 @@ class Editor
                 c = @editor.mainCursor()
                 if c[0] == 1 and c[1] == 0
                     return stopEvent event, @close()
-        klog 'onKey' mod, key, combo
+        # klog 'onKey' mod, key, combo
             
     close: =>
 
         @div.remove()
         @focus.focus()
-        @editor.del()
+        @editor?.del()
         delete @editor
         
     resized: -> @editor?.resized()
