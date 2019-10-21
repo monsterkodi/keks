@@ -120,6 +120,8 @@ window.document.addEventListener 'wheel' onWheel
 
 onMenuAction = (name, args) ->
 
+    klog 'menuAction' name
+    
     switch name
 
         when 'Toggle Extensions' then return toggleExtensions()
@@ -149,19 +151,5 @@ hideExtensions = (hide=true) ->
 
     setStyle '.browserRow.file .ext' 'display' hide and 'none' or 'initial'
     setStyle '.fileInfoFile .ext'    'display' hide and 'none' or 'initial'
-
-# 000   000  00000000  000   000
-# 000  000   000        000 000
-# 0000000    0000000     00000
-# 000  000   000          000
-# 000   000  00000000     000
-
-# onCombo = (combo, info) ->
-
-    # return if not combo
-
-    # { mod, key, combo, char, event } = info
-
-# post.on 'combo' onCombo
 
 winMain()

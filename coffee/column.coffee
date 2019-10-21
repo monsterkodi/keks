@@ -12,6 +12,7 @@ Row      = require './row'
 Scroller = require './tools/scroller'
 File     = require './tools/file'
 Viewer   = require './viewer'
+Editor   = require './editor'
 Crumb    = require './crumb'
 fuzzy    = require 'fuzzy'
 wxw      = require 'wxw'
@@ -86,7 +87,8 @@ class Column
                     @browser.select.row row, false
         else
             if @hasFocus()
-                @browser.select.row @activeRow() ? @browser.select.active
+                if @activeRow() ? @browser.select.active
+                    @browser.select.row @activeRow() ? @browser.select.active
 
     onDragMove: (d,e) =>
         
@@ -255,7 +257,6 @@ class Column
         @clearSearch()
         delete @parent
         @div.scrollTop = 0
-        @editor?.del()
         @table.innerHTML = ''
         @crumb.clear()
         @rows = []
@@ -545,9 +546,12 @@ class Column
         if @activeRow()?.item.name != '..' and slash.isDir @activePath()
             path = @activePath()
         else
-            if File.isImage @activeRow()?.item.file
-                path = @activeRow()?.item.file
-            else
+            path = @activeRow()?.item.file
+            if File.isText path
+                @browser.viewer = new Editor path
+                return
+                
+            if not File.isImage path
                 path = @path()
             
         @browser.viewer = new Viewer path

@@ -11,6 +11,18 @@ titlebarFontSize    = 15px
 titlebarFont        = Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial
 fontMono            = "Meslo LG S", "Liberation Mono", "Menlo", "Cousine", "Andale Mono", Arial
 
+selectionRadius       = 0.3em
+selectionRadiusCursor = 0.15em
+metaRadius            = 0.15em
+
+minimapWidth          = 130px
+scrollbarWidth        = 12px // transparent scroll area
+numbersWidth          = 50px
+editorPadding         = (8px + numbersWidth)
+thinBorder            = 1px solid
+
+editorFont            = "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace
+
 // 0000000     0000000   0000000    000   000
 // 000   000  000   000  000   000   000 000 
 // 0000000    000   000  000   000    00000  
@@ -47,6 +59,7 @@ body
 //    000     000  000       000   000  000       000   000  
 //     0      000  00000000  00     00  00000000  000   000  
 
+.editor
 .viewer
     overflow            scroll
     position            absolute
@@ -274,3 +287,374 @@ unicode(char)
         left            0
     &.right
         right           0
+        
+// 00000000  0000000    000  000000000   0000000   00000000
+// 000       000   000  000     000     000   000  000   000
+// 0000000   000   000  000     000     000   000  0000000
+// 000       000   000  000     000     000   000  000   000
+// 00000000  0000000    000     000      0000000   000   000
+
+.editor
+    position            relative
+    overflow            hidden
+    font-family         editorFont
+
+// 000       0000000   000   000  00000000  00000000
+// 000      000   000   000 000   000       000   000
+// 000      000000000    00000    0000000   0000000
+// 000      000   000     000     000       000   000
+// 0000000  000   000     000     00000000  000   000
+
+.layerScroll
+    fill-abs()
+    overflow-x          visible
+    overflow-y          hidden
+    &::-webkit-scrollbar
+        height          2px
+
+.layers
+    position            relative
+    height              10000000px
+
+// 000      000  000   000  00000000   0000000
+// 000      000  0000  000  000       000
+// 000      000  000 0 000  0000000   0000000
+// 000      000  000  0000  000            000
+// 0000000  000  000   000  00000000  0000000
+
+.lines
+    cursor              text
+    font-size           inherit
+    pointer-events      none
+
+.line
+    font-size           inherit
+    white-space         nowrap
+    position            absolute
+    & span
+        position        absolute
+        pointer-events  none
+
+//  0000000  000   000  00000000    0000000   0000000   00000000
+// 000       000   000  000   000  000       000   000  000   000
+// 000       000   000  0000000    0000000   000   000  0000000
+// 000       000   000  000   000       000  000   000  000   000
+//  0000000   0000000   000   000  0000000    0000000   000   000
+
+.cursor
+    width                2px
+    margin-right        -1px
+    margin-left         -1px
+    z-index             999999999
+    position            absolute
+    display             inline-block
+    &.main:not(.off)
+        width            4px
+        margin-right    -2px
+        margin-left     -2px
+        border-radius    2px
+
+.cursor-line
+    position             absolute
+    left                 0
+    top                  0
+        
+// 000   000  000   000  00     00  0000000    00000000  00000000    0000000
+// 0000  000  000   000  000   000  000   000  000       000   000  000
+// 000 0 000  000   000  000000000  0000000    0000000   0000000    0000000
+// 000  0000  000   000  000 0 000  000   000  000       000   000       000
+// 000   000   0000000   000   000  0000000    00000000  000   000  0000000
+
+.numbers
+    position            absolute
+    left                0
+    top                 0
+    bottom              0
+    width               numbersWidth
+    pointer-events      none
+    font-size           13px
+    font-family         editorFont
+
+.linenumber
+    width               numbersWidth
+    border-right        thinBorder
+    position            absolute
+
+    & span
+        display         inline-block
+        width           (numbersWidth - 8px)
+        text-align      right
+        padding-top     2px
+
+        &.gitInfoLine
+            font-size   16px
+        
+// 00     00  00000000  000000000   0000000
+// 000   000  000          000     000   000
+// 000000000  0000000      000     000000000
+// 000 0 000  000          000     000   000
+// 000   000  00000000     000     000   000
+
+.meta
+    position            absolute
+    pointer-events      auto
+
+    &.coffeeResult
+    &.searchResult
+    &.termResult
+    &.termCommand
+    &.coffeeCommand
+        padding-right                metaRadius
+        margin-right               - metaRadius
+        margin-left                - editorPadding
+        padding-left                 editorPadding
+        border-top-right-radius      metaRadius
+        border-bottom-right-radius   metaRadius
+
+    &.gitInfoChange
+        border-radius               metaRadius
+        
+    &.gitInfoFile
+    &.termCommand
+    &.coffeeCommand
+    &.searchResult
+        cursor              pointer
+
+    &.searchResult
+        padding-right       10000px
+        
+    &.coffeeResult
+    &.searchResult
+    &.termResult
+    &.spacer
+        background          transparent
+
+    &.spacer
+        border-top-right-radius    0
+        border-bottom-right-radius 0
+
+    &.git
+        width               numbersWidth
+        &.toggled
+            opacity         1
+
+    &.dbg
+        z-index             1
+        border-radius       6px
+        margin-top          3px
+        margin-left         4px
+        width               12px
+        height              12px
+
+    &.dbg.pointer
+        z-index             2
+        width               0
+        height              0
+        border-radius       0
+        margin-left         10px
+        background          transparent
+        border-top          6px solid transparent
+        border-bottom       6px solid transparent
+        border-left         6px solid
+
+    &.pigment
+        opacity             1
+        border-radius       2px
+        margin-left        -8px
+        padding-left        8px
+        padding-right       8px
+
+.linenumber span .saveButton
+    pointer-events      auto
+    cursor              pointer
+    width               initial
+    padding-top         2px
+    margin-top         -2px
+    padding-left        4px
+    padding-right       4px
+    border-radius       4px
+
+// 00     00  000  000   000  000  00     00   0000000   00000000
+// 000   000  000  0000  000  000  000   000  000   000  000   000
+// 000000000  000  000 0 000  000  000000000  000000000  00000000
+// 000 0 000  000  000  0000  000  000 0 000  000   000  000
+// 000   000  000  000   000  000  000   000  000   000  000
+
+.minimap
+    position            absolute
+    top                 0
+    bottom              0
+    right               0
+    width               minimapWidth
+    overflow            hidden
+    cursor              pointer
+    border-left         thinBorder
+    pointer-events      auto
+
+.minimap canvas
+    pointer-events      none
+    position            absolute
+    top                 0
+    right               0
+    overflow            hidden
+
+.topbot
+    position            absolute
+    right               0
+    width               minimapWidth
+    pointer-events      none
+
+.minimapLines
+    background-color    transparent
+    opacity             0.8
+
+.minimapHighlights
+.minimapSelections
+.minimapCursors
+    background-color    transparent
+
+// 000   000  000   0000000   000   000  000      000   0000000   000   000  000000000
+// 000   000  000  000        000   000  000      000  000        000   000     000
+// 000000000  000  000  0000  000000000  000      000  000  0000  000000000     000
+// 000   000  000  000   000  000   000  000      000  000   000  000   000     000
+// 000   000  000   0000000   000   000  0000000  000   0000000   000   000     000
+
+.highlight
+    position            absolute
+    pointer-events      none
+
+.bracketmatch
+    position            absolute
+    pointer-events      none
+    text-decoration     underline
+
+.stringmatch
+    position            absolute
+    pointer-events      none
+    text-decoration     underline
+
+//  0000000  00000000  000      00000000   0000000  000000000  000   0000000   000   000
+// 000       000       000      000       000          000     000  000   000  0000  000
+// 0000000   0000000   000      0000000   000          000     000  000   000  000 0 000
+//      000  000       000      000       000          000     000  000   000  000  0000
+// 0000000   00000000  0000000  00000000   0000000     000     000   0000000   000   000
+
+.selection
+    position            absolute
+    pointer-events      none
+
+    & .empty // used in selections of empty lines
+        width            1px
+        margin-right    -1px
+
+.selection
+.highlight
+    padding-right       selectionRadiusCursor
+    margin-right        - selectionRadiusCursor
+    padding-left        selectionRadiusCursor
+    margin-left         - selectionRadiusCursor
+    &.start
+        padding-left    editorPadding
+        margin-left     - editorPadding
+
+.comment.header
+    border-radius       0.3em
+    border-width        0.15em
+    border-left-style   solid
+    border-bottom-style solid
+    border-top-style    hidden
+    border-right-style  hidden
+    height 1.2em
+
+.stringmatch
+.bracketmatch
+.selection
+.highlight
+    &.tl
+        border-top-left-radius selectionRadius
+        &.start
+            border-top-left-radius 0
+
+    &.bl
+        border-bottom-left-radius selectionRadius
+        &.start
+            border-bottom-left-radius 0
+
+    &.tr
+        border-top-right-radius selectionRadius
+    &.br
+        border-bottom-right-radius selectionRadius
+
+.stringmatch
+.bracketmatch
+    padding-right       0
+    margin-right        0
+    padding-left        0
+    margin-left         0
+
+//  0000000   000   000  000000000   0000000    0000000   0000000   00     00  00000000   000      00000000  000000000  00000000
+// 000   000  000   000     000     000   000  000       000   000  000   000  000   000  000      000          000     000
+// 000000000  000   000     000     000   000  000       000   000  000000000  00000000   000      0000000      000     0000000
+// 000   000  000   000     000     000   000  000       000   000  000 0 000  000        000      000          000     000
+// 000   000   0000000      000      0000000    0000000   0000000   000   000  000        0000000  00000000     000     00000000
+
+.autocomplete-span
+    opacity             1
+
+.autocomplete-list
+    pointer-events      auto
+    position            absolute
+    max-height          200px
+    width               auto
+    overflow-x          hidden
+    overflow-y          auto
+    left                0
+    top                 100%
+    &::-webkit-scrollbar
+        width            4px
+    &::-webkit-scrollbar-thumb
+        width            2px
+
+.autocomplete-item
+    pointer-events      auto
+    white-space         nowrap
+    width               100%
+    display             block
+    padding-left        5px
+    padding-right       10px
+    overflow            hidden
+    cursor              pointer
+    -webkit-user-select none
+
+// 00     00   0000000   00000000   000   000  0000000     0000000   000   000  000   000
+// 000   000  000   000  000   000  000  000   000   000  000   000  000 0 000  0000  000
+// 000000000  000000000  0000000    0000000    000   000  000   000  000000000  000 0 000
+// 000 0 000  000   000  000   000  000  000   000   000  000   000  000   000  000  0000
+// 000   000  000   000  000   000  000   000  0000000     0000000   00     00  000   000
+
+.li1.marker:before
+    content             '▸'
+    
+.li2.marker:before    
+    content             '▪'
+    
+.li3.marker:before    
+    content             '◆'
+
+//  0000000   00000000   00000000    0000000   000   000   0000000
+// 000   000  000   000  000   000  000   000  000 0 000  000
+// 000000000  0000000    0000000    000   000  000000000  0000000
+// 000   000  000   000  000   000  000   000  000   000       000
+// 000   000  000   000  000   000   0000000   00     00  0000000
+
+.function.head
+.function.tail
+     opacity            1
+     color              transparent
+
+.function.tail:before
+    content             ' ▬'
+     
+.function.head:before
+    content             ' ▶'
+        

@@ -19,6 +19,7 @@ body {
 #shelf .browserRow.active {
   background: #ddf;
 }
+.editor,
 .viewer,
 .browser {
   background: #fff;

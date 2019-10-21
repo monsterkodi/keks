@@ -190,7 +190,6 @@ class FileBrowser extends Browser
 
         switch action
             when 'loadItem'     then @loadItem     item, arg
-            # when 'activateItem' then @activateItem item, arg
     
     # 000       0000000    0000000   0000000    000  000000000  00000000  00     00
     # 000      000   000  000   000  000   000  000     000     000       000   000
@@ -216,26 +215,7 @@ class FileBrowser extends Browser
 
         if opt.focus
             @columns[0]?.focus()
-            
-    #  0000000    0000000  000000000  000  000   000   0000000   000000000  00000000
-    # 000   000  000          000     000  000   000  000   000     000     000
-    # 000000000  000          000     000   000 000   000000000     000     0000000
-    # 000   000  000          000     000     000     000   000     000     000
-    # 000   000   0000000     000     000      0      000   000     000     00000000
-
-    # activateItem: (item, col) ->
-
-        # klog 'activateItem' col, item?.file
-#         
-        # @clearColumnsFrom col+1, pop:true, clear:col+1
-
-        # switch item.type
-            # when 'dir'  then @loadDirItem  item, col+1, focus:false
-            # when 'file' then @loadFileItem item, col+1
-            
-        # if row = @columns[col].row slash.file item.file
-            # @select.row row
-            
+                        
     # 00000000  000  000      00000000  000  000000000  00000000  00     00
     # 000       000  000      000       000     000     000       000   000
     # 000000    000  000      0000000   000     000     0000000   000000000

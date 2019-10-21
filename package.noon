@@ -23,14 +23,16 @@ maintainers
 bugs
                 url  https://github.com/monsterkodi/keks/issues
 dependencies
+                wxw             ^1.87.0
+                kxk             ^0.340.0
+                klor            ^1.4.0
                 fuzzy           ^0.1.3
                 ignore          ^5.1.4
-                klor            ^1.4.0
-                kxk             ^0.339.0
                 moment          ^2.24.0
+                js-beautify     ^1.10.2
                 pretty-bytes    ^5.3.0
                 unused-filename  ^2.1.0
-                wxw             ^1.87.0
+                seamless-immutable  ^7.1.4
 devDependencies
                 electron        ^6.0.12
                 electron-packager  ^14.0.6

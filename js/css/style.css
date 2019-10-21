@@ -16,6 +16,7 @@ body {
 #shelfResize {
   background: transparent;
 }
+.editor,
 .viewer {
   overflow: scroll;
   position: absolute;
@@ -205,7 +206,7 @@ body {
 .scrollbar.left {
   bottom: 0;
   left: 0;
-  width: scrollbarWidth;
+  width: 12px;
 }
 .scrollbar.right {
   right: 0;
@@ -222,4 +223,326 @@ body {
 }
 .scrollhandle.right {
   right: 0;
+}
+.editor {
+  position: relative;
+  overflow: hidden;
+  font-family: "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace;
+}
+.layerScroll {
+  overflow-x: visible;
+  overflow-y: hidden;
+}
+.layerScroll::-webkit-scrollbar {
+  height: 2px;
+}
+.layers {
+  position: relative;
+  height: 10000000px;
+}
+.lines {
+  cursor: text;
+  font-size: inherit;
+  pointer-events: none;
+}
+.line {
+  font-size: inherit;
+  white-space: nowrap;
+  position: absolute;
+}
+.line span {
+  position: absolute;
+  pointer-events: none;
+}
+.cursor {
+  width: 2px;
+  margin-right: -1px;
+  margin-left: -1px;
+  z-index: 999999999;
+  position: absolute;
+  display: inline-block;
+}
+.cursor.main:not(.off) {
+  width: 4px;
+  margin-right: -2px;
+  margin-left: -2px;
+  border-radius: 2px;
+}
+.cursor-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.numbers {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  pointer-events: none;
+  font-size: 13px;
+  font-family: "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace;
+}
+.linenumber {
+  width: 50px;
+  border-right: 1px solid;
+  position: absolute;
+}
+.linenumber span {
+  display: inline-block;
+  width: 42px;
+  text-align: right;
+  padding-top: 2px;
+}
+.linenumber span.gitInfoLine {
+  font-size: 16px;
+}
+.meta {
+  position: absolute;
+  pointer-events: auto;
+}
+.meta.coffeeResult,
+.meta.searchResult,
+.meta.termResult,
+.meta.termCommand,
+.meta.coffeeCommand {
+  padding-right: 0.15em;
+  margin-right: -0.15em;
+  margin-left: -58px;
+  padding-left: 58px;
+  border-top-right-radius: 0.15em;
+  border-bottom-right-radius: 0.15em;
+}
+.meta.gitInfoChange {
+  border-radius: 0.15em;
+}
+.meta.gitInfoFile,
+.meta.termCommand,
+.meta.coffeeCommand,
+.meta.searchResult {
+  cursor: pointer;
+}
+.meta.searchResult {
+  padding-right: 10000px;
+}
+.meta.coffeeResult,
+.meta.searchResult,
+.meta.termResult,
+.meta.spacer {
+  background: transparent;
+}
+.meta.spacer {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.meta.git {
+  width: 50px;
+}
+.meta.git.toggled {
+  opacity: 1;
+}
+.meta.dbg {
+  z-index: 1;
+  border-radius: 6px;
+  margin-top: 3px;
+  margin-left: 4px;
+  width: 12px;
+  height: 12px;
+}
+.meta.dbg.pointer {
+  z-index: 2;
+  width: 0;
+  height: 0;
+  border-radius: 0;
+  margin-left: 10px;
+  background: transparent;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid;
+}
+.meta.pigment {
+  opacity: 1;
+  border-radius: 2px;
+  margin-left: -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.linenumber span .saveButton {
+  pointer-events: auto;
+  cursor: pointer;
+  width: initial;
+  padding-top: 2px;
+  margin-top: -2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 4px;
+}
+.minimap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 130px;
+  overflow: hidden;
+  cursor: pointer;
+  border-left: 1px solid;
+  pointer-events: auto;
+}
+.minimap canvas {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: hidden;
+}
+.topbot {
+  position: absolute;
+  right: 0;
+  width: 130px;
+  pointer-events: none;
+}
+.minimapLines {
+  background-color: transparent;
+  opacity: 0.8;
+}
+.minimapHighlights,
+.minimapSelections,
+.minimapCursors {
+  background-color: transparent;
+}
+.highlight {
+  position: absolute;
+  pointer-events: none;
+}
+.bracketmatch {
+  position: absolute;
+  pointer-events: none;
+  text-decoration: underline;
+}
+.stringmatch {
+  position: absolute;
+  pointer-events: none;
+  text-decoration: underline;
+}
+.selection {
+  position: absolute;
+  pointer-events: none;
+}
+.selection .empty {
+  width: 1px;
+  margin-right: -1px;
+}
+.selection,
+.highlight {
+  padding-right: 0.15em;
+  margin-right: -0.15em;
+  padding-left: 0.15em;
+  margin-left: -0.15em;
+}
+.selection.start,
+.highlight.start {
+  padding-left: 58px;
+  margin-left: -58px;
+}
+.comment.header {
+  border-radius: 0.3em;
+  border-width: 0.15em;
+  border-left-style: solid;
+  border-bottom-style: solid;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  height: 1.2em;
+}
+.stringmatch.tl,
+.bracketmatch.tl,
+.selection.tl,
+.highlight.tl {
+  border-top-left-radius: 0.3em;
+}
+.stringmatch.tl.start,
+.bracketmatch.tl.start,
+.selection.tl.start,
+.highlight.tl.start {
+  border-top-left-radius: 0;
+}
+.stringmatch.bl,
+.bracketmatch.bl,
+.selection.bl,
+.highlight.bl {
+  border-bottom-left-radius: 0.3em;
+}
+.stringmatch.bl.start,
+.bracketmatch.bl.start,
+.selection.bl.start,
+.highlight.bl.start {
+  border-bottom-left-radius: 0;
+}
+.stringmatch.tr,
+.bracketmatch.tr,
+.selection.tr,
+.highlight.tr {
+  border-top-right-radius: 0.3em;
+}
+.stringmatch.br,
+.bracketmatch.br,
+.selection.br,
+.highlight.br {
+  border-bottom-right-radius: 0.3em;
+}
+.stringmatch,
+.bracketmatch {
+  padding-right: 0;
+  margin-right: 0;
+  padding-left: 0;
+  margin-left: 0;
+}
+.autocomplete-span {
+  opacity: 1;
+}
+.autocomplete-list {
+  pointer-events: auto;
+  position: absolute;
+  max-height: 200px;
+  width: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  left: 0;
+  top: 100%;
+}
+.autocomplete-list::-webkit-scrollbar {
+  width: 4px;
+}
+.autocomplete-list::-webkit-scrollbar-thumb {
+  width: 2px;
+}
+.autocomplete-item {
+  pointer-events: auto;
+  white-space: nowrap;
+  width: 100%;
+  display: block;
+  padding-left: 5px;
+  padding-right: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-user-select: none;
+}
+.li1.marker:before {
+  content: '▸';
+}
+.li2.marker:before {
+  content: '▪';
+}
+.li3.marker:before {
+  content: '◆';
+}
+.function.head,
+.function.tail {
+  opacity: 1;
+  color: transparent;
+}
+.function.tail:before {
+  content: ' ▬';
+}
+.function.head:before {
+  content: ' ▶';
 }
