@@ -13,6 +13,7 @@ module.exports =
         menu: 'Line'
         
         moveLinesUp:
+            separator: true
             name: 'Move Lines Up'
             combo: 'alt+up'
             

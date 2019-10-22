@@ -201,9 +201,7 @@ class Browser
         
     popEmptyColumns: (opt) -> 
         
-        klog 'popEmptyColumns' opt, @lastDirColumn()?.index
         @clearColumnsFrom @lastDirColumn()?.index ? 0, pop:true
-        # @popColumn(opt) while @hasEmptyColumns()
         
     shiftColumnsTo: (col) ->
         

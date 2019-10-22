@@ -18,6 +18,7 @@ module.exports =
             combos: ['enter']
             
         newlineAtEnd:
+            separator: true
             name:  'Insert Newline at End'
             combo: 'alt+enter'
 

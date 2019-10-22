@@ -710,6 +710,7 @@ class TextEditor extends Editor
 
         switch combo
             
+            when 'ctrl+\\'              then return post.emit 'menuAction' 'Toggle Center Text'
             when 'ctrl+z'               then return @do.undo()
             when 'ctrl+shift+z'         then return @do.redo()
             when 'ctrl+x'               then return @cut()

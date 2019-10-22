@@ -6,7 +6,7 @@
 00000000  0000000    000     000      0000000   000   000  
 ###
 
-{ slash, empty, post, open, elem, stopEvent, keyinfo, klog, $, _ } = require 'kxk'
+{ slash, empty, clamp, prefs, post, open, elem, stopEvent, keyinfo, klog, $, _ } = require 'kxk'
 
 File       = require './tools/file'
 Header     = require './header'
@@ -34,6 +34,9 @@ class Editor
         
         @editor.setCurrentFile path
         
+        if prefs.get 'centerText'
+            @editor.centerText true 0
+        
         @header = new Header @browser
         @header.setFile path
             
@@ -57,6 +60,7 @@ class Editor
             
     close: =>
 
+        @browser.viewer = null
         @header.del()
         @div.remove()
         @focus.focus()
@@ -65,6 +69,64 @@ class Editor
         
     resized: -> @editor?.resized()
         
+
+    #  0000000  00000000  000   000  000000000  00000000  00000000       000000000  00000000  000   000  000000000
+    # 000       000       0000  000     000     000       000   000         000     000        000 000      000
+    # 000       0000000   000 0 000     000     0000000   0000000           000     0000000     00000       000
+    # 000       000       000  0000     000     000       000   000         000     000        000 000      000
+    #  0000000  00000000  000   000     000     00000000  000   000         000     00000000  000   000     000
+    
+    toggleCenterText: ->
+    
+        klog 'toggleCenterText'
+        if prefs.get "invisibles▸#{@editor.currentFile ? @editor.name}", false
+            @editor.toggleInvisibles()
+            restoreInvisibles = true
+    
+        if not prefs.get 'centerText' false
+            prefs.set 'centerText' true
+            @editor.centerText true
+        else
+            prefs.set 'centerText' false
+            @editor.centerText false
+    
+        if restoreInvisibles
+            @editor.toggleInvisibles()
+        
+    # 00000000   0000000   000   000  000000000      0000000  000  0000000  00000000
+    # 000       000   000  0000  000     000        000       000     000   000
+    # 000000    000   000  000 0 000     000        0000000   000    000    0000000
+    # 000       000   000  000  0000     000             000  000   000     000
+    # 000        0000000   000   000     000        0000000   000  0000000  00000000
+    
+    setFontSize: (s) ->
+    
+        s = prefs.get('editorFontSize' 19) if not _.isFinite s
+        s = clamp 8, 100, s
+    
+        prefs.set 'editorFontSize' s
+        @editor.setFontSize s
+        if @editor.currentFile?
+            @editor.setCurrentFile @editor.currentFile
+    
+    changeFontSize: (d) ->
+    
+        if      @editor.size.fontSize >= 30
+            f = 4
+        else if @editor.size.fontSize >= 50
+            f = 10
+        else if @editor.size.fontSize >= 20
+            f = 2
+        else
+            f = 1
+        @setFontSize @editor.size.fontSize + f*d
+    
+    resetFontSize: ->
+    
+        defaultFontSize = prefs.get 'editorDefaultFontSize' 19
+        prefs.set 'editorFontSize' defaultFontSize
+        @setFontSize defaultFontSize
+                
     # 00     00  00000000  000   000  000   000      0000000    0000000  000000000  000   0000000   000   000
     # 000   000  000       0000  000  000   000     000   000  000          000     000  000   000  0000  000
     # 000000000  0000000   000 0 000  000   000     000000000  000          000     000  000   000  000 0 000
@@ -90,10 +152,10 @@ class Editor
             when 'Cut'                   then return @editor.cut()
             when 'Copy'                  then return @editor.copy()
             when 'Paste'                 then return @editor.paste()
-            when 'Toggle Center Text'    then return toggleCenterText()
-            when 'Increase'              then return changeFontSize +1
-            when 'Decrease'              then return changeFontSize -1
-            when 'Reset'                 then return resetFontSize()
+            when 'Toggle Center Text'    then return @toggleCenterText()
+            when 'Increase'              then return @changeFontSize +1
+            when 'Decrease'              then return @changeFontSize -1
+            when 'Reset'                 then return @resetFontSize()
             when 'Save'                  then return post.emit 'saveFile'
             when 'Save As ...'           then return post.emit 'saveFileAs'
             when 'Revert'                then return post.emit 'reloadFile'

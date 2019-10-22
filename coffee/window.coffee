@@ -122,12 +122,16 @@ onMenuAction = (name, args) ->
 
     klog 'menuAction' name
     
+    if not fileBrowser.viewer
+        switch name
+            when 'Toggle Extensions' then return toggleExtensions()
+            when 'Increase'          then return changeFontSize +1
+            when 'Decrease'          then return changeFontSize -1
+            when 'Reset'             then return resetFontSize()
+            when 'Refresh'           then return fileBrowser.refresh()
+    
     switch name
 
-        when 'Toggle Extensions' then return toggleExtensions()
-        when 'Increase'          then return changeFontSize +1
-        when 'Decrease'          then return changeFontSize -1
-        when 'Reset'             then return resetFontSize()
         when 'Add to Shelf'      then return addToShelf()
         when 'Focus Shelf'       then return $('shelf')?.focus?()
         when 'Reload Window'     then return reloadWin()

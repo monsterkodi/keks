@@ -13,6 +13,7 @@ module.exports =
         menu: 'Delete'
         
         deleteForward:
+            separator: true
             name:   'Delete Forward'
             combo:  'delete'
             text:   'delete character to the right'

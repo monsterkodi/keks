@@ -14,7 +14,7 @@ class Header
 
     @: (@browser) ->
         
-        @elem = elem class:'header'
+        @elem = elem id:'header'
         @elem.addEventListener 'mousedown' @onMouseDown
         @elem.addEventListener 'mouseup'   @onMouseUp
         $('crumbs').appendChild @elem

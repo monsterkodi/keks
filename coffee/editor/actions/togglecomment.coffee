@@ -13,6 +13,7 @@ module.exports =
         menu: 'Line'
         
         toggleComment:
+            separator: true
             name:  'Toggle Comment'
             combo: 'command+/'
             accel: 'ctrl+/'

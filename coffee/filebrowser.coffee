@@ -120,10 +120,7 @@ class FileBrowser extends Browser
             return 0
         Math.max -1, col-2
 
-    closeViewer: ->
-        
-        @viewer?.close()
-        @viewer = null
+    closeViewer: -> @viewer?.close()
         
     browse: (file, opt) -> 
     
@@ -485,6 +482,7 @@ class FileBrowser extends Browser
     refresh: =>
 
         if @lastUsedColumn()
+            klog 'refresh' @lastUsedColumn()?.path()
             @navigateToFile @lastUsedColumn()?.path()
 
 module.exports = FileBrowser

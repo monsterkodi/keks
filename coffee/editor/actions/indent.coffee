@@ -11,6 +11,7 @@ module.exports =
         menu: 'Line'
         
         indent:
+            separator: true
             name:  'Indent'
             combo: 'command+]'
             accel: 'ctrl+]'

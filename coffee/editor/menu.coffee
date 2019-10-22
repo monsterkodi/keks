@@ -8,7 +8,6 @@
 
 { filelist, keyinfo, empty, klog, noon, post, slash, os, _ } = require 'kxk'
 
-
 template = (obj) ->
     
     tmpl = []
@@ -38,19 +37,24 @@ template = (obj) ->
 module.exports = ->
 
     mainMenu = template noon.load __dirname + '../../../coffee/menu.noon'
-    
+
+    viewMenu = text:'View' menu:[
+        text:'Toggle Center Text'  accel:'ctrl+\\'
+    ]    
     editMenu = text:'Edit' menu:[
         text:'Undo'  accel:'ctrl+z'
     ,
         text:'Redo'  accel:'ctrl+shift+z'
     ,
-        text:'-'     
+        text:''     
     ,
         text:'Cut'   accel:'ctrl+x'
     ,
         text:'Copy'  accel:'ctrl+c'
     ,
         text:'Paste' accel:'ctrl+v'
+    ,
+        text:''     
     ]
 
     actionFiles = filelist slash.join __dirname, '../editor/actions'
@@ -79,10 +83,10 @@ module.exports = ->
                         if v.separator
                             submenu[v.menu ? menuName].push text: ''
                         submenu[v.menu ? menuName].push item
-                submenu[menuName].push text: ''
+                # submenu[menuName].push text: ''
 
     for key, menu of submenu
         editMenu.menu.push text:key, menu:menu
 
-    [mainMenu[0], editMenu, mainMenu[2]]
+    [mainMenu[0], editMenu, viewMenu, mainMenu[2]]
 

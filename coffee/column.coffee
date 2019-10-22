@@ -575,7 +575,7 @@ class Column
             if not File.isImage path
                 path = @path()
             
-        @browser.viewer = new Viewer path
+        @browser.viewer = new Viewer @browser, path
         
     newFolder: =>
         
@@ -664,14 +664,14 @@ class Column
             absPos = kpos @div.getBoundingClientRect().left, @div.getBoundingClientRect().top
         
         opt = items: [ 
-            text:   'Toggle Invisible'
-            combo:  'ctrl+i' 
-            cb:     @toggleDotFiles
-        ,
-            text:   'Refresh'
-            combo:  'ctrl+r' 
-            cb:     @browser.refresh
-        ,
+            # text:   'Toggle Invisible'
+            # combo:  'ctrl+i' 
+            # cb:     @toggleDotFiles
+        # ,
+            # text:   'Refresh'
+            # combo:  'ctrl+r' 
+            # cb:     @browser.refresh
+        # ,
             text:   'Duplicate'
             combo:  'ctrl+d' 
             cb:     @duplicateFile
@@ -697,8 +697,10 @@ class Column
             cb:     @explorer
         ,
             text:   'Open'
-            combo:  'alt+o' 
+            combo:  'return alt+o'
             cb:     @open
+        ,
+            text:   ''
         ]
         
         opt.items = opt.items.concat window.titlebar.makeTemplate require './menu.json'
@@ -720,6 +722,7 @@ class Column
         switch combo
             when 'shift+`' '~'                      then return stopEvent event, @browser.browse '~'
             when '/'                                then return stopEvent event, @browser.browse '/'
+            when 'alt+shift+.'                      then return stopEvent event, @addToShelf()
             when 'alt+e'                            then return @explorer()
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()

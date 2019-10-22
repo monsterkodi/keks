@@ -1,7 +1,7 @@
 {
   "name": "keks",
   "productName": "keks",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "description": "file browser",
   "main": "js/main.js",
   "bin": {

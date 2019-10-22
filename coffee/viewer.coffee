@@ -13,7 +13,7 @@ File    = require './tools/file'
 
 class Viewer
 
-    @: (path) ->
+    @: (@browser, path) ->
         
         if slash.isDir path
             
@@ -66,6 +66,7 @@ class Viewer
             
     close: =>
 
+        @browser.viewer = null
         @div.remove()
         @focus.focus()
 

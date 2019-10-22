@@ -144,13 +144,13 @@ class Shelf extends Column
         @addItem item, opt
         
     addFiles: (files, opt) ->
-        klog 'files' files
+        # klog 'files' files
         for file in files
             if slash.isDir file
-                klog 'addDir' file
+                # klog 'addDir' file
                 @addDir file, opt
             else
-                klog 'addFile' file
+                # klog 'addFile' file
                 @addFile file, opt
         
     addItem:  (item, opt) ->
@@ -165,8 +165,6 @@ class Shelf extends Column
             
         @setItems @items
                         
-    # dropRow: (row, pos) -> @addItem row.item, pos:pos
-         
     onDrop: (event) => 
     
         action = event.getModifierState('Shift') and 'copy' or 'move'

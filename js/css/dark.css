@@ -324,10 +324,10 @@ body {
   border-left-color: #111;
 }
 .topbot {
-  background-color: #181818;
+  background-color: #111;
 }
 .minimapTopBot {
-  background-color: #000;
+  background-color: #111;
 }
 .highlight {
   color: rgba(255,0,255,0.5);
