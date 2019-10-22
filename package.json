@@ -1,7 +1,7 @@
 {
   "name": "keks",
   "productName": "keks",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "description": "file browser",
   "main": "js/main.js",
   "bin": {
@@ -43,7 +43,7 @@
     "seamless-immutable": "^7.1.4"
   },
   "devDependencies": {
-    "electron": "^6.0.12",
+    "electron": "^7.0.0",
     "electron-packager": "^14.0.6",
     "electron-rebuild": "^1.8.6",
     "koffee": "^1.4.0",

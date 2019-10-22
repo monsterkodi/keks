@@ -10,6 +10,7 @@
 module.exports =
 
     actions:
+        menu:  'Misc'
 
         toggleGitChange:
             name:  'Toggle Git Changes at Cursors'

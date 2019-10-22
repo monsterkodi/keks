@@ -12,7 +12,7 @@ Scroller = require '../tools/scroller'
 
 class Scrollbar
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @editor.scroll.on 'scroll', @update
         @editor.on 'linesShown',    @update

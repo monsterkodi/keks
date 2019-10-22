@@ -12,7 +12,7 @@ matchr = require '../tools/matchr'
 
 class Strings
     
-    constructor: (@editor) ->
+    @: (@editor) ->
         
         @editor.on 'cursor', @onCursor
         @editor.on 'fileTypeChanged', @setupConfig

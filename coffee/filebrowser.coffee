@@ -55,12 +55,7 @@ class FileBrowser extends Browser
     # 000   000  000   000  000   000  000        000   000  000          000     000  000   000  000  0000  
     # 0000000    000   000   0000000   000        000   000   0000000     000     000   0000000   000   000  
     
-    # dropAction: (event, target) ->
     dropAction: (action, sources, target) ->
-        
-        # action = event.getModifierState('Shift') and 'copy' or 'move'
-        
-        # sources = event.dataTransfer.getData('text/plain').split '\n'
         
         if slash.isFile target
             target = slash.dir target
@@ -72,15 +67,11 @@ class FileBrowser extends Browser
                     klog 'noop'
                     return
                         
-        # klog "dropAction #{target}" sources
-        
         for source in sources
             
             switch action
                 when 'move'
                     File.rename source, target, (source, target) =>
-                        klog action, source
-                        klog action, target
                         if sourceColumn = @columnForFile source 
                             sourceColumn.removeFile source
                         if targetColumn = @columnForFile target
@@ -88,8 +79,6 @@ class FileBrowser extends Browser
                                 targetColumn.insertFile target
                 when 'copy'
                     File.copy source, target, (source, target) =>
-                        klog action, source
-                        klog action, target
                         if targetColumn = @columnForFile target
                             if not targetColumn.row target
                                 targetColumn.insertFile target

@@ -26,7 +26,7 @@ class Transform
         Sort: ['up', 'down', 'sort', 'uniq', 'reverse']
         Path: [ 'resolve', 'unresolve', 'dir', 'base', 'file', 'ext' ]
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @editor.transform = @
         @last         = null
@@ -274,9 +274,10 @@ module.exports =
 
     actions:
 
-        menu: "Misc"
+        menu: 'Misc'
 
         toggleCase:
+            separator: true
             name:  'Toggle Case'
             text:  'toggles selected texts between lower- upper- and title-case'
             combo: 'command+alt+ctrl+u'

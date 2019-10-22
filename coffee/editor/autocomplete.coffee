@@ -12,7 +12,7 @@ event   = require 'events'
 
 class Autocomplete extends event
 
-    constructor: (@editor) -> 
+    @: (@editor) -> 
         
         super()
         

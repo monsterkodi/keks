@@ -13,7 +13,7 @@ File   = require '../tools/file'
 
 class Meta
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @metas     = [] # [ [lineIndex, [start, end], {href: ...}], ... ]
         @lineMetas = {} # { lineIndex: [ lineMeta, ... ], ... }

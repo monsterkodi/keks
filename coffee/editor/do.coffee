@@ -13,7 +13,7 @@ require '../tools/ranges'
 
 class Do
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @reset()
 

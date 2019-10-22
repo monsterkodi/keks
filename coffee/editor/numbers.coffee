@@ -12,7 +12,7 @@ event = require 'events'
 
 class Numbers extends event
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         super()
         @lineDivs = {}

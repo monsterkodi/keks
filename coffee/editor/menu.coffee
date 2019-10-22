@@ -40,6 +40,10 @@ module.exports = ->
 
     viewMenu = text:'View' menu:[
         text:'Toggle Center Text'  accel:'ctrl+\\'
+    ,
+        text:'Toggle Invisibles'   accel:'ctrl+i'
+    ,
+        text:'Toggle Pigments'     accel:'alt+ctrl+p'
     ]    
     editMenu = text:'Edit' menu:[
         text:'Undo'  accel:'ctrl+z'
@@ -53,8 +57,6 @@ module.exports = ->
         text:'Copy'  accel:'ctrl+c'
     ,
         text:'Paste' accel:'ctrl+v'
-    ,
-        text:''     
     ]
 
     actionFiles = filelist slash.join __dirname, '../editor/actions'
@@ -69,6 +71,8 @@ module.exports = ->
                 if value['menu']?
                     menuName = value['menu']
                     submenu[menuName] ?= []
+                else
+                    continue
                 for k,v of value
                     if v.name and v.combo
                         menuAction = (c) -> (i,win) -> post.toWin win.id, 'menuAction', c
@@ -83,10 +87,10 @@ module.exports = ->
                         if v.separator
                             submenu[v.menu ? menuName].push text: ''
                         submenu[v.menu ? menuName].push item
-                # submenu[menuName].push text: ''
 
+    result = [editMenu]
     for key, menu of submenu
-        editMenu.menu.push text:key, menu:menu
+        result.push text:key, menu:menu
 
-    [mainMenu[0], editMenu, viewMenu, mainMenu[2]]
+    result.concat [viewMenu, mainMenu[2]]
 

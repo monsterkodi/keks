@@ -13,7 +13,7 @@ hub      = require '../git/hub'
 
 class Diffbar
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @elem = elem 'canvas', class: 'diffbar'
         @elem.style.position = 'absolute'

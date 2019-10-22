@@ -11,7 +11,7 @@ matchr = require '../../tools/matchr'
 
 class Pigments
 
-    constructor: (@editor) ->
+    @: (@editor) ->
 
         @test = /#[a-fA-F0-9]{3}|rgba?/
         trio  = /#[a-fA-F0-9]{3}(?![\w\d])/
@@ -99,8 +99,8 @@ class Pigments
 
         @clear()
 
-        @editor.on 'lineChanged',  @onLineChanged
-        @editor.on 'lineInserted', @onLineInserted
+        @editor.on 'lineChanged'  @onLineChanged
+        @editor.on 'lineInserted' @onLineInserted
 
         for li in [0...@editor.numLines()]
             @onLineInserted li
@@ -112,14 +112,13 @@ module.exports =
         togglePigments:
             name:  'Toggle Pigments'
             text:  'toggle pigments for current file'
-            combo: 'command+alt+shift+p'
-            accel: 'alt+ctrl+shift+p'
+            combo: 'alt+ctrl+p'
 
     initPigments: -> @pigments ?= new Pigments @
 
     togglePigments: ->
 
-        if prefs.get "pigments|#{@currentFile}"
+        if prefs.get "pigments▸#{@currentFile}"
             @pigments.deactivate()
         else
             @pigments.activate()

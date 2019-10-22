@@ -14,6 +14,8 @@ module.exports =
     
     actions:
         
+        menu: 'Misc'
+        
         startSalter:
             name: 'ASCII Header Mode'
             text: """if cursor is not in ascii-header: 

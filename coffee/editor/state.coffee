@@ -12,7 +12,7 @@ Immutable = require 'seamless-immutable'
 
 class State
 
-    constructor: (opt) ->
+    @: (opt) ->
 
         if opt? and Immutable.isImmutable opt
             @s = opt
