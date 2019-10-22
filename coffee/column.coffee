@@ -664,41 +664,39 @@ class Column
             absPos = kpos @div.getBoundingClientRect().left, @div.getBoundingClientRect().top
         
         opt = items: [ 
-            # text:   'Toggle Invisible'
-            # combo:  'ctrl+i' 
-            # cb:     @toggleDotFiles
-        # ,
-            # text:   'Refresh'
-            # combo:  'ctrl+r' 
-            # cb:     @browser.refresh
-        # ,
-            text:   'Duplicate'
-            combo:  'ctrl+d' 
-            cb:     @duplicateFile
-        ,
-            text:   'Move to Trash'
-            combo:  'ctrl+backspace' 
-            cb:     @moveToTrash
-        ,
-            text:   'Add to Shelf'
-            combo:  'alt+shift+.'
-            cb:     @addToShelf
-        ,
-            text:   'New Folder'
-            combo:  'alt+n' 
-            cb:     @newFolder
+            text:   'Open'
+            combo:  'return alt+o'
+            cb:     @open
         ,
             text:   'Viewer'
-            combo:  'alt+v' 
+            combo:  'space alt+v' 
             cb:     @openViewer
         ,
             text:   'Explorer'
             combo:  'alt+e' 
             cb:     @explorer
+        ,   
+            text:   ''
         ,
-            text:   'Open'
-            combo:  'return alt+o'
-            cb:     @open
+            text:   'Duplicate'
+            combo:  'ctrl+d' 
+            cb:     @duplicateFile
+        ,   
+            text:   'New Folder'
+            combo:  'alt+n' 
+            cb:     @newFolder
+        ,
+            text:   ''
+        ,
+            text:   'Add to Shelf'
+            combo:  'alt+shift+.'
+            cb:     @addToShelf
+        ,
+            text:   ''
+        ,
+            text:   'Move to Trash'
+            combo:  'ctrl+backspace' 
+            cb:     @moveToTrash
         ,
             text:   ''
         ]

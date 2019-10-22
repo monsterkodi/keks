@@ -88,13 +88,14 @@ class Browser
                 @loadItem @fileItem slash.dir @columns[0].path()
         else        
             index = @focusColumn()?.index ? 0
-            index += switch key
+            nuidx = index + switch key
                 when 'left''up' then -1
                 when 'right'    then +1
                                 
-            index = clamp 0, @numCols()-1, index
-            if @columns[index].numRows()
-                @columns[index].focus().activeRow().activate()
+            nuidx = clamp 0, @numCols()-1, nuidx
+            return if nuidx == index
+            if @columns[nuidx].numRows()
+                @columns[nuidx].focus().activeRow().activate()
             
         @updateColumnScrolls()
         @

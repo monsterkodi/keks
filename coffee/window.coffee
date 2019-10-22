@@ -120,8 +120,6 @@ window.document.addEventListener 'wheel' onWheel
 
 onMenuAction = (name, args) ->
 
-    klog 'menuAction' name
-    
     if not fileBrowser.viewer
         switch name
             when 'Toggle Extensions' then return toggleExtensions()
@@ -137,6 +135,7 @@ onMenuAction = (name, args) ->
         when 'Reload Window'     then return reloadWin()
         when 'Toggle Shelf'      then return fileBrowser.toggleShelf()
         
+    klog 'menuAction' name
     post.toMain 'menuAction' name, args
 
 post.on 'menuAction' onMenuAction
@@ -153,6 +152,7 @@ post.on 'load' (info) ->
 toggleExtensions = -> prefs.toggle 'browser▸hideExtensions' hideExtensions
 hideExtensions = (hide=true) ->
 
+    # klog 'hideExtensions' hide
     setStyle '.browserRow.file .ext' 'display' hide and 'none' or 'initial'
     setStyle '.fileInfoFile .ext'    'display' hide and 'none' or 'initial'
 
