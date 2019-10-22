@@ -331,7 +331,24 @@ class Column
         @navigateCols 'enter'
     
     updateCrumb: => @crumb.updateRect @div.getBoundingClientRect()
+           
+    extendSelection: (key) ->
+        
+        return error "no rows in column #{@index}?" if not @numRows()        
+        index = @activeRow()?.index() ? -1
+        error "no index from activeRow? #{index}?", @activeRow() if not index? or Number.isNaN index
             
+        toIndex = switch key
+            when 'up'        then index-1
+            when 'down'      then index+1
+            when 'home'      then 0
+            when 'end'       then @numRows()-1
+            when 'page up'   then Math.max 0, index-@numVisible()
+            when 'page down' then Math.min @numRows()-1, index+@numVisible()
+            else index
+    
+        @browser.select.to @row(toIndex), true
+    
     # 000   000   0000000   000   000  000   0000000    0000000   000000000  00000000  
     # 0000  000  000   000  000   000  000  000        000   000     000     000       
     # 000 0 000  000000000   000 000   000  000  0000  000000000     000     0000000   
@@ -344,7 +361,7 @@ class Column
         index = @activeRow()?.index() ? -1
         error "no index from activeRow? #{index}?", @activeRow() if not index? or Number.isNaN index
         
-        index = switch key
+        newIndex = switch key
             when 'up'        then index-1
             when 'down'      then index+1
             when 'home'      then 0
@@ -353,15 +370,17 @@ class Column
             when 'page down' then index+@numVisible()
             else index
             
-        if not index? or Number.isNaN index        
-            error "no index #{index}? #{@numVisible()}"
+        if not newIndex? or Number.isNaN newIndex        
+            error "no index #{newIndex}? #{@numVisible()}"
             
-        index = clamp 0, @numRows()-1, index
+        newIndex = clamp 0, @numRows()-1, newIndex
         
-        if not @rows[index]?.activate?
-            error "no row at index #{index}/#{@numRows()-1}?", @numRows() 
+        return if newIndex == index
+        
+        if not @rows[newIndex]?.activate?
+            error "no row at index #{newIndex}/#{@numRows()-1}?", @numRows() 
             
-        @browser.select.row @rows[index]
+        @browser.select.row @rows[newIndex]
     
     navigateCols: (key) -> # move to file browser?
         
@@ -705,6 +724,7 @@ class Column
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
             when 'space' 'alt+v'                    then return @openViewer()
+            when 'shift+up' 'shift+down' 'shift+home' 'shift+end' 'shift+page up' 'shift+page down' then return stopEvent event, @extendSelection key
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
             when 'command+down' 'ctrl+down'         then return stopEvent event, @navigateRows 'end'
@@ -739,7 +759,7 @@ class Column
         if combo in ['left' 'right'] then return stopEvent event, @navigateCols key
             
         if mod in ['shift' ''] and char then @doSearch char
-                
+                        
 module.exports = Column
 
 

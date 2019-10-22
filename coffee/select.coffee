@@ -66,7 +66,9 @@ class Select
             @rows.push row
     
     row: (row, activate=true) ->
-                
+        
+        return if not row
+        
         if @active?.column == row.column and activate
             @active?.clearActive()
         
@@ -79,8 +81,9 @@ class Select
         if not row.isActive() and activate
             row.activate()
             
-    to: (row) -> 
-        
+    to: (row, moveActive=false) -> 
+
+        return if not row
         return if row == @active
         return if not @active
         
@@ -96,9 +99,14 @@ class Select
             to   = @active.index()-1
             
         for index in [from..to]
-            row = @active.column.rows[index]
-            if not row.isSelected() 
-                row.setSelected()
-                @rows.push row
+            r = @active.column.rows[index]
+            if not r.isSelected() 
+                r.setSelected()
+                @rows.push r
+                
+        if moveActive
+            @active?.clearActive()
+            @active = row
+            @active.setActive()
 
 module.exports = Select
