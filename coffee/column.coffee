@@ -575,19 +575,10 @@ class Column
     # 0000000     0000000   000        0000000  000   0000000  000   000     000     00000000  
     
     duplicateFile: =>
-        
-        unused = require 'unused-filename'
-        
+                
         for file in @browser.select.files()
-        
-            unused(file).then (fileName) =>
-                fileName = slash.path fileName
-                fs.copyFile file, fileName, (err) =>
-                    return error 'copy file failed' err if err?
-                    # newFile = slash.join slash.dir(@activePath()), fileName
-                    klog 'fileName' fileName
-                    row = @insertFile fileName
-                    @browser.select.row row
+            File.duplicate file, (source, target) =>
+                @browser.select.row @insertFile target
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  

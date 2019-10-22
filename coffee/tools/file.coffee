@@ -8,7 +8,8 @@
 
 { slash, valid, klog, fs, kerror } = require 'kxk'
 
-icons = require './icons.json'
+icons  = require './icons.json'
+unused = require 'unused-filename'
 
 class File
     
@@ -19,30 +20,37 @@ class File
         
         fs.mkdir slash.dir(to), recursive:true, (err) ->
             
-            return kerror 'mkdir failed' err if err
+            return kerror "mkdir failed #{err}" if err
             
             if slash.isDir(to)
                 to = slash.join to, slash.file from
 
             fs.move from, to, overwrite:true, (err) ->
-                return kerror 'rename failed' err if err
+                return kerror "rename failed #{err}" if err
                 cb from, to
 
+    @duplicate: (from, cb) -> 
+
+        unused(from).then (target) =>          
+            @copy from, target, cb
+    
     @copy: (from, to, cb) ->
         
-        if slash.dir(from) == to
-            unusedFilename = require 'unused-filename'
-            unusedFilename(from).then (fileName) => 
-                @copy from, fileName, cb
-            return
+        # if slash.dir(from) == to
+            # klog 'unused>' from, to
+            # unused(from).then (target) => 
+                # klog 'unused:' from, target
+                # @copy from, target, cb
+            # return
             
         if slash.isDir(to)
             to = slash.join to, slash.file from
-        else
-            to = slash.join slash.dir(to), slash.file from
+        # else
+            # to = slash.join slash.dir(to), slash.file from
 
+        klog "copy #{from} #{to}"
         fs.copy from, to, (err) ->
-            return kerror 'copy failed' err if err
+            return kerror "copy failed #{err}" if err
             cb from, to
                 
     # 000   0000000   0000000   000   000  
