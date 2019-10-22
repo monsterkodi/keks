@@ -36,19 +36,10 @@ class File
     
     @copy: (from, to, cb) ->
         
-        # if slash.dir(from) == to
-            # klog 'unused>' from, to
-            # unused(from).then (target) => 
-                # klog 'unused:' from, target
-                # @copy from, target, cb
-            # return
-            
         if slash.isDir(to)
             to = slash.join to, slash.file from
-        # else
-            # to = slash.join slash.dir(to), slash.file from
 
-        klog "copy #{from} #{to}"
+        # klog "copy #{from} #{to}"
         fs.copy from, to, (err) ->
             return kerror "copy failed #{err}" if err
             cb from, to

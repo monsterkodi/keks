@@ -10,6 +10,7 @@
 
 dirlist = require './tools/dirlist'
 File    = require './tools/file'
+Header  = require './header'
 
 class Viewer
 
@@ -27,9 +28,12 @@ class Viewer
         else
             if File.isImage path
                 @loadImages [path]
-            
+                            
     loadImages: (images) ->
             
+        @header = new Header @browser
+        @header.setFile path
+        
         @div = elem class:'viewer' tabindex:1
         
         @focus = document.activeElement
@@ -67,6 +71,7 @@ class Viewer
     close: =>
 
         @browser.viewer = null
+        @header.del()
         @div.remove()
         @focus.focus()
 
