@@ -569,7 +569,7 @@ class Column
             path = @activeRow()?.item.file
             
             if File.isText path
-                @browser.viewer = new Editor path
+                @browser.viewer = new Editor @browser, path
                 return
                 
             if not File.isImage path

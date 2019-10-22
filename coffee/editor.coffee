@@ -9,12 +9,13 @@
 { slash, empty, post, open, elem, stopEvent, keyinfo, klog, $, _ } = require 'kxk'
 
 File       = require './tools/file'
+Header     = require './header'
 BaseEditor = require './editor/editor'
 FileEditor = require './editor/fileeditor'
 
 class Editor
 
-    @: (path) ->
+    @: (@browser, path) ->
                     
         @div = elem class:'editor' tabindex:1
         
@@ -32,6 +33,9 @@ class Editor
         @div.focus()
         
         @editor.setCurrentFile path
+        
+        @header = new Header @browser
+        @header.setFile path
             
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
@@ -50,10 +54,10 @@ class Editor
                 c = @editor.mainCursor()
                 if c[0] == 1 and c[1] == 0
                     return stopEvent event, @close()
-        # klog 'onKey' mod, key, combo
             
     close: =>
 
+        @header.del()
         @div.remove()
         @focus.focus()
         @editor?.del()

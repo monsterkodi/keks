@@ -208,10 +208,6 @@ unicode(char)
 .noon-icon:before
     unicode('ⓞ')
     
-.dir
-.crumb
-    font-weight     bold
-    
 .inline
     display         inline-block
     
@@ -226,38 +222,44 @@ unicode(char)
 //    000     000     000     0000000  00000000  0000000    000   000  000   000  
 
 #titlebar
-    position    absolute
-    left        0
-    right       0
-    top         0
-    height      titlebarHeight
-    pointer-events none
+    position        absolute
+    left            0
+    right           0
+    top             0
+    height          titlebarHeight
+    pointer-events  none
     
 .titlebar-title
-    opacity             0
-    pointer-events none
+    opacity         0
+    pointer-events  none
     
 .crumb
-    font-size   15px
-    padding-top 1px
-    line-height titlebarHeight
-    position    absolute
-    text-align  center
-    cursor      pointer
-    & .path
-        opacity 0.5
-    & .punct
-        padding 0.2em
-        opacity 0.2
+    font-size       15px
+    padding-top     1px
+    line-height     titlebarHeight
+    position        absolute
+    text-align      center
+    cursor          pointer
+    & .path    
+        opacity     0.5
+    & .punct    
+        padding     0.2em
+        opacity     0.2
 
+.header .crumb
+    left            0
+    right           0
+        
+.header
 #crumbs
-    position    absolute
-    left        0
-    right       0
-    top         0  
-    height      titlebarHeight
-    display     block
-    background  frameColor
+    font-weight     bold
+    position        absolute
+    left            0
+    right           0
+    top             0  
+    height          titlebarHeight
+    display         block
+    background      frameColor
     
 //  0000000   0000000  00000000    0000000   000      000      0000000     0000000   00000000
 // 000       000       000   000  000   000  000      000      000   000  000   000  000   000

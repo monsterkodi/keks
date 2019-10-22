@@ -151,10 +151,6 @@ body {
   font-family: Sans-Serif;
   content: 'ⓞ';
 }
-.dir,
-.crumb {
-  font-weight: bold;
-}
 .inline {
   display: inline-block;
 }
@@ -189,7 +185,13 @@ body {
   padding: 0.2em;
   opacity: 0.2;
 }
+.header .crumb {
+  left: 0;
+  right: 0;
+}
+.header,
 #crumbs {
+  font-weight: bold;
   position: absolute;
   left: 0;
   right: 0;
