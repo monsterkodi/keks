@@ -142,13 +142,10 @@ class FileEditor extends TextEditor
         
     saveAs: ->
     
-        dialog.showSaveDialog(
-            title: "Save File As"
-            defaultPath: slash.unslash slash.dir @currentFile
-            properties: ['openFile' 'createDirectory']).then (result) =>
-                if not result.cancelled and result.filePath
-                    klog "saveAs #{result.filePath}" @text()
-                    slash.writeText result.filePath, @text()
+        dialog.showSaveDialog(title:'Save File As' defaultPath:slash.unslash @currentFile).then (result) =>
+            if not result.cancelled and result.filePath
+                slash.writeText result.filePath, @text()
+                post.emit 'navigateToFile' result.filePath
                     
     saveScrollCursorsAndSelections: (opt) ->
 

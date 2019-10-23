@@ -29,9 +29,10 @@ class FileBrowser extends Browser
         @select = new Select @
         @name   = 'FileBrowser'
 
-        post.on 'file'        @onFile
-        post.on 'filebrowser' @onFileBrowser
-        post.on 'openFile'    @onOpenFile
+        post.on 'file'           @onFile
+        post.on 'filebrowser'    @onFileBrowser
+        post.on 'openFile'       @onOpenFile
+        post.on 'navigateToFile' @navigateToFile
 
         @shelfResize = elem 'div' class: 'shelfResize'
         @shelfResize.style.position = 'absolute'
@@ -117,7 +118,7 @@ class FileBrowser extends Browser
         
         if file then @loadItem @fileItem(file), opt
         
-    navigateToFile: (file) ->
+    navigateToFile: (file) =>
 
         @closeViewer()
         
