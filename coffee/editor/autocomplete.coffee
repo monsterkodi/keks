@@ -143,11 +143,11 @@ class Autocomplete extends event
         if @matchList.length
             
             @list = elem class: 'autocomplete-list'
-            @list.addEventListener 'wheel', @onWheel
-            @list.addEventListener 'mousedown', @onMouseDown
+            @list.addEventListener 'wheel'     @onWheel
+            @list.addEventListener 'mousedown' @onMouseDown
             index = 0
             for m in @matchList
-                item = elem class: 'autocomplete-item', index:index++
+                item = elem class:'autocomplete-item' index:index++
                 item.textContent = m
                 @list.appendChild item
             cursor.appendChild @list
@@ -161,8 +161,8 @@ class Autocomplete extends event
     close: =>
         
         if @list?
-            @list.removeEventListener 'wheel', @onWheel
-            @list.removeEventListener 'click', @onClick
+            @list.removeEventListener 'wheel' @onWheel
+            @list.removeEventListener 'click' @onClick
             @list.remove()
             
         @span?.remove()
@@ -318,8 +318,8 @@ class Autocomplete extends event
     
     onLinesAppended:  (lines)    => @parseLines lines, action: 'append'
     onLineInserted:   (li)       => @parseLines [@editor.line(li)], action: 'insert'
-    onLineChanged:    (li)       => @parseLines [@editor.line(li)], action: 'change', count: 0
-    onWillDeleteLine: (line)     => @parseLines [line], action: 'delete', count: -1
+    onLineChanged:    (li)       => @parseLines [@editor.line(li)], action: 'change' count:0
+    onWillDeleteLine: (line)     => @parseLines [line], action: 'delete' count:-1
     onLinesSet:       (lines)    => @parseLines lines, action: 'set' if lines.length
 
     # 000   000  00000000  000   000

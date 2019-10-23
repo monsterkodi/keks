@@ -251,7 +251,8 @@ class FileBrowser extends Browser
             
         img = elem 'img' class:'browserImage' src:slash.fileUrl file
         cnt = elem class:'browserImageContainer' child:img
-        cnt.addEventListener 'dblclick' -> open file
+        cnt.addEventListener 'dblclick' => clearTimeout @openViewerTimer; open file
+        cnt.addEventListener 'click' => clearTimeout @openViewerTimer; @openViewerTimer = setTimeout (=> @lastDirColumn()?.openViewer()), 500
                     
         img.onload = ->
             img =$ '.browserImage'
@@ -309,7 +310,8 @@ class FileBrowser extends Browser
             elem 'table' class:"fileInfoData" html:"<tr><th>#{size[0]}</th><td>#{size[1]}</td></tr><tr><th>#{num}</th><td>#{range}</td></tr>"
         ]
         
-        info.addEventListener 'dblclick' -> open file
+        info.addEventListener 'dblclick' => clearTimeout @openViewerTimer; open file
+        info.addEventListener 'click' => clearTimeout @openViewerTimer; @openViewerTimer = setTimeout (=> @lastDirColumn()?.openViewer()), 500
         
         info
         

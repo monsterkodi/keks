@@ -87,9 +87,8 @@ class Column
                     @activeRow()?.clearActive()
                     @browser.select.row @dragStartRow, false
         else
-            if @hasFocus()
-                if @activeRow() ? @browser.select.active
-                    @browser.select.row @activeRow() ? @browser.select.active
+            if @hasFocus() and @activeRow()
+                @browser.select.row @activeRow()
 
     onDragMove: (d,e) =>
         
@@ -283,7 +282,7 @@ class Column
     activateRow: (row) -> @row(row)?.activate()
        
     activeRow: -> _.find @rows, (r) -> r.isActive()
-    activePath: -> @activeRow()?.path()
+    activePath: -> @activeRow()?.path() ? @parent.file
     
     row: (row) -> # accepts element, index, string or row
         if      _.isNumber  row then return 0 <= row < @numRows() and @rows[row] or null
@@ -319,7 +318,9 @@ class Column
                 
         if not @activeRow() and @numRows() and opt?.activate != false
             @rows[0].setActive()
+            
         @div.focus()
+        @div.classList.add 'focus'
         @
         
     onFocus: => @div.classList.add 'focus'
@@ -574,19 +575,21 @@ class Column
     
     openViewer: =>
         
-        if @activeRow()?.item.name != '..' and slash.isDir @activePath()
+        if @activeRow()?.item.name != '..' 
             path = @activePath()
         else
-            path = @activeRow()?.item.file
+            path = @parent.file
             
+        if path
             if File.isText path
                 @browser.viewer = new Editor @browser, path
                 return
                 
-            if not File.isImage path
-                path = @path()
+            if slash.isFile path
+                if not File.isImage path
+                    path = @path()
             
-        @browser.viewer = new Viewer @browser, path
+            @browser.viewer = new Viewer @browser, path
         
     newFolder: =>
         
@@ -608,7 +611,12 @@ class Column
                 
         for file in @browser.select.files()
             File.duplicate file, (source, target) =>
-                @browser.select.row @insertFile target
+                if @parent.type == 'file'
+                    col = @prevColumn()
+                    col.focus()
+                else col = @
+                row = col.insertFile target
+                @browser.select.row row
                     
     # 00000000  000   000  00000000   000       0000000   00000000   00000000  00000000   
     # 000        000 000   000   000  000      000   000  000   000  000       000   000  
@@ -621,7 +629,7 @@ class Column
         open slash.dir @activePath()
         
     open: =>
-        
+
         open @activePath()
                   
     # 00000000    0000000   00000000   000   000  00000000     
@@ -686,16 +694,6 @@ class Column
             text:   'Explorer'
             combo:  'alt+e' 
             cb:     @explorer
-        ,   
-            text:   ''
-        ,
-            text:   'Duplicate'
-            combo:  'ctrl+d' 
-            cb:     @duplicateFile
-        ,   
-            text:   'New Folder'
-            combo:  'alt+n' 
-            cb:     @newFolder
         ,
             text:   ''
         ,
@@ -708,20 +706,36 @@ class Column
             text:   'Move to Trash'
             combo:  'ctrl+backspace' 
             cb:     @moveToTrash
-        ,
-            text:   ''
         ,   
-            text:   'Sort'
-            menu: [
-                text: 'By Name' combo:'ctrl+n', cb:@sortByName
-            ,
-                text: 'By Type' combo:'ctrl+t', cb:@sortByType
-            ,
-                text: 'By Date' combo:'ctrl+a', cb:@sortByDateAdded
-            ]
+            text:   ''
+            hide:   @parent.type == 'file'
+        ,
+            text:   'Duplicate'
+            combo:  'ctrl+d' 
+            cb:     @duplicateFile
+            hide:   @parent.type == 'file'
+        ,   
+            text:   'New Folder'
+            combo:  'alt+n' 
+            cb:     @newFolder
+            hide:   @parent.type == 'file'
         ]
         
-        opt.items = opt.items.concat window.titlebar.makeTemplate require './menu.json'
+        if @parent.type != 'file'
+            opt.items = opt.items.concat [
+                text:   ''
+            ,   
+                text:   'Sort'
+                menu: [
+                    text: 'By Name' combo:'ctrl+n', cb:@sortByName
+                ,
+                    text: 'By Type' combo:'ctrl+t', cb:@sortByType
+                ,
+                    text: 'By Date' combo:'ctrl+a', cb:@sortByDateAdded
+                ]
+            ]
+        
+            opt.items = opt.items.concat window.titlebar.makeTemplate require './menu.json'
         
         opt.x = absPos.x
         opt.y = absPos.y
