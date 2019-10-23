@@ -716,6 +716,9 @@ class TextEditor extends Editor
             when 'ctrl+x'               then return @cut()
             when 'ctrl+c'               then return @copy()
             when 'ctrl+v'               then return @paste()
+            when 'ctrl+s'               then return @save()
+            when 'ctrl+shift+s'         then return @saveAs()
+            when 'ctrl+r'               then return @revert()
             when 'esc'
                 if @salterMode          then return @setSalterMode false
                 if @numHighlights()     then return @clearHighlights()

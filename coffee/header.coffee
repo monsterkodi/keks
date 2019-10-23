@@ -26,10 +26,10 @@ class Header
     
     setDirty: (@dirty) ->
         
-        klog 'dirty' @dirty
         if @dirty
-            @crumb.appendChild  elem 'span' class:'dot' text:'●' 
-            @crumb.insertBefore elem 'span' class:'dot' text:'●' 
+            if @crumb.firstChild.className != 'dot'
+                @crumb.appendChild  elem 'span' class:'dot' text:'●' 
+                @crumb.insertBefore elem('span' class:'dot' text:'●'), @crumb.firstChild
         else
             if @crumb.lastChild.className == 'dot'
                 @crumb.lastChild.remove()
@@ -53,6 +53,7 @@ class Header
             @browser.browse event.target.id
         else
             root = @crumb.firstChild
+            root = root.nextSibling if root.className == 'dot'
             br = root.getBoundingClientRect()
             if kpos(event).x < br.left
                 @browser.browse root.id

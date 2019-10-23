@@ -17,7 +17,7 @@ class Crumb
         @elem = elem class:'crumb'
         @elem.columnIndex = @column.index
         @elem.addEventListener 'mousedown' @onMouseDown
-        @elem.addEventListener 'mouseup' @onMouseUp
+        @elem.addEventListener 'mouseup'   @onMouseUp
         $('crumbs').appendChild @elem
 
     onMouseDown: (event) =>

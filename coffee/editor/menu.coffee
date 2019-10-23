@@ -44,7 +44,16 @@ module.exports = ->
         text:'Toggle Invisibles'   accel:'ctrl+i'
     ,
         text:'Toggle Pigments'     accel:'alt+ctrl+p'
-    ]    
+    ] 
+    
+    fileMenu = text:'File' menu:[
+        text:'Save'         accel:'ctrl+s'
+    ,
+        text:'Save As ...'  accel:'ctrl+shift+s'
+    ,
+        text:'Revert'       accel:'ctrl+r'
+    ]
+    
     editMenu = text:'Edit' menu:[
         text:'Undo'  accel:'ctrl+z'
     ,
@@ -88,7 +97,7 @@ module.exports = ->
                             submenu[v.menu ? menuName].push text: ''
                         submenu[v.menu ? menuName].push item
 
-    result = [editMenu]
+    result = [fileMenu, editMenu]
     for key, menu of submenu
         result.push text:key, menu:menu
 

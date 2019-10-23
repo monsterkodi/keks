@@ -223,6 +223,10 @@ body {
   display: block;
   background: frameColor;
 }
+.crumb .dot {
+  padding-left: 10px;
+  padding-right: 10px;
+}
 .scrollbar {
   position: absolute;
   top: 0;

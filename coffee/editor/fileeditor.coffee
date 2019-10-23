@@ -13,6 +13,8 @@ TextEditor = require './texteditor'
 Syntax     = require './syntax'
 Menu       = require './menu'
 electron   = require 'electron'
+remote     = electron.remote
+dialog     = remote.dialog
 
 class FileEditor extends TextEditor
 
@@ -35,10 +37,7 @@ class FileEditor extends TextEditor
         @currentFile = null
         @watch       = null
 
-        @view.addEventListener "contextmenu", @onContextMenu
-
-        post.on 'jumpTo'        @jumpTo
-        post.on 'jumpToFile'    @jumpToFile
+        @view.addEventListener 'contextmenu' @onContextMenu
 
         @initPigments()
         @initInvisibles()
@@ -51,9 +50,13 @@ class FileEditor extends TextEditor
     # 000       000   000  000   000  000  0000  000   000  000       000   000
     #  0000000  000   000  000   000  000   000   0000000   00000000  0000000
 
-    changed: (changeInfo) ->
+    changed: (changeInfo) =>
 
         super changeInfo
+        @updateDirty()
+        
+    updateDirty: ->
+        
         dirty = @do.hasLineChanges()
         if @dirty != dirty
             @dirty = dirty
@@ -67,14 +70,16 @@ class FileEditor extends TextEditor
 
     clear: ->
 
-        @dirty = false
         @setSalterMode false
         @stopWatcher()
         @diffbar?.clear()
         @meta?.clear()
         @setLines ['']
         @do.reset()
+        @updateDirty()
 
+    revert: -> @setCurrentFile @currentFile
+        
     setCurrentFile: (file) ->
 
         @clear()
@@ -129,6 +134,22 @@ class FileEditor extends TextEditor
     #      000  000   000     000     000
     # 0000000   000   000      0      00000000
 
+    save: ->
+                
+        slash.writeText @currentFile, @text(), =>
+            @do.reset()
+            @updateDirty()
+        
+    saveAs: ->
+    
+        dialog.showSaveDialog(
+            title: "Save File As"
+            defaultPath: slash.unslash slash.dir @currentFile
+            properties: ['openFile' 'createDirectory']).then (result) =>
+                if not result.cancelled and result.filePath
+                    klog "saveAs #{result.filePath}" @text()
+                    slash.writeText result.filePath, @text()
+                    
     saveScrollCursorsAndSelections: (opt) ->
 
         return if not @currentFile
@@ -141,11 +162,11 @@ class FileEditor extends TextEditor
 
         s.scroll = @scroll.scroll if @scroll.scroll
 
-        filePositions = window.stash.get 'filePositions' Object.create null
+        filePositions = prefs.get 'filePositions' Object.create null
         if not _.isPlainObject filePositions
             filePositions = Object.create null
         filePositions[@currentFile] = s
-        window.stash.set 'filePositions' filePositions
+        prefs.set 'filePositions' filePositions
 
     # 00000000   00000000   0000000  000000000   0000000   00000000   00000000
     # 000   000  000       000          000     000   000  000   000  000
@@ -157,7 +178,7 @@ class FileEditor extends TextEditor
 
         return if not @currentFile
 
-        filePositions = window.stash.get 'filePositions' {}
+        filePositions = prefs.get 'filePositions' {}
 
         if filePositions[@currentFile]?
 
@@ -190,91 +211,6 @@ class FileEditor extends TextEditor
         @minimap.onEditorScroll()
         @emit 'cursor'
         @emit 'selection'
-
-    #       000  000   000  00     00  00000000
-    #       000  000   000  000   000  000   000
-    #       000  000   000  000000000  00000000
-    # 000   000  000   000  000 0 000  000
-    #  0000000    0000000   000   000  000
-
-    jumpToFile: (opt) =>
-
-        window.tabs.activeTab true
-
-        # log 'jumpToFile' require('kxk').noon.stringify opt
-
-        if opt.newTab
-
-            file = opt.file
-            file += ':' + opt.line if opt.line
-            file += ':' + opt.col if opt.col
-            post.emit 'newTabWithFile' file
-
-        else
-
-            [file, fpos] = slash.splitFilePos opt.file
-            opt.pos = fpos
-            opt.pos[0] = opt.col if opt.col
-            opt.pos[1] = opt.line-1 if opt.line
-            opt.winID  = window.winID
-
-            opt.oldPos = @cursorPos()
-            opt.oldFile = @currentFile
-            window.navigate.gotoFilePos opt
-
-    jumpTo: (word, opt) =>
-
-        if _.isObject(word) and not opt?
-            opt  = word
-            word = opt.word
-
-        opt ?= {}
-
-        if opt.file?
-            @jumpToFile opt
-            return true
-
-        return kerror 'nothing to jump to?' if empty word
-
-        find = word.toLowerCase().trim()
-        find = find.slice 1 if find[0] == '@'
-
-        return kerror 'FileEditor.jumpTo -- nothing to find?' if empty find
-
-        type = opt?.type
-
-        if not type or type == 'class'
-            classes = post.get 'indexer' 'classes'
-            for clss, info of classes
-                if clss.toLowerCase() == find
-                    @jumpToFile info
-                    return true
-
-        if not type or type == 'func'
-            funcs = post.get 'indexer' 'funcs'
-            for func, infos of funcs
-                if func.toLowerCase() == find
-                    info = infos[0]
-                    for i in infos
-                        if i.file == @currentFile
-                            info = i
-                    # if infos.length > 1 and not opt?.dontList
-                        # window.commandline.commands.term.execute "func ^#{word}$"
-                    @jumpToFile info
-                    return true
-
-        if not type or type == 'file'
-            files = post.get 'indexer' 'files'
-            for file, info of files
-                if slash.base(file).toLowerCase() == find and file != @currentFile
-                    @jumpToFile file:file, line:6
-
-        window.commandline.commands.search.start 'search'
-        window.commandline.commands.search.execute word
-
-        window.split.do 'show terminal'
-
-        true
 
     #  0000000  00000000  000   000  000000000  00000000  00000000
     # 000       000       0000  000     000     000       000   000

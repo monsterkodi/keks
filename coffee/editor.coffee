@@ -43,7 +43,7 @@ class Editor
             
     onDirty: (dirty) =>
         
-        @header.setDirty dirty
+        @header?.setDirty dirty
         
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
@@ -171,9 +171,9 @@ class Editor
             when 'Increase'              then return @changeFontSize +1
             when 'Decrease'              then return @changeFontSize -1
             when 'Reset'                 then return @resetFontSize()
-            when 'Save'                  then return post.emit 'saveFile'
-            when 'Save As ...'           then return post.emit 'saveFileAs'
-            when 'Revert'                then return post.emit 'reloadFile'
+            when 'Save'                  then return @editor.save()
+            when 'Save As ...'           then return @editor.saveAs()
+            when 'Revert'                then return @editor.revert()
     
         klog "unhandled menu action! '#{name}' args:" args
         'unhandled'
