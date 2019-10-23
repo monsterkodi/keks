@@ -6,7 +6,7 @@
 000       000  0000000  00000000        00000000  0000000    000     000      0000000   000   000
 ###
 
-{ post, stopEvent, setStyle, srcmap, popup, slash, empty, clamp, kpos, fs, klog, kerror, _ } = require 'kxk'
+{ post, stopEvent, setStyle, srcmap, popup, prefs, slash, empty, clamp, kpos, fs, klog, kerror, _ } = require 'kxk'
 
 Watcher    = require '../tools/watcher'
 TextEditor = require './texteditor'
@@ -78,7 +78,10 @@ class FileEditor extends TextEditor
         @do.reset()
         @updateDirty()
 
-    revert: -> @setCurrentFile @currentFile
+    revert: -> 
+    
+        @saveScrollCursorsAndSelections()
+        @setCurrentFile @currentFile
         
     setCurrentFile: (file) ->
 
@@ -93,16 +96,8 @@ class FileEditor extends TextEditor
             @setText slash.readText @currentFile
             @watch = new Watcher @currentFile
 
-        # post.emit 'file' @currentFile # browser & shelf
-
         @emit 'file' @currentFile # diffbar, pigments, ...
-
-        # post.emit 'dirty' @dirty
-
-    restoreFromTabState: (tabsState) ->
-
-        return kerror "no tabsState.file?" if not tabsState.file?
-        @setCurrentFile tabsState.file, tabsState.state
+        @restoreScrollCursorsAndSelections()
 
     stopWatcher: ->
 

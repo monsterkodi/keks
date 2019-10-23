@@ -65,6 +65,7 @@ class Editor
             
     close: =>
 
+        @editor?.saveScrollCursorsAndSelections()
         @browser.viewer = null
         @header.del()
         @div.remove()

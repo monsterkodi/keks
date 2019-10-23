@@ -17,49 +17,7 @@ class Do
 
         @reset()
 
-        post.on 'fileLineChanges', @onFileLineChanges
-
-    del: -> post.removeListener 'fileLineChanges', @onFileLineChanges
-
-    onFileLineChanges: (file, lineChanges) =>
-        if file == @editor.currentFile
-            @foreignChanges lineChanges
-
-    foreignChanges: (lineChanges) ->
-        @start()
-        for change in lineChanges
-            if change.change != 'deleted' and not change.after?
-                kerror "Do.foreignChanges -- no after? #{change}"
-                continue
-            switch change.change
-                when 'changed'  then @change change.doIndex, change.after
-                when 'inserted' then @insert change.doIndex, change.after
-                when 'deleted'  then @delete change.doIndex
-                else
-                    kerror "Do.foreignChanges -- unknown change #{change.change}"
-        @end foreign: true
-
-    # 000000000   0000000   0000000     0000000  000000000   0000000   000000000  00000000
-    #    000     000   000  000   000  000          000     000   000     000     000
-    #    000     000000000  0000000    0000000      000     000000000     000     0000000
-    #    000     000   000  000   000       000     000     000   000     000     000
-    #    000     000   000  0000000    0000000      000     000   000     000     00000000
-
-    tabState: ->
-
-        history: @history
-        redos:   @redos
-        state:   @state
-        file:    @editor.currentFile
-
-    setTabState: (state) ->
-
-        @editor.restoreFromTabState state
-
-        @groupCount = 0
-        @history = state.history
-        @redos   = state.redos
-        @state   = state.state
+    del: -> 
 
     # 00000000   00000000   0000000  00000000  000000000
     # 000   000  000       000       000          000
