@@ -37,6 +37,7 @@ class Column
         @div.addEventListener 'focus'     @onFocus
         @div.addEventListener 'blur'      @onBlur
         @div.addEventListener 'keydown'   @onKey
+        @div.addEventListener 'keyup'     @onKeyUp
         
         @div.addEventListener 'mouseover' @onMouseOver
         @div.addEventListener 'mouseout'  @onMouseOut
@@ -111,7 +112,10 @@ class Column
             @dragDiv.style.left = "#{pos.x-d.deltaSum.x}px"
             @dragDiv.style.width = "#{br.width-12}px"
             @dragDiv.style.pointerEvents = 'none'
-                        
+            
+            @dragInd = elem class:'dragIndicator'
+            @dragDiv.appendChild @dragInd
+            
             for row in @browser.select.rows
                 rowClone = row.div.cloneNode true
                 rowClone.style.flex = 'unset'
@@ -119,13 +123,20 @@ class Column
                 rowClone.style.border = 'none'
                 rowClone.style.marginBottom = '-1px'
                 @dragDiv.appendChild rowClone
-                
+                            
             document.body.appendChild @dragDiv
+            @focus activate:false
             
         if @dragDiv
             
+            @updateDragIndicator e      
             @dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
 
+    updateDragIndicator: (event) ->
+        
+        @dragInd?.classList.toggle 'copy' event.shiftKey
+        @dragInd?.classList.toggle 'move' event.ctrlKey or event.metaKey or event.altKey
+            
     onDragStop: (d,e) =>
         
         if @dragDiv?
@@ -477,7 +488,7 @@ class Column
     #      000  000   000  000   000     000     
     # 0000000    0000000   000   000     000     
     
-    sortByName: ->
+    sortByName: =>
          
         @rows.sort (a,b) -> 
             (a.item.type + a.item.name).localeCompare(b.item.type + b.item.name)
@@ -487,7 +498,7 @@ class Column
             @table.appendChild row.div
         @
         
-    sortByType: ->
+    sortByType: =>
         
         @rows.sort (a,b) -> 
             atype = a.item.type == 'file' and slash.ext(a.item.name) or '___' #a.item.type
@@ -499,7 +510,7 @@ class Column
             @table.appendChild row.div
         @
 
-    sortByDateAdded: ->
+    sortByDateAdded: =>
         
         @rows.sort (a,b) -> b.item.stat?.atimeMs - a.item.stat?.atimeMs
             
@@ -699,6 +710,15 @@ class Column
             cb:     @moveToTrash
         ,
             text:   ''
+        ,   
+            text:   'Sort'
+            menu: [
+                text: 'By Name' combo:'ctrl+n', cb:@sortByName
+            ,
+                text: 'By Type' combo:'ctrl+t', cb:@sortByType
+            ,
+                text: 'By Date' combo:'ctrl+a', cb:@sortByDateAdded
+            ]
         ]
         
         opt.items = opt.items.concat window.titlebar.makeTemplate require './menu.json'
@@ -760,6 +780,14 @@ class Column
         if combo in ['left' 'right'] then return stopEvent event, @navigateCols key
             
         if mod in ['shift' ''] and char then @doSearch char
+        
+        if @dragDiv
+            @updateDragIndicator event
+            
+    onKeyUp: (event) =>
+        
+        if @dragDiv
+            @updateDragIndicator event
                         
 module.exports = Column
 

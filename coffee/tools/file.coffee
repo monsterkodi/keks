@@ -88,6 +88,6 @@ class File
             s = split[i]
             spans.push "<div class='inline path' id='#{split[0..i].join '/'}'>#{s}</div>"
         spans.push "<div class='inline' id='#{file}'>#{split[-1]}</div>"
-        return spans.join "<span class='punct'>/</span>"
+        spans.join "<span class='punct'>/</span>"
         
 module.exports = File

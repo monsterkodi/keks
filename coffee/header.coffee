@@ -24,6 +24,17 @@ class Header
 
     del: -> @elem.remove()
     
+    setDirty: (@dirty) ->
+        
+        klog 'dirty' @dirty
+        if @dirty
+            @crumb.appendChild  elem 'span' class:'dot' text:'●' 
+            @crumb.insertBefore elem 'span' class:'dot' text:'●' 
+        else
+            if @crumb.lastChild.className == 'dot'
+                @crumb.lastChild.remove()
+                @crumb.firstChild.remove()
+    
     onMouseDown: (event) =>
         
         @downPos = kpos window.win.getBounds()

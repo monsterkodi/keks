@@ -14,11 +14,11 @@ Header  = require './header'
 
 class Viewer
 
-    @: (@browser, path) ->
+    @: (@browser, @path) ->
         
-        if slash.isDir path
+        if slash.isDir @path
             
-            dirlist path, (items) =>
+            dirlist @path, (items) =>
     
                 images = items.filter (item) -> File.isImage item.file
     
@@ -26,13 +26,13 @@ class Viewer
                 
                 @loadImages images.map (item) -> item.file
         else
-            if File.isImage path
-                @loadImages [path]
+            if File.isImage @path
+                @loadImages [@path]
                             
     loadImages: (images) ->
             
         @header = new Header @browser
-        @header.setFile path
+        @header.setFile @path
         
         @div = elem class:'viewer' tabindex:1
         

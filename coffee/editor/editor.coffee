@@ -30,7 +30,7 @@ class Editor extends Buffer
         @stickySelection = false
         @syntax          = new Syntax @config.syntaxName, @line, @lines
         @do              = new Do @
-
+        
         @setupFileType()
 
     del: ->

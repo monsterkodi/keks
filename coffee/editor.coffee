@@ -28,6 +28,7 @@ class Editor
         @editor = new FileEditor @div
 
         post.on 'menuAction' @onMenuAction
+        post.on 'dirty' @onDirty
         
         @div.addEventListener 'keydown' @onKey
         @div.focus()
@@ -40,6 +41,10 @@ class Editor
         @header = new Header @browser
         @header.setFile path
             
+    onDirty: (dirty) =>
+        
+        @header.setDirty dirty
+        
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
     # 0000000    0000000     00000    

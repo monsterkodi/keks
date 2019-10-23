@@ -294,6 +294,10 @@ class Shelf extends Column
                 if @search.length then @doSearch ''
                 return stopEvent event
             when 'esc'
+                if @dragDiv
+                    @dragDiv.drag.dragStop()
+                    @dragDiv.remove()
+                    delete @dragDiv
                 if @search.length then @clearSearch()
                 return stopEvent event
             when 'up' 'down' 'page up' 'page down' 'home' 'end' 
@@ -302,5 +306,13 @@ class Shelf extends Column
                 return stopEvent event, @focusBrowser()
                 
         if mod in ['shift' ''] and char then @doSearch char
+        
+        if @dragDiv
+            @updateDragIndicator event
+            
+    onKeyUp: (event) =>
+        
+        if @dragDiv
+            @updateDragIndicator event
         
 module.exports = Shelf
