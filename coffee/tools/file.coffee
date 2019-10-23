@@ -14,7 +14,7 @@ unused = require 'unused-filename'
 class File
     
     @isImage: (file) -> slash.ext(file) in ['gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico']
-    @isText:  (file) -> slash.ext(file) in ['koffee' 'coffee' 'styl' 'swift' 'pug' 'md' 'noon' 'txt' 'json' 'sh' 'py' 'cpp' 'cc' 'c' 'cs' 'css' 'h' 'hpp' 'html' 'ts' 'js']
+    @isText:  (file) -> slash.isText file
     
     @rename: (from, to, cb) ->
         

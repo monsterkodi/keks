@@ -1,6 +1,6 @@
 name            keks
 productName     keks
-version         0.41.0
+version         0.42.0
 description     file browser
 main            js/main.js
 bin
@@ -27,7 +27,7 @@ dependencies
                 ignore          ^5.1.4
                 js-beautify     ^1.10.2
                 klor            ^1.4.0
-                kxk             ^0.340.0
+                kxk             ^0.342.0
                 moment          ^2.24.0
                 pretty-bytes    ^5.3.0
                 seamless-immutable  ^7.1.4
