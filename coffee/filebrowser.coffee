@@ -30,6 +30,7 @@ class FileBrowser extends Browser
         @name   = 'FileBrowser'
 
         post.on 'file'           @onFile
+        post.on 'browse'         @browse
         post.on 'filebrowser'    @onFileBrowser
         post.on 'openFile'       @onOpenFile
         post.on 'navigateToFile' @navigateToFile
@@ -112,7 +113,7 @@ class FileBrowser extends Browser
 
     closeViewer: -> @viewer?.close()
         
-    browse: (file, opt) -> 
+    browse: (file, opt) => 
     
         @closeViewer()
         
@@ -331,9 +332,10 @@ class FileBrowser extends Browser
 
         dirlist dir, opt, (items) =>
 
-            if @columns.length and col >= @columns.length and @skipOnDblClick
+            if @skipOnDblClick
                 delete @skipOnDblClick
-                return 
+                if col > 0
+                    return 
                 
             @loadDirItems dir, item, items, col, opt
             

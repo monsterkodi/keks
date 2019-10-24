@@ -43,7 +43,6 @@ winMain = ->
         fileBrowser.browse args.folder[0]
     else
         if load = prefs.get 'load'
-            # klog 'init load' load
             if load.last != load.first
                 active = load.last[load.first.length..]
                 active = load.first + '/' + slash.split(active)[0]
@@ -135,7 +134,7 @@ onMenuAction = (name, args) ->
         when 'Reload Window'     then return reloadWin()
         when 'Toggle Shelf'      then return fileBrowser.toggleShelf()
         
-    klog 'menuAction' name
+    # klog 'menuAction' name
     post.toMain 'menuAction' name, args
 
 post.on 'menuAction' onMenuAction

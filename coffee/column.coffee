@@ -69,6 +69,8 @@ class Column
     
         @dragStartRow = @row e.target
         
+        @browser.skipOnDblClick = false
+        
         delete @toggle
         
         if @dragStartRow
