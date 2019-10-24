@@ -61,6 +61,7 @@ class Editor
             when 'space' 
                 c = @editor.mainCursor()
                 if c[0] == 1 and c[1] == 0
+                    @editor.setCursors [[0,0]]
                     return stopEvent event, @close()
             
     close: =>
