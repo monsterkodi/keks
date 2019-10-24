@@ -85,7 +85,8 @@ class Browser
                     else
                         @loadItem @fileItem col.path()
             else
-                @loadItem @fileItem slash.dir @columns[0].path()
+                if not slash.isRoot @columns[0].path()
+                    @loadItem @fileItem slash.dir @columns[0].path()
         else        
             index = @focusColumn()?.index ? 0
             nuidx = index + switch key

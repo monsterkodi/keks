@@ -59,6 +59,8 @@ class Column
         
         @crumb?.elem.columnIndex = @index
         
+    width: -> @div.getBoundingClientRect().width
+        
     # 0000000    00000000    0000000    0000000   
     # 000   000  000   000  000   000  000        
     # 000   000  0000000    000000000  000  0000  
@@ -105,13 +107,12 @@ class Column
             @dragDiv.drag = d
             pos = kpos e.pageX, e.pageY
             row = @browser.select.rows[0]
-            br  = row.div.getBoundingClientRect()
 
             @dragDiv.style.position = 'absolute'
             @dragDiv.style.opacity  = "0.7"
             @dragDiv.style.top  = "#{pos.y-d.deltaSum.y}px"
             @dragDiv.style.left = "#{pos.x-d.deltaSum.x}px"
-            @dragDiv.style.width = "#{br.width-12}px"
+            @dragDiv.style.width = "#{@width()-12}px"
             @dragDiv.style.pointerEvents = 'none'
             
             @dragInd = elem class:'dragIndicator'

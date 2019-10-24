@@ -114,7 +114,7 @@ class FileBrowser extends Browser
     closeViewer: -> @viewer?.close()
         
     browse: (file, opt) => 
-    
+            
         @closeViewer()
         
         if file then @loadItem @fileItem(file), opt
@@ -170,6 +170,7 @@ class FileBrowser extends Browser
     fileItem: (path) ->
         
         p = slash.resolve path
+                
         file:p
         type:slash.isFile(p) and 'file' or 'dir'
         name:slash.file p
@@ -368,10 +369,15 @@ class FileBrowser extends Browser
             @columns[col].row(slash.file opt.active)?.setActive()
             
         if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
-            if col = @lastDirColumn()
-                col.div.focus()
+            if lastColumn = @lastDirColumn()
+                # lastColumn.div.focus()
+                lastColumn.focus()
                 
         opt.cb? column:col, item:item
+
+        if col >= 3 and @columns[0].width() < 200
+            klog 'loadDirItems' @columns[0].width(), item.type, item.file, col, opt
+            @columns[1].makeRoot()
 
     #  0000000   000   000  00000000  000  000      00000000
     # 000   000  0000  000  000       000  000      000

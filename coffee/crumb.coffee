@@ -62,14 +62,6 @@ class Crumb
     updateRect: (br) ->
         
         @elem.style.left = "#{br.left}px"
-        if @column.index == @column.browser.numCols()-1
-            width = br.right - br.left - 135
-            @elem.style.width = "#{width}px"
-            if width < 50
-                @elem.style.display = 'none'
-            else
-                @elem.style.display = null
-        else
-            @elem.style.width = "#{br.right - br.left}px"
+        @elem.style.width = "#{br.right - br.left}px"
         
 module.exports = Crumb
