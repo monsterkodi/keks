@@ -32,6 +32,7 @@ class Crumb
         
         if upPos.to(@downPos).length() > 0
             delete @downPos
+            @column.focus()
             return
         
         if @column.index == 0
