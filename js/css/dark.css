@@ -290,14 +290,6 @@ body {
 .meta.git.boring {
   background: #666;
 }
-.meta.dbg {
-  opacity: 0.8;
-  background: #f00;
-}
-.meta.dbg.pointer {
-  opacity: 1;
-  border-left-color: #ff0;
-}
 .meta.pigment {
   opacity: 1;
 }
