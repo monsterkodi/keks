@@ -12,7 +12,6 @@ Browser  = require './browser'
 Shelf    = require './shelf'
 Select   = require './select'
 File     = require './tools/file'
-dirlist  = require './tools/dirlist'
 pbytes   = require 'pretty-bytes'
 moment   = require 'moment'
 
@@ -331,7 +330,7 @@ class FileBrowser extends Browser
 
         opt.ignoreHidden = not prefs.get "browser▸showHidden▸#{dir}"
 
-        dirlist dir, opt, (items) =>
+        slash.list dir, opt, (items) =>
 
             if @skipOnDblClick
                 delete @skipOnDblClick

@@ -8,7 +8,6 @@
 
 { slash, empty, open, elem, stopEvent, keyinfo, klog, $ } = require 'kxk'
 
-dirlist = require './tools/dirlist'
 File    = require './tools/file'
 Header  = require './header'
 
@@ -18,7 +17,7 @@ class Viewer
         
         if slash.isDir @path
             
-            dirlist @path, (items) =>
+            slash.list @path, (items) =>
     
                 images = items.filter (item) -> File.isImage item.file
     

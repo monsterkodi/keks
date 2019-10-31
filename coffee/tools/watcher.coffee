@@ -31,19 +31,19 @@ class Watcher
             else
                 slash.exists @file, @onRename
             
-        @w.on 'unlink', (p) => #klog "unlink #{@id}", slash.basename(@file)
+        @w.on 'unlink' (p) => #klog "unlink #{@id}", slash.basename(@file)
         
     onChange: (stat) =>
         
         if stat.mtimeMs != @mtime
             @mtime = stat.mtimeMs
-            post.emit 'reloadFile', @file
+            post.emit 'reloadFile' @file
 
     onRename: (stat) =>
         
         if not stat
             @stop()
-            post.emit 'removeFile', @file
+            post.emit 'removeFile' @file
             
     stop: ->
         
