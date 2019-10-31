@@ -6,9 +6,8 @@
 0000000      000     000   000     000     000   000  000   000
 ###
 
-{ kerror, kstr, valid, klog, elem, empty, fs, noon, slash, _ } = require 'kxk'
+{ matchr, valid, style, elem, last, kstr, _ } = require 'kxk'
 
-matchr   = require '../tools/matchr'
 Balancer = require './balancer'
 klor     = require 'klor'
 

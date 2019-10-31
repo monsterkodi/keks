@@ -6,9 +6,8 @@
 0000000    000   000  0000000  000   000  000   000   0000000  00000000  000   000
 ###
 
-{ empty, kerror, klog, _ } = require 'kxk'
+{ matchr, empty, kerror, klog, _ } = require 'kxk'
 
-matchr = require '../tools/matchr'
 klor   = require 'klor'
 
 class Balancer

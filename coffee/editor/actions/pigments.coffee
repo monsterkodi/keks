@@ -5,9 +5,7 @@
 # 000        000  000   000  000 0 000  000       000  0000     000          000
 # 000        000   0000000   000   000  00000000  000   000     000     0000000
 
-{ prefs } = require 'kxk' 
-
-matchr = require '../../tools/matchr'
+{ matchr, prefs } = require 'kxk' 
 
 class Pigments
 
