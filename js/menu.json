@@ -1,9 +1,11 @@
 {
   "keks": {
-    "About": "alt+cmdctrl+/",
-    "-": null,
     "New Window": "cmdctrl+n",
     "--": null,
+    "About": "alt+cmdctrl+/",
+    "---": null,
+    "Preferences": "cmdctrl+,",
+    "----": null,
     "Quit": "cmdctrl+q"
   },
   "View": {
