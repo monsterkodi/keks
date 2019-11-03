@@ -6,7 +6,7 @@
 0000000      000     000   000     000     000   000  000   000
 ###
 
-{ matchr, valid, style, elem, last, kstr, _ } = require 'kxk'
+{ matchr, valid, elem, last, kstr, _ } = require 'kxk'
 
 Balancer = require './balancer'
 klor     = require 'klor'
@@ -171,8 +171,8 @@ class Syntax
                 for sp in [last...d.start]
                     spc += '&nbsp;'
                 last  = d.start + d.match.length
-                value = d.value? and d.value.length and " class=\"#{d.value}\"" or ''
-                clrzd = "<span#{style}#{value}>#{spc}#{kstr.encode d.match}</span>"
+                clss = d.clss? and d.clss.length and " class=\"#{d.clss}\"" or ''
+                clrzd = "<span#{style}#{clss}>#{spc}#{kstr.encode d.match}</span>"
                 l += clrzd
         l
 

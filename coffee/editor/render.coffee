@@ -22,8 +22,8 @@ class Render
             for di in [diss.length-1..0]
                 d = diss[di]
                 tx = d.start * size.charWidth
-                value = d.value? and " class=\"#{d.value}\"" or ''
-                clrzd = "<span style=\"transform:translatex(#{tx}px);#{d.styl ? ''}\"#{value}>#{kstr.encode d.match}</span>"
+                clss = d.clss? and " class=\"#{d.clss}\"" or ''
+                clrzd = "<span style=\"transform:translatex(#{tx}px);#{d.styl ? ''}\"#{clss}>#{kstr.encode d.match}</span>"
                 l = clrzd + l
         l
 
@@ -35,7 +35,7 @@ class Render
         for d in diss ? []
             span = elem 'span'
             span.style.transform = "translatex(#{d.start * size.charWidth}px)"
-            span.className = d.value if d.value?
+            span.className = d.clss if d.clss?
             span.textContent = d.match.replace /\x1b/g, '▪'
             if d.styl?
                 for st in d.styl.split ';'
@@ -113,7 +113,7 @@ class Render
         if sel[1][0] == 0 and not size.centerText
             border += " start" # wider offset at start of line
 
-        sw = size.charWidth * (sel[1][1]-sel[1][0])
+        cw = size.charWidth * (sel[1][1]-sel[1][0])
         tx = size.charWidth *  sel[1][0] + size.offsetX
         ty = size.lineHeight * sel[0]
         lh = size.lineHeight
@@ -125,8 +125,8 @@ class Render
                 ty += lh/4
                 lh /= 2
 
-        empty = sel[1][0] == sel[1][1] and "empty" or ""
+        mpty = sel[1][0] == sel[1][1] and "empty" or ""
 
-        "<span class=\"#{clss}#{border}#{empty}\" style=\"transform: translate(#{tx}px,#{ty}px); width: #{sw}px; height: #{lh}px\"></span>"
+        "<span class=\"#{clss}#{border}#{mpty}\" style=\"transform: translate(#{tx}px,#{ty}px); width: #{cw}px; height: #{lh}px\"></span>"
 
 module.exports = Render
