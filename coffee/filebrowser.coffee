@@ -6,7 +6,7 @@
 000       000  0000000  00000000        0000000    000   000   0000000   00     00  0000000   00000000  000   000
 ###
 
-{ post, open, valid, empty, clamp, prefs, last, elem, drag, state, klog, slash, fs, os, $, _ } = require 'kxk'
+{ post, filelist, prefs, slash, empty, clamp, elem, drag, open, klog, $ } = require 'kxk'
 
 Browser  = require './browser'
 Shelf    = require './shelf'
@@ -369,13 +369,11 @@ class FileBrowser extends Browser
             
         if opt.focus != false and empty(document.activeElement) and empty($('.popup')?.outerHTML)
             if lastColumn = @lastDirColumn()
-                # lastColumn.div.focus()
                 lastColumn.focus()
                 
         opt.cb? column:col, item:item
 
-        if col >= 3 and @columns[0].width() < 200
-            klog 'loadDirItems' @columns[0].width(), item.type, item.file, col, opt
+        if col >= 2 and @columns[0].width() < 250
             @columns[1].makeRoot()
 
     #  0000000   000   000  00000000  000  000      00000000
