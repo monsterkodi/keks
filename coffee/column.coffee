@@ -6,7 +6,7 @@
  0000000   0000000   0000000   0000000   000   000  000   000
 ###
 
-{ post, prefs, stopEvent, setStyle, keyinfo, popup, slash, valid, clamp, empty, drag, open, elem, kpos, fs, klog, kerror, $, _ } = require 'kxk'
+{ post, stopEvent, keyinfo, valid, slash, empty, clamp, prefs, popup, elem, drag, kpos, open, fs, kerror, klog, _ } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './tools/scroller'
@@ -596,8 +596,7 @@ class Column
         
     newFolder: =>
         
-        unused = require 'unused-filename'
-        unused(slash.join @path(), 'New folder').then (newDir) =>
+        slash.unused slash.join(@path(), 'New folder'), (newDir) =>
             fs.mkdir newDir, (err) =>
                 if empty err
                     row = @insertFile newDir

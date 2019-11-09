@@ -6,10 +6,9 @@
 000       000  0000000  00000000
 ###
 
-{ slash, valid, klog, fs, kerror } = require 'kxk'
+{ slash, valid, fs, kerror } = require 'kxk'
 
 icons  = require './icons.json'
-unused = require 'unused-filename'
 
 class File
     
@@ -31,7 +30,7 @@ class File
 
     @duplicate: (from, cb) -> 
 
-        unused(from).then (target) =>          
+        slash.unused from, (target) =>          
             @copy from, target, cb
     
     @copy: (from, to, cb) ->
