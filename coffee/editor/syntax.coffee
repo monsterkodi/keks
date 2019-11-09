@@ -6,10 +6,9 @@
 0000000      000     000   000     000     000   000  000   000
 ###
 
-{ matchr, valid, elem, last, kstr, _ } = require 'kxk'
+{ matchr, valid, elem, last, kstr, klor, _ } = require 'kxk'
 
 Balancer = require './balancer'
-klor     = require 'klor'
 
 class Syntax
     
@@ -219,29 +218,6 @@ class Syntax
 
     @init: ->
 
-        # syntaxDir = "#{__dirname}/../../syntax/"
-
-        # for syntaxFile in fs.readdirSync syntaxDir
-
-            # syntaxName = slash.basename syntaxFile, '.noon'
-            # patterns = noon.load slash.join syntaxDir, syntaxFile
-
-            # patterns['\\w+']       = 'text'   # this ensures that all ...
-            # patterns['[^\\w\\s]+'] = 'syntax' # non-space characters match
-
-            # if patterns.ko?.extnames?
-                # extnames = patterns.ko.extnames
-                # delete patterns.ko
-
-                # config = matchr.config patterns
-                # for syntaxName in extnames
-                    # @syntaxNames.push syntaxName
-                    # @matchrConfigs[syntaxName] = config
-            # else
-                # @syntaxNames.push syntaxName
-                # @matchrConfigs[syntaxName] = matchr.config patterns
-
-        # klor.init()
         @syntaxNames = @syntaxNames.concat klor.exts
 
 Syntax.init()
