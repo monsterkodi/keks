@@ -16,6 +16,7 @@ Editor   = require './editor'
 Crumb    = require './crumb'
 fuzzy    = require 'fuzzy'
 wxw      = require 'wxw'
+electron = require 'electron'
 
 class Column
     
@@ -743,6 +744,16 @@ class Column
         opt.y = absPos.y
         popup.menu opt        
         
+    #  0000000   0000000   00000000   000   000  
+    # 000       000   000  000   000   000 000   
+    # 000       000   000  00000000     00000    
+    # 000       000   000  000           000     
+    #  0000000   0000000   000           000     
+    
+    copyPaths: ->
+        
+        electron.clipboard.writeText @browser.select.files().join '\n'
+        
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
     # 0000000    0000000     00000    
@@ -761,6 +772,7 @@ class Column
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
             when 'space' 'alt+v'                    then return @openViewer()
+            when 'ctrl+c' 'command+c'               then return @copyPaths()
             when 'shift+up' 'shift+down' 'shift+home' 'shift+end' 'shift+page up' 'shift+page down' then return stopEvent event, @extendSelection key
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'
