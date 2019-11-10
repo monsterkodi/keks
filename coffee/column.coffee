@@ -106,6 +106,7 @@ class Column
             
             @dragDiv = elem 'div'
             @dragDiv.drag = d
+            @dragDiv.files = @browser.select.files()
             pos = kpos e.pageX, e.pageY
             row = @browser.select.rows[0]
 
@@ -132,9 +133,22 @@ class Column
             
         if @dragDiv
             
-            @updateDragIndicator e      
+            clearTimeout @browser.springLoadTimer
+            delete @browser.springLoadTarget
+            if row = @browser.rowAtPos d.pos
+                if row.item.type == 'dir'
+                    @browser.springLoadTimer = setTimeout @onSpringLoadTimeout, 1000
+                    @browser.springLoadTarget = row.item.file
+            
+            @updateDragIndicator e 
             @dragDiv.style.transform = "translateX(#{d.deltaSum.x}px) translateY(#{d.deltaSum.y}px)"
 
+    onSpringLoadTimeout: =>
+        
+        if column = @browser.columnForFile @browser.springLoadTarget
+            if row = column.row @browser.springLoadTarget
+                row.activate()
+            
     updateDragIndicator: (event) ->
         
         @dragInd?.classList.toggle 'copy' event.shiftKey
@@ -142,9 +156,13 @@ class Column
             
     onDragStop: (d,e) =>
         
+        clearTimeout @browser.springLoadTimer
+        delete @browser.springLoadTarget
+        
         if @dragDiv?
             
             @dragDiv.remove()
+            files = @dragDiv.files
             delete @dragDiv
             delete @dragStartRow
             
@@ -158,16 +176,16 @@ class Column
             else
                 klog 'no drop target'
                 return
-                
+                                
             action = e.shiftKey and 'copy' or 'move'
                 
             if column == @browser.shelf 
                 if target and (e.ctrlKey or e.shiftKey or e.metaKey or e.altKey)
-                    @browser.dropAction action, @browser.select.files(), target
+                    @browser.dropAction action, files, target
                 else
-                    @browser.shelf.addFiles @browser.select.files(), pos:d.pos
+                    @browser.shelf.addFiles files, pos:d.pos
             else
-                @browser.dropAction action, @browser.select.files(), target
+                @browser.dropAction action, files, target
         else
             
             @focus activate:false

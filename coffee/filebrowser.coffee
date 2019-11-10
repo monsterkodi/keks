@@ -59,13 +59,14 @@ class FileBrowser extends Browser
     dropAction: (action, sources, target) ->
         
         if slash.isFile target
+            
             target = slash.dir target
         
         for source in sources
         
             if action == 'move' 
                 if source == target or slash.dir(source) == target
-                    klog 'noop'
+                    klog 'noop' source, target
                     return
                         
         for source in sources
