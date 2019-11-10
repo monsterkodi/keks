@@ -81,7 +81,7 @@ class Column
             if e.shiftKey
                 @browser.select.to @dragStartRow
             else if e.metaKey or e.altKey or e.ctrlKey
-                if not row.isSelected()
+                if not @dragStartRow.isSelected()
                     @browser.select.toggle @dragStartRow
                 else
                     @toggle = true
@@ -184,6 +184,8 @@ class Column
                             @browser.select.row row
                         else
                             row.activate()
+            else
+                @activeRow()?.clearActive()
         
     #  0000000  00000000  000000000  000  000000000  00000000  00     00   0000000  
     # 000       000          000     000     000     000       000   000  000       
@@ -752,7 +754,26 @@ class Column
     
     copyPaths: ->
         
-        electron.clipboard.writeText @browser.select.files().join '\n'
+        paths = @browser.select.files().join '\n'
+        electron.clipboard.writeText paths
+        paths
+        
+    cutPaths: ->
+        
+        @browser.cutPaths = @copyPaths()
+        
+    pastePaths: ->
+        
+        text = electron.clipboard.readText()
+        paths = text.split '\n'
+        if text == @browser.cutPaths
+            action = 'move'
+        else
+            action = 'copy'
+        target = @parent.file
+        if @activeRow()?.item.type == 'dir'
+            target = @activeRow().item.file
+        @browser.dropAction action, paths, target
         
     # 000   000  00000000  000   000  
     # 000  000   000        000 000   
@@ -772,7 +793,9 @@ class Column
             when 'alt+o'                            then return @open()
             when 'alt+n'                            then return @newFolder()
             when 'space' 'alt+v'                    then return @openViewer()
+            when 'ctrl+x' 'command+x'               then return @cutPaths()
             when 'ctrl+c' 'command+c'               then return @copyPaths()
+            when 'ctrl+v' 'command+v'               then return @pastePaths()
             when 'shift+up' 'shift+down' 'shift+home' 'shift+end' 'shift+page up' 'shift+page down' then return stopEvent event, @extendSelection key
             when 'page up' 'page down' 'home' 'end' then return stopEvent event, @navigateRows key
             when 'command+up' 'ctrl+up'             then return stopEvent event, @navigateRows 'home'

@@ -49,7 +49,7 @@ class Select
 
         # return if row == @active
             
-        if row.column != @active.column
+        if row.column != @active?.column
             @row row
             return
         
