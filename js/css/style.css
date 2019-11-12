@@ -1,3 +1,9 @@
+@font-face {
+  font-family: fontMono;
+  font-weight: normal;
+  font-style: normal;
+  src: url("../../pug/Meslo.woff");
+}
 body {
   font-family: Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial;
   font-size: 18px;
@@ -256,7 +262,7 @@ body {
 .editor {
   position: relative;
   overflow: hidden;
-  font-family: "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace;
+  font-family: fontMono;
 }
 .layerScroll {
   overflow-x: visible;
@@ -310,7 +316,7 @@ body {
   width: 50px;
   pointer-events: none;
   font-size: 13px;
-  font-family: "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace;
+  font-family: fontMono;
 }
 .linenumber {
   width: 50px;

@@ -9,7 +9,6 @@ frameWidth          = 6px
 titlebarHeight      = 30px
 titlebarFontSize    = 15px
 titlebarFont        = Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial
-fontMono            = "Meslo LG S", "Liberation Mono", "Menlo", "Cousine", "Andale Mono", Arial
 
 selectionRadius       = 0.3em
 selectionRadiusCursor = 0.15em
@@ -21,7 +20,11 @@ numbersWidth          = 50px
 editorPadding         = (8px + numbersWidth)
 thinBorder            = 1px solid
 
-editorFont            = "MesloLGS Nerd Font Mono", "Meslo LG S", "Menlo", "Bitstream Vera Sans Mono", "DejaVu Sans Mono", "Cousine", "Andale Mono", monospace
+@font-face 
+    font-family     fontMono
+    font-weight     normal
+    font-style      normal
+    src             url("../../pug/Meslo.woff")
 
 // 0000000     0000000   0000000    000   000
 // 000   000  000   000  000   000   000 000 
@@ -327,7 +330,7 @@ unicode(char)
 .editor
     position            relative
     overflow            hidden
-    font-family         editorFont
+    font-family         fontMono
 
 // 000       0000000   000   000  00000000  00000000
 // 000      000   000   000 000   000       000   000
@@ -403,7 +406,7 @@ unicode(char)
     width               numbersWidth
     pointer-events      none
     font-size           13px
-    font-family         editorFont
+    font-family         fontMono
 
 .linenumber
     width               numbersWidth
