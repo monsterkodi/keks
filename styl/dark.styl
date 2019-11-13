@@ -8,7 +8,8 @@
 frameColor = #111111
 backColor  = #000000
 darkColor  = #0a0a0a
-shelfColor = #111111
+shelfFocusColor = #0e0e0e
+crumbHoverColor = #0e0e0e
 
 bgColor    = #181818
 titleColor = #333333
@@ -78,7 +79,7 @@ body
     background          darkColor
     
 #shelf.focus
-    background          shelfColor
+    background          shelfFocusColor
     
 .fileInfoData
     margin-top          20px
@@ -100,7 +101,7 @@ body
 .crumb 
     background          frameColor
     &:hover
-        background      #0e0e0e
+        background      crumbHoverColor
     & .path:hover
         color       #aaf
     

@@ -1,11 +1,17 @@
 @font-face {
+  font-family: titlebarFont;
+  font-weight: normal;
+  font-style: normal;
+  src: url("../../node_modules/kxk/styl/Bahnschrift.woff");
+}
+@font-face {
   font-family: fontMono;
   font-weight: normal;
   font-style: normal;
-  src: url("../../pug/Meslo.woff");
+  src: url("../../node_modules/kxk/styl/Meslo.woff");
 }
 body {
-  font-family: Bahnschrift Light, Ebrima, Varela Round, Arial Rounded MT Bold, Helvetica, Arial;
+  font-family: titlebarFont;
   font-size: 18px;
 }
 #main {
