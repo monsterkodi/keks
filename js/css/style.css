@@ -47,7 +47,7 @@ body {
 .browserColumn {
   overflow: hidden;
   position: relative;
-  line-height: 1.25;
+  line-height: 1.15;
 }
 .browserColumn.focus {
   border-bottom: 1px solid #111;
@@ -214,7 +214,6 @@ body {
 }
 #header,
 #crumbs {
-  font-weight: bold;
   position: absolute;
   left: 0;
   right: 0;
