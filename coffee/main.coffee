@@ -6,12 +6,12 @@
 000   000  000   000  000  000   000
 ###
 
-{ post, app, args, post, klog } = require 'kxk'
+{ post, args, app } = require 'kxk'
 
 class Main extends app
 
     @: ->
-        
+
         super
             dir:        __dirname
             pkg:        require '../package.json'
@@ -46,6 +46,7 @@ class Main extends app
         
         if @win
             post.toWin @win.id, 'browse' args.folder[0]
+            @win.focus()
         else
             @showWindow()
             
