@@ -6,7 +6,7 @@
     0      000  00000000  00     00  00000000  000   000
 ###
 
-{ slash, empty, open, elem, stopEvent, keyinfo, klog, $ } = require 'kxk'
+{ $, elem, empty, keyinfo, klog, open, slash } = require 'kxk'
 
 File    = require './tools/file'
 Header  = require './header'
@@ -63,7 +63,8 @@ class Viewer
 
         switch combo
             when 'esc' 'space' then @close()
-            # else klog 'combo' combo
+            when 'ctrl+q' then return
+            else klog 'combo' combo
             
         event.stopPropagation?()
             

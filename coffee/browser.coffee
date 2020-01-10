@@ -6,7 +6,7 @@
 0000000    000   000   0000000   00     00  0000000   00000000  000   000  
 ###
 
-{ post, prefs, elem, clamp, setStyle, childp, slash, fs, os, kpos, klog, kerror, $, _ } = require 'kxk'
+{ childp, clamp, elem, fs, kerror, klog, kpos, os, prefs, setStyle, slash } = require 'kxk'
 
 Column = require './column'
 flex   = require './flex/flex'
@@ -257,7 +257,7 @@ class Browser
 
     resized: -> 
 
-        @viewer?.resized()
+        @viewer?.resized?()
         
         @updateColumnScrolls()
     

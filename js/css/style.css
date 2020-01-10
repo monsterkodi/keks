@@ -31,7 +31,7 @@ body {
   text-align: center;
 }
 .viewerImage {
-  max-width: -webkit-fill-available;
+  max-width: 100%;
   border: 1px solid;
   cursor: pointer;
   background-size: 12px 12px;
