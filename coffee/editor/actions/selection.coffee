@@ -5,7 +5,7 @@
 #      000  000       000      000       000          000     000  000   000  000  0000
 # 0000000   00000000  0000000  00000000   0000000     000     000   0000000   000   000
 
-{ post, kerror, _ } = require 'kxk'
+{ _, kerror, post } = require 'kxk'
 
 module.exports =
     
@@ -259,9 +259,6 @@ module.exports =
         
     selectNextHighlight: -> # command+g
         
-        if not @numHighlights() and window? # < this sucks
-            searchText = window.commandline.commands.find?.currentText
-            @highlightText searchText if searchText?.length
         return if not @numHighlights()
         r = rangeAfterPosInRanges @cursorPos(), @highlights()
         r ?= @highlight 0
@@ -271,9 +268,6 @@ module.exports =
 
     selectPrevHighlight: -> # command+shift+g
         
-        if not @numHighlights() and window? # < this sucks
-            searchText = window.commandline.commands.find?.currentText
-            @highlightText searchText if searchText?.length
         return if not @numHighlights()
         hs = @highlights()
         r = rangeBeforePosInRanges @cursorPos(), hs
