@@ -6,7 +6,7 @@
  0000000   0000000   0000000   0000000   000   000  000   000
 ###
 
-{ post, stopEvent, keyinfo, valid, slash, empty, clamp, prefs, popup, elem, drag, kpos, open, fs, kerror, klog, _ } = require 'kxk'
+{ _, clamp, drag, elem, empty, fs, kerror, keyinfo, klog, kpos, open, popup, post, prefs, slash, stopEvent, valid } = require 'kxk'
 
 Row      = require './row'
 Scroller = require './tools/scroller'
@@ -94,6 +94,9 @@ class Column
         else
             if @hasFocus() and @activeRow()
                 @browser.select.row @activeRow()
+            
+        # klog '@hasFocus' @hasFocus()
+        # klog '@activeRow' @activeRow()?.item?.file
 
     onDragMove: (d,e) =>
         
@@ -188,7 +191,8 @@ class Column
                 @browser.dropAction action, files, target
         else
             
-            @focus activate:false
+            if e.button == 0
+                @focus activate:false
             
             if row = @row e.target
                 if row.isSelected()

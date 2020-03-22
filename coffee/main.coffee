@@ -6,7 +6,7 @@
 000   000  000   000  000  000   000
 ###
 
-{ post, args, app } = require 'kxk'
+{ app, args, post } = require 'kxk'
 
 class Main extends app
 
@@ -38,9 +38,11 @@ class Main extends app
                 
     onOtherInstance: (otherargs, dir) =>
         
+        # klog 'onOtherInstance' otherargs, dir
         args.folder = []
         for arg in otherargs
             if arg.endsWith '.exe' then continue
+            if arg.indexOf('keks.app/Contents/MacOS') > 0 then continue
             if arg.startsWith '--' then continue
             args.folder.push arg
         
