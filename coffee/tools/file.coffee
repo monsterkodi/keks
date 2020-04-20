@@ -6,13 +6,13 @@
 000       000  0000000  00000000
 ###
 
-{ slash, valid, fs, kerror } = require 'kxk'
+{ fs, kerror, slash, valid } = require 'kxk'
 
 icons  = require './icons.json'
 
 class File
     
-    @isImage: (file) -> slash.ext(file) in ['gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico']
+    @isImage: (file) -> slash.ext(file) in ['gif' 'png' 'jpg' 'jpeg' 'svg' 'bmp' 'ico' 'webp']
     @isText:  (file) -> slash.isText file
     
     @rename: (from, to, cb) ->
