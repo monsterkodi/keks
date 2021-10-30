@@ -6,12 +6,9 @@
 000   000   0000000   00     00
 ###
 
-{ elem, keyinfo, clamp, stopEvent, valid, empty, post, slash, klog, kerror, fs, $, _ } = require 'kxk' 
+{ $, _, elem, empty, keyinfo, klog, slash, stopEvent } = require 'kxk'
 
-electron  = require 'electron'
 File      = require './tools/file'
-
-app = electron.remote.app
 
 class Row
     

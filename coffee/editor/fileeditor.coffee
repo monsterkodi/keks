@@ -6,15 +6,12 @@
 000       000  0000000  00000000        00000000  0000000    000     000      0000000   000   000
 ###
 
-{ post, stopEvent, setStyle, srcmap, popup, prefs, slash, empty, clamp, kpos, fs, klog, kerror, _ } = require 'kxk'
+{ _, clamp, kpos, popup, post, prefs, setStyle, slash, stopEvent } = require 'kxk'
 
 Watcher    = require '../tools/watcher'
 TextEditor = require './texteditor'
 Syntax     = require './syntax'
 Menu       = require './menu'
-electron   = require 'electron'
-remote     = electron.remote
-dialog     = remote.dialog
 
 class FileEditor extends TextEditor
 
@@ -137,10 +134,13 @@ class FileEditor extends TextEditor
         
     saveAs: ->
     
-        dialog.showSaveDialog(title:'Save File As' defaultPath:slash.unslash @currentFile).then (result) =>
-            if not result.cancelled and result.filePath
-                slash.writeText result.filePath, @text()
-                post.emit 'navigateToFile' result.filePath
+        window.win.saveFileDialog(
+            title:'Save File As' 
+            defaultPath:slash.unslash @currentFile
+            cb: (file) =>
+                slash.writeText file, @text()
+                post.emit 'navigateToFile' file
+            )
                     
     saveScrollCursorsAndSelections: (opt) ->
 

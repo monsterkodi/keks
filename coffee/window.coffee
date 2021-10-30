@@ -6,7 +6,7 @@
 00     00  000  000   000  0000000     0000000   00     00
 ###
 
-{ post, args, slash, prefs, stopEvent, setStyle, scheme, popup, klog, clamp, kpos, win, $, _ } = require 'kxk'
+{ $, _, args, clamp, post, prefs, setStyle, slash, win } = require 'kxk'
 
 FileBrowser = require './filebrowser'
   
@@ -19,14 +19,8 @@ w = new win
     context: false
     dragElem: $ '#crumbs'
     
-electron = require 'electron'
 pkg      = require '../package.json'
-
-remote   = electron.remote
-dialog   = remote.dialog
-Browser  = remote.BrowserWindow
-win      = window.win   = remote.getCurrentWindow()
-winID    = window.winID = win.id
+winID    = window.winID
 fileBrowser = null
 
 # 000   000  000  000   000  00     00   0000000   000  000   000
@@ -39,7 +33,7 @@ winMain = ->
 
     fileBrowser = new FileBrowser $ "#main"
     
-    if args.folder[0]
+    if args.folder?[0]
         fileBrowser.browse args.folder[0]
     else
         if load = prefs.get 'load'
@@ -51,7 +45,7 @@ winMain = ->
         else
             fileBrowser.browse '~'
     
-    win.on 'resize' -> fileBrowser.resized()
+    # win.on 'resize' -> fileBrowser.resized()
     
     prefs.apply 'browser▸hideExtensions' hideExtensions
     
